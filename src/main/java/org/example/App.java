@@ -23,11 +23,12 @@ public class App
             System.out.println("je suis client qui envoie");
             Socket sock= null;
             try {
-                sock = new Socket(InetAddress.getLocalHost(),port);
+                //sock = new Socket(InetAddress.getLocalHost(),port);
+                sock = new Socket("192.168.252.198" ,port);
                 System.out.println(name +": on va lancer le connect");
                 PrintWriter outpout=new PrintWriter(sock.getOutputStream(), true);
                 System.out.println(name+": on s'est co");
-                String s= String.valueOf(InetAddress.getLocalHost());
+                String s="bonjour";//String.valueOf(InetAddress.getLocalHost());
                 System.out.println(name+ ": on va lancer le write du message "+s);
                 outpout.println(s);
                 System.out.println(name+": on a lancer un message "+s);
