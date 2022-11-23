@@ -1,14 +1,13 @@
 package org.example;
 
 public class State {
-    enum StateNotify {
+    enum state {
         CONNECTION,
         CHANGEPSEUDO,
-        DECONNECTION
-    }
-    enum StateAnswer {
+        DECONNECTION,
         VALIDPSEUDO,
         INVALIDPSEUDO
     }
+
 
 }
