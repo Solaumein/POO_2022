@@ -1,41 +1,41 @@
 package org.example;
 
-import java.io.BufferedReader;
+import org.example.Exception.SocketComNotFoundException;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class NetworkManagerTCP {
-    ArrayList<Socket> lisSocket;
+    ArrayList<Socket> listSocket;
     ServerSocket serverAccept;
     NetworkManagerTCP(){//init la liste de socket
-        lisSocket=new ArrayList<>();
+        listSocket =new ArrayList<>();
         //todo ServerSocket serverSocketStartCo()
         /*while(true){
            accept
         }*/
     }
 
-    public boolean start(){
-        try {
-            serverAccept=new ServerSocket(42069);
-            while(true){
-                Socket s=listening();
-                addSocket(s);
-                startThread(s);
+    public void start(){
+        new Thread(() -> {
+            try {
+                serverAccept=new ServerSocket(42069);
+                while(true){
+                    Socket s=listening();
+                    addSocket(s);
+                    ThreadManager.createThreadCommunication(s);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        }).start();
+
     }
 
-    private void startThread(Socket s) {
-        ThreadCom threadCom=new ThreadCom(s);
-    }
+
 
     private Socket listening() {
         try {
@@ -57,9 +57,10 @@ public class NetworkManagerTCP {
         InetAddress hostname=u.getUserAddress().getAddress();
         try {
             System.out.println("on demande a user de pseudo "+u.getPseudo());
-            Socket socket =  new Socket(hostname, u.getUserAddress().getPort());
+            Socket socket =  new Socket(hostname, 42069);
             System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
+            ThreadManager.createThreadCommunication(socket);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,37 +68,46 @@ public class NetworkManagerTCP {
         }
     }
 
-    boolean send(String s){
-        System.out.println(this + ": on va lancer le write du message "+s);
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(s);
-            System.out.println(this + ": on a lancer un message "+s);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
 
-    }
-    String receive() {
-        try {
-            System.out.println(this + ": on va lancer le read");
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String res= in.readLine();
-            System.out.println(this + ": on a recu un message "+res);
-            return res;
-        } catch (IOException e) {
-            e.printStackTrace();
+    Socket getSocketFromIP(InetAddress ip) throws SocketComNotFoundException{
+        for (Socket socket : listSocket) {
+            if (ip.equals(socket.getInetAddress())){
+                return socket;
+            }
         }
-        return null;
+        throw new SocketComNotFoundException();
     }
+//    boolean send(String s){
+//        System.out.println(this + ": on va lancer le write du message "+s);
+//        PrintWriter out = null;
+//        try {
+//            out = new PrintWriter(socket.getOutputStream(), true);
+//            out.println(s);
+//            System.out.println(this + ": on a lancer un message "+s);
+//            return true;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//    }
+//    String receive() {
+//        try {
+//            System.out.println(this + ": on va lancer le read");
+//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            String res= in.readLine();
+//            System.out.println(this + ": on a recu un message "+res);
+//            return res;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
-    public void addSocket(Socket s){this.lisSocket.add(s);}
+    public void addSocket(Socket s){this.listSocket.add(s);}
 
     @Override
     public String toString() {
-        return socket.getInetAddress().toString()+" ";
+        return listSocket.toString();
     }
 }

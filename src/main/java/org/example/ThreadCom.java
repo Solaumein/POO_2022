@@ -1,14 +1,17 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ThreadCom extends Thread {
-    static int i =0;
     Socket sockCom;
     ThreadCom(Socket s){
-        super();
+        super(s.getInetAddress().toString());
         this.sockCom=s;
         this.start();
     }
@@ -16,14 +19,47 @@ public class ThreadCom extends Thread {
     @Override
     public void run() {
         super.run();
-        String threadName="";
-        try {
-            threadName= "thread"+InetAddress.getLocalHost().toString();
-        } catch (UnknownHostException e) {
-            this.interrupt();
-        }
-        this.setName(threadName);
-        //todo faire 2eme thread d'envoie avec send de nouveau port
+        //System.out.println("le nouveau nom "+this.getName()+" "+threadName);
+        //todo faire 2eme thread d'envoi avec send de nouveau port
     }
 
+    boolean send(String s){
+        System.out.println(this + ": on va lancer le write du message "+s);
+        PrintWriter out;
+        try {
+            out = new PrintWriter(sockCom.getOutputStream(), true);
+            out.println(s);
+            System.out.println(this + ": on a lancer un message "+s);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+    String receive() {
+        try {
+            System.out.println(this + ": on va lancer le read");
+            BufferedReader in = new BufferedReader(new InputStreamReader(sockCom.getInputStream()));
+            String res= in.readLine();
+            System.out.println(this + ": on a recu un message "+res);
+            return res;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean close() {
+        try {
+            sockCom.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
