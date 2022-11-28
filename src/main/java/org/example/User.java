@@ -1,6 +1,8 @@
 package org.example;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     private UserAddress userAddress;
     private String pseudo;
 
