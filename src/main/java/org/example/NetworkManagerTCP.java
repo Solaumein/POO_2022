@@ -10,10 +10,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class NetworkManagerTCP {
-    Socket socket = null;
     ArrayList<Socket> lisSocket;
-
-    boolean accept;
+    ServerSocket serverAccept;
     NetworkManagerTCP(){//init la liste de socket
         lisSocket=new ArrayList<>();
         //todo ServerSocket serverSocketStartCo()
@@ -22,33 +20,44 @@ public class NetworkManagerTCP {
         }*/
     }
 
-    public boolean start(User u,boolean accept){//todo a remplacer apres le while true
-        this.accept=accept;
-        if(accept) return accept(u);//attend la connection du user
-        else return connect(u);//se connecte au user
-    }
-    //argument sera utile pour rajouter/modifier la liste des contact
-    //boolean sera utile pour montrer si pb de co
-    private boolean accept(User u){
-        ServerSocket serverSocket;
+    public boolean start(){
         try {
-            serverSocket=new ServerSocket(u.getUserAddress().getPort());
-            System.out.println("on se met en ecoute...");
-            socket =  serverSocket.accept();
-            System.out.println("on s'est co");
-            addSocket(socket);
-            return true;
+            serverAccept=new ServerSocket(42069);
+            while(true){
+                Socket s=listening();
+                addSocket(s);
+                startThread(s);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            throw new RuntimeException(e);
         }
     }
+
+    private void startThread(Socket s) {
+        ThreadCom threadCom=new ThreadCom(s);
+    }
+
+    private Socket listening() {
+        try {
+            System.out.println("on se met en ecoute...");
+            Socket socket =  serverAccept.accept();
+            InetAddress addr= socket.getInetAddress();
+            System.out.println("on s'est co avec"+addr);
+            return socket;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //argument sera utile pour rajouter/modifier la liste des contact
+    //boolean sera utile pour montrer si pb de co
+
 
     boolean connect(User u){
         InetAddress hostname=u.getUserAddress().getAddress();
         try {
             System.out.println("on demande a user de pseudo "+u.getPseudo());
-            socket =  new Socket(hostname, u.getUserAddress().getPort());
+            Socket socket =  new Socket(hostname, u.getUserAddress().getPort());
             System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
             return true;
