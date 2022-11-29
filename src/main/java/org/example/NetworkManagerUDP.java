@@ -12,7 +12,7 @@ public class NetworkManagerUDP {
 
     }
     public String packetToString(Packet packet){
-        String str = (packet.pseudo + "," + packet.addr.toString() + "," + packet.portcomtcp + packet.state.toString());
+        String str = (packet.pseudo + "," + packet.addr.toString() + "," + packet.portcomtcp + "," + packet.state.toString());
         return str;
     }
     NetworkManagerUDP(){
@@ -27,11 +27,8 @@ public class NetworkManagerUDP {
 
     public Packet listenNotify() {
         try {
-            System.out.println("Hello World!");
             Packet packet = new Packet();
-            System.out.println("Hello World!22222222");
             DatagramSocket ds = new DatagramSocket(1024);
-            System.out.println("Hello World!3333333333333333");
             byte[] buf = new byte[1024];
             DatagramPacket dp = new DatagramPacket(buf, 1024);
             ds.receive(dp);
@@ -39,45 +36,41 @@ public class NetworkManagerUDP {
             String data = new String(dp.getData(), 0, dp.getLength());
             String[] packetstr = data.split(",");
             packet.pseudo = packetstr[0];
-            packet.addr = InetAddress.getByName(packetstr[1]);
+            packet.addr = InetAddress.getByName(packetstr[1].split("/")[1]);
             packet.portcomtcp = Integer.valueOf(packetstr[2]);
             packet.state = State.stringToState(packetstr[3]);
+            System.out.println(packetToString(packet));
 
             return packet;
         } catch (IOException e) {
 
-             throw new RuntimeException(e);
+            throw new RuntimeException(e);
+            //e.printStackTrace();
+            //return new Packet();
         }
     }
 
-    boolean notify(State.state state){
-        System.out.println("notify");
+    boolean sendnotify(State.state state){
+        System.out.println("sendnotify");
         DatagramSocket ds = null;
-        System.out.println("notify2");
         try {
             ds = new DatagramSocket();
-            System.out.println("notify3");
             Packet packet = new Packet();
-            System.out.println("notify4");
-            System.out.println("notify411");
             try {
-                System.out.println("notify49");
-                packet.addr = InetAddress.getByName("localhost");
-                System.out.println("notify5");
+                packet.addr = InetAddress.getLocalHost();
             } catch (Exception e) {
-                System.out.println("Toto");
                 System.err.println(e.getMessage());
                 //throw new RuntimeException(e);
             }
-            System.out.println("maybe");
             //toDo  determiner un port
             packet.portcomtcp = 11111;
 
             //toDO  getpseudo user local
             packet.pseudo ="PseudoTest";
+            packet.state = state;
             String data = packetToString(packet);
+            System.out.println(data);
             InetAddress ip = null;
-            System.out.println("notify6");
             try {
                 ip = InetAddress.getByName("255.255.255.255");
             } catch (UnknownHostException e) {
@@ -91,7 +84,7 @@ public class NetworkManagerUDP {
             }
             ds.close();
 
-            System.out.println("notify end");
+            System.out.println("sendnotify end");
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }

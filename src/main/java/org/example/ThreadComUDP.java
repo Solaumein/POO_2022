@@ -20,9 +20,7 @@ public class ThreadComUDP extends Thread {
     private void listentIntent() {
         NetworkManagerUDP managerUDP = new NetworkManagerUDP();
         while (true) {
-            System.out.println("Hello Here!");
             NetworkManagerUDP.Packet info = managerUDP.listenNotify();
-            System.out.println("On a passe listenNotify");
             // Son pseudo = mon pseudo ??
             //toDO Cas où timeout : on retourne au debut du while
             //toDO AddContact
@@ -33,13 +31,13 @@ public class ThreadComUDP extends Thread {
     private void notifyIntent() throws SocketException, UnknownHostException {
         NetworkManagerUDP managerUDP = new NetworkManagerUDP();
         //toDO pouvoir changer le state en arg
-        boolean notify = managerUDP.notify(org.example.State.state.CONNECTION);
+        boolean notify = managerUDP.sendnotify(org.example.State.state.CONNECTION);
 
     }
 
     @Override
     public void run() {
-        super.run();
+        //super.run();
         if(this.intent == UdpIntent.LISTEN){
             listentIntent();
         }
