@@ -1,6 +1,9 @@
 package org.example;
 
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 public class ThreadComUDP extends Thread {
     static int i =0;
     UdpIntent intent;
@@ -17,17 +20,17 @@ public class ThreadComUDP extends Thread {
     private void listentIntent() {
         NetworkManagerUDP managerUDP = new NetworkManagerUDP();
         while (true) {
+            System.out.println("Hello Here!");
             NetworkManagerUDP.Packet info = managerUDP.listenNotify();
             System.out.println("On a passe listenNotify");
             // Son pseudo = mon pseudo ??
             //toDO Cas où timeout : on retourne au debut du while
             //toDO AddContact
             //toDo answer(reponse) où reponse contient mon pseudo, mon port dédié pour tcp, state (ValidPseudo) or InvalidPseudo
-
         }
     }
 
-    private void notifyIntent(){
+    private void notifyIntent() throws SocketException, UnknownHostException {
         NetworkManagerUDP managerUDP = new NetworkManagerUDP();
         //toDO pouvoir changer le state en arg
         boolean notify = managerUDP.notify(org.example.State.state.CONNECTION);
@@ -41,7 +44,13 @@ public class ThreadComUDP extends Thread {
             listentIntent();
         }
         else if(this.intent == UdpIntent.NOTIFY){
-            notifyIntent();
+            try {
+                notifyIntent();
+            } catch (SocketException e) {
+                throw new RuntimeException(e);
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
         }
         }
 

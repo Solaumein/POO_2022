@@ -4,6 +4,9 @@ import junit.framework.TestCase;
 
 public class ListenNotifyTest extends TestCase {
     public void testListenNotify(){
-        ThreadComUDP  thread1 = new ThreadComUDP(ThreadComUDP.UdpIntent.LISTEN);
+        //ThreadComUDP  thread1 = new ThreadComUDP(ThreadComUDP.UdpIntent.LISTEN);
+        NetworkManagerUDP manageUDP = new NetworkManagerUDP();
+        manageUDP.listenNotify();
+
     }
 }
