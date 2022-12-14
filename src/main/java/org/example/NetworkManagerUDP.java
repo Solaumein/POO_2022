@@ -27,6 +27,7 @@ public class NetworkManagerUDP {
     }
 
     public Packet listenNotify(DatagramSocket ds) {
+        //toDo ignorer le packet s'il vient de moi (car broadcast me l'envoie aussi)
         try {
             Packet packet = new Packet();
             //DatagramSocket ds = new DatagramSocket(1024);
@@ -120,7 +121,7 @@ public class NetworkManagerUDP {
             }
             ds.close();
 
-            System.out.println("sendnotify end");
+            System.out.println("sendanswer end");
         }catch (SocketException e) {
             throw new RuntimeException(e);
         }
