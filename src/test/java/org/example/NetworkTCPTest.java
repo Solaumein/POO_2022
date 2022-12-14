@@ -5,6 +5,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.example.Exception.ThreadComNotFoundException;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -39,30 +41,37 @@ public class NetworkTCPTest
      */
     static ArrayList<String> listMessageAtest=new ArrayList<>();;
     private void initListMSG(){
-        listMessageAtest.add("bonjour");
-        //listMessageAtest.add("aie aie aie\n plusieurs ligne");
-        listMessageAtest.add("");
+        listMessageAtest.add("bonjour");//message normale
+        //listMessageAtest.add("aie aie aie\n plusieurs ligne");//todo a tester quand on delimittera a la main les message avecv de cara de valeur ascii 0
         //listMessageAtest.add("\n");
+        listMessageAtest.add("");//message vide a tester
+        listMessageAtest.add("é#яйца");//ascii compliqué
     }
 
     public void testApp()
     {
+        System.out.println("on commence le test de networkTCP");
         initListMSG();
+        System.out.println("on a init les MSG");
 
         Thread testTCP=new Thread(NetworkTCPTest::launchSend);//lance le thread d'envoi des messages
         testTCP.start();
+        System.out.println("on a lancé le thread de launch");
 
         //Init de la partie RZO
-        ThreadManager threadManager=new ThreadManager();
-        NetworkManagerTCP ntcp=new NetworkManagerTCP();
-
+        ThreadManager threadManager=ThreadManager.getInstance();
+        NetworkManagerTCP ntcp=NetworkManagerTCP.getInstance();
         ntcp.start();
+        System.out.println("on a lancer le networkmanagerTCP");
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        while (ntcp.listSocket.isEmpty()){//attend la creation du socket
+        System.out.println("on a attendu 100 ms");
+
+        while (ntcp.getListSocket().isEmpty()){//attend la creation du socket
             System.out.println("pas de sock");
             try {
                 Thread.sleep(4000);
@@ -70,7 +79,9 @@ public class NetworkTCPTest
                 throw new RuntimeException(e);
             }
         }
-       Socket s= ntcp.listSocket.get(0);//recupere le premier socket(le seul)
+        System.out.println("la liste de sock n'est plus vide");
+
+        Socket s= ntcp.getListSocket().get(0);//recupere le premier socket(le seul)
         try {
             ThreadCom tc= threadManager.getThreadFromIP(s.getInetAddress());
             for (String s1 : listMessageAtest) {
@@ -78,7 +89,7 @@ public class NetworkTCPTest
             }
             tc.close();
         } catch (ThreadComNotFoundException e) {
-            System.out.println("pb de co avec socket " + s.getInetAddress());
+            e.printStackTrace();
             fail();
         } catch (UnknownHostException e) {
             System.out.println("pb de getlocalHost");
@@ -88,38 +99,26 @@ public class NetworkTCPTest
     }
 
 
-    private static void launchSend() {
-        //init partie
-        ThreadManager threadManager=new ThreadManager();
-        NetworkManagerTCP ntcp=new NetworkManagerTCP();
-        UserAddress userAddress;
+    private static void launchSend() {//simule la co et l'envoie en TCP d'un autre utilisateur
         try {
-            userAddress= new UserAddress(InetAddress.getLocalHost(), 42069);
-        }catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-
-        User u=new User(userAddress,"oui");
-        ntcp.connect(u);
-        Socket socket= ntcp.listSocket.get(0);
-        try {
-            ThreadCom tc= threadManager.getThreadFromIP(socket.getInetAddress());
+            InetAddress hostname= InetAddress.getLocalHost();
+            Socket socket =  new Socket(hostname, 42069);
+            PrintWriter out;
+            out = new PrintWriter(socket.getOutputStream(), true);
+            //envoie chaque message
             for (String s : listMessageAtest) {
-                tc.send(s);
+                out.println(s);
             }
-            assertTrue(true);
-        } catch (ThreadComNotFoundException e) {
-            System.out.println("pb de co avec socket "+socket.getInetAddress()+ " list "+threadManager.getListThread());
-            e.printStackTrace();
-            fail();
+        } catch (Exception e) {
+           e.printStackTrace();
+           fail();
         }
-
     }
 
     void testReception(ThreadCom tc,String expectedString,InetAddress inetExpected){
         String msgRecu =tc.receive();
-        Message message=new Message(msgRecu);
-        System.out.println("on a recu "+message);
+        //Message message=new Message(msgRecu);
+        System.out.println("on a recu "+msgRecu);
         assertEquals(expectedString, msgRecu);
         assertEquals(tc.sockCom.getInetAddress(),inetExpected);
     }

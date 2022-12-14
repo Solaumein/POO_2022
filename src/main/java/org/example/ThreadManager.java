@@ -8,26 +8,29 @@ import java.util.ArrayList;
 
 public class ThreadManager {
 
-    static ArrayList<ThreadCom> listThreadCom;
-    ThreadManager(){listThreadCom=new ArrayList<>();}
+    private ArrayList<ThreadCom> listThreadCom=new ArrayList<>();
+    private static final ThreadManager instance = new ThreadManager();
 
+    public static ThreadManager getInstance() {
+        return instance;
+    }
+    private ThreadManager() {}
     ArrayList<ThreadCom> getListThread(){
         return listThreadCom;
     }
 
-    static void createThreadCommunication(Socket socket){
+    public synchronized void createThreadCommunication(Socket socket){
        ThreadCom threadCom = new ThreadCom(socket);
        //threadCom.start();todo a remettre plus tard
         listThreadCom.add(threadCom);
     }
 
-    ThreadCom getThreadFromIP(InetAddress ip) throws ThreadComNotFoundException{
+    public synchronized ThreadCom getThreadFromIP(InetAddress ip) throws ThreadComNotFoundException{
         for (ThreadCom threadCom : listThreadCom) {
             System.out.println(threadCom);
             if(ip.toString().equals(threadCom.getName())) return threadCom;
         }
         throw new ThreadComNotFoundException();
     }
-
 
 }

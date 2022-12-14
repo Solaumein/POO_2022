@@ -27,5 +27,16 @@ public class User implements Serializable{
         this.pseudo = pseudo;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return getUserAddress().equals(user.getUserAddress()) && getPseudo().equals(user.getPseudo());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserAddress(), getPseudo());
+    }
 }

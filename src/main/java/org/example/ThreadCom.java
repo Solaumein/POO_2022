@@ -7,15 +7,16 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class ThreadCom extends Thread {
     Socket sockCom;
-
+    MessageHistory messageHistory;
     BufferedReader in;
     ThreadCom(Socket s){
         super(s.getInetAddress().toString());
         this.sockCom=s;
-
+        this.messageHistory=new MessageHistory();
         try {
             in=new BufferedReader(new InputStreamReader(sockCom.getInputStream()));
         } catch (IOException e) {
@@ -26,18 +27,24 @@ public class ThreadCom extends Thread {
     @Override
     public void run() {
         System.out.println("ca commence");
-        //String messageSTR=receive();
-        //Message message=new Message(messageSTR);
-        //todo traitement des message
+        //chargement des anciens messages
+        LocalDbManager localDbManager=LocalDbManager.getInstance();
+        this.messageHistory=localDbManager.getMessageHistory(sockCom.getInetAddress());
+
     }
 
-    boolean send(String s){
-        System.out.println(this + ": on va lancer le write du message "+s);
-        PrintWriter out;
+    boolean send(String messageEnvoyer){
         try {
+            //System.out.println(this + ": on va lancer le write du message "+s);
+            PrintWriter out;
             out = new PrintWriter(sockCom.getOutputStream(), true);
-            out.println(s);
-            System.out.println(this + ": on a lancer un message "+s);
+            //envoie le message
+            out.println(messageEnvoyer);
+            //creation du message
+            Message message=new Message(messageEnvoyer,false);
+            //sauvegarde du message
+            this.messageHistory.addMessage(message);
+            //System.out.println(this + ": on a lancer un message "+s);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,11 +66,16 @@ public class ThreadCom extends Thread {
     }
     String receive() {
         try {
-            System.out.println(this + ": on va lancer le read");
-            String res=   in.readLine();
-            Message message=new Message(res);
-            System.out.println(sockCom.getInetAddress()+" a envoyer le message suivant :\n"+message.toString());
-            return res;
+            //System.out.println(this + ": on va lancer le read");
+
+            String stringRecu=   in.readLine();
+            //creation du message
+            Message message=new Message(stringRecu,true);
+            //sauvegarde du message
+            this.messageHistory.addMessage(message);
+
+            //System.out.println(sockCom.getInetAddress()+" a envoyer le message suivant :\n"+message.toString());
+            return stringRecu;
         } catch (IOException e) {
             e.printStackTrace();
         }

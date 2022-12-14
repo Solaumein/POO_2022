@@ -4,15 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message {
-    String contenu;
-    Date dateMessage;
+    private String contenu;
+    private Date dateMessage;
+    private boolean recu;
 
-    Message(String contenu,Date dateMessage){
+    Message(String contenu,Date dateMessage,boolean recu){
         this.contenu=contenu;
         this.dateMessage=dateMessage;
 
     }
-    Message(String contenu){
+    Message(String contenu,boolean recu){
         this.contenu=contenu;
         this.dateMessage= new Date();
 
@@ -25,6 +26,12 @@ public class Message {
 
     public String getContenu() {
         return contenu;
+    }
+    public Date getDateMessage() {
+        return dateMessage;
+    }
+    public boolean getRecu() {
+        return recu;
     }
 
     @Override
