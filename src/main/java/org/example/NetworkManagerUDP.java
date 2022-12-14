@@ -16,6 +16,7 @@ public class NetworkManagerUDP {
         return str;
     }
     NetworkManagerUDP(){
+
     }
 
     boolean Notify(State.state s){
@@ -25,14 +26,14 @@ public class NetworkManagerUDP {
         return true;
     }
 
-    public Packet listenNotify() {
+    public Packet listenNotify(DatagramSocket ds) {
         try {
             Packet packet = new Packet();
-            DatagramSocket ds = new DatagramSocket(1024);
-            byte[] buf = new byte[1024];
+            //DatagramSocket ds = new DatagramSocket(1024);
+            byte[] buf = new byte[10240];
             DatagramPacket dp = new DatagramPacket(buf, 1024);
-            ds.receive(dp);
-            ds.close();
+            ds.receive(dp); //a garder ici
+            //ds.close();
             String data = new String(dp.getData(), 0, dp.getLength());
             String[] packetstr = data.split(",");
             packet.pseudo = packetstr[0];
@@ -62,11 +63,9 @@ public class NetworkManagerUDP {
                 System.err.println(e.getMessage());
                 //throw new RuntimeException(e);
             }
-            //toDo  determiner un port
-            packet.portcomtcp = 11111;
+            packet.portcomtcp = ListContact.selfUser.getUserAddress().getPort();
 
-            //toDO  getpseudo user local
-            packet.pseudo ="PseudoTest";
+            packet.pseudo = ListContact.selfUser.getPseudo();
             packet.state = state;
             String data = packetToString(packet);
             System.out.println(data);
@@ -86,6 +85,43 @@ public class NetworkManagerUDP {
 
             System.out.println("sendnotify end");
         } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
+    }
+
+    boolean sendanswer(State.state state, InetAddress addr ){
+        System.out.println("sendanswer");
+        DatagramSocket ds = null;
+        try {
+            ds = new DatagramSocket();
+            Packet packet = new Packet();
+            try {
+                packet.addr = InetAddress.getLocalHost();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //throw new RuntimeException(e);
+            }
+            packet.portcomtcp = ListContact.selfUser.getUserAddress().getPort();
+
+            packet.pseudo = ListContact.selfUser.getPseudo();
+            packet.state = state;
+            String data = packetToString(packet);
+            System.out.println(data);
+            InetAddress ip = null;
+            ip = addr;
+
+            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, 1024);
+            try {
+                ds.send(dp);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ds.close();
+
+            System.out.println("sendnotify end");
+        }catch (SocketException e) {
             throw new RuntimeException(e);
         }
 

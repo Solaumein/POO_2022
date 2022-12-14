@@ -1,15 +1,18 @@
 package org.example;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import static java.lang.Thread.sleep;
 
 public class NotifyTest extends TestCase {
     public void testNotify() throws InterruptedException {
-        ThreadComUDP thread2 = new ThreadComUDP(ThreadComUDP.UdpIntent.NOTIFY);
-        thread2.join();
-        //NetworkManagerUDP  manageUDP = new NetworkManagerUDP();
-        //manageUDP.sendnotify(State.state.CONNECTION);
-    }
+        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
+        for (int i = 0; i < 10; i++) {
+            managerUDP.sendnotify(State.state.CONNECTION);
+            assertTrue(true);
+            //NetworkManagerUDP  manageUDP = new NetworkManagerUDP();
+            //manageUDP.sendnotify(State.state.CONNECTION);
+        }
 
 }

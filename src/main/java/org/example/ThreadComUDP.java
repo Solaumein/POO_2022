@@ -1,31 +1,38 @@
 package org.example;
 
 
+import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class ThreadComUDP extends Thread {
     static int i =0;
-    UdpIntent intent;
-    enum UdpIntent{
-        LISTEN,
-        NOTIFY
-    }
-    ThreadComUDP(UdpIntent intent){
+    NetworkManagerUDP managerUDP;
+
+    ThreadComUDP(NetworkManagerUDP managerUDP){
         super("thread"+i);
         i++;
-        this.intent = intent;
+        this.managerUDP = managerUDP;
         this.start();
     }
-    private void listentIntent() {
-        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
+
+
+    private void listentIntent(NetworkManagerUDP managerUDP) {
+
+        DatagramSocket ds = null;
+        try {
+            ds = new DatagramSocket(1024);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
         while (true) {
-            NetworkManagerUDP.Packet info = managerUDP.listenNotify();
-            // Son pseudo = mon pseudo ??
-            //toDO Cas où timeout : on retourne au debut du while
-            //toDO AddContact
+            NetworkManagerUDP.Packet info = managerUDP.listenNotify(ds);
+            //cas connexion
+            ThreadTraitementPacket traitement = new ThreadTraitementPacket(info, managerUDP);
+
             //toDo answer(reponse) où reponse contient mon pseudo, mon port dédié pour tcp, state (ValidPseudo) or InvalidPseudo
         }
+        //ds.close();
     }
 
     private void notifyIntent() throws SocketException, UnknownHostException {
@@ -38,18 +45,8 @@ public class ThreadComUDP extends Thread {
     @Override
     public void run() {
         //super.run();
-        if(this.intent == UdpIntent.LISTEN){
-            listentIntent();
-        }
-        else if(this.intent == UdpIntent.NOTIFY){
-            try {
-                notifyIntent();
-            } catch (SocketException e) {
-                throw new RuntimeException(e);
-            } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        }
+            listentIntent(managerUDP);}
+
+
 
 }
