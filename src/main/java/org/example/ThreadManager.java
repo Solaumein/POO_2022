@@ -17,6 +17,7 @@ public class ThreadManager {
 
     static void createThreadCommunication(Socket socket){
        ThreadCom threadCom = new ThreadCom(socket);
+       //threadCom.start();todo a remettre plus tard
         listThreadCom.add(threadCom);
     }
 

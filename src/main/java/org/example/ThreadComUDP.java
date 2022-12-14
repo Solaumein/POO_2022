@@ -35,12 +35,12 @@ public class ThreadComUDP extends Thread {
         //ds.close();
     }
 
-    private void notifyIntent() throws SocketException, UnknownHostException {
-        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
-        //toDO pouvoir changer le state en arg
-        boolean notify = managerUDP.sendnotify(org.example.State.state.CONNECTION);
-
-    }
+//    private void notifyIntent() throws SocketException, UnknownHostException {
+//        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
+//        //toDO pouvoir changer le state en arg
+//        boolean notify = managerUDP.sendnotify(org.example.State.state.CONNECTION);
+//
+//    }
 
     @Override
     public void run() {

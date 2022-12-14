@@ -6,7 +6,9 @@ import static java.lang.Thread.sleep;
 
 public class ListenNotifyTest extends TestCase {
     public void testListenNotify() throws InterruptedException {
-        ThreadComUDP  thread1 = new ThreadComUDP(ThreadComUDP.UdpIntent.LISTEN);
+        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
+
+        ThreadComUDP  thread1 = new ThreadComUDP(managerUDP);
         thread1.join();
         //NetworkManagerUDP manageUDP = new NetworkManagerUDP();
         //manageUDP.listenNotify();

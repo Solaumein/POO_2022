@@ -10,17 +10,25 @@ import java.net.UnknownHostException;
 
 public class ThreadCom extends Thread {
     Socket sockCom;
+
+    BufferedReader in;
     ThreadCom(Socket s){
         super(s.getInetAddress().toString());
         this.sockCom=s;
-        this.start();
+
+        try {
+            in=new BufferedReader(new InputStreamReader(sockCom.getInputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void run() {
-        super.run();
-        //System.out.println("le nouveau nom "+this.getName()+" "+threadName);
-        //todo faire 2eme thread d'envoi avec send de nouveau port
+        System.out.println("ca commence");
+        //String messageSTR=receive();
+        //Message message=new Message(messageSTR);
+        //todo traitement des message
     }
 
     boolean send(String s){
@@ -37,12 +45,24 @@ public class ThreadCom extends Thread {
         }
 
     }
+    private String readMultipleLine(BufferedReader in){
+        StringBuilder everything = new StringBuilder();
+        String line;
+        try {
+            while ((line = in.readLine()) != null) {//car 0 pour simuler
+                everything.append(line).append("\n");
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return everything.toString();
+    }
     String receive() {
         try {
             System.out.println(this + ": on va lancer le read");
-            BufferedReader in = new BufferedReader(new InputStreamReader(sockCom.getInputStream()));
-            String res= in.readLine();
-            System.out.println(this + ": on a recu un message "+res);
+            String res=   in.readLine();
+            Message message=new Message(res);
+            System.out.println(sockCom.getInetAddress()+" a envoyer le message suivant :\n"+message.toString());
             return res;
         } catch (IOException e) {
             e.printStackTrace();
