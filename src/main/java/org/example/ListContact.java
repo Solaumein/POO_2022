@@ -57,6 +57,15 @@ public class ListContact {
         listContact.remove(index);
     }
 
+    public static boolean isContactinLIst(InetAddress addr){
+        for(User user : listContact){
+            if(user.getUserAddress().getAddress()==addr){
+                return true;
+            }
+        }
+        return false;
+    }
+
 //    public User getSelfUser() {
 //        return selfUser;
 //    }

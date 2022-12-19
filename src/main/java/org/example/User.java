@@ -7,9 +7,13 @@ public class User implements Serializable{
     private UserAddress userAddress;
     private String pseudo;
 
+    private boolean connected;
+
     public User(UserAddress userAddress, String pseudo) {
         this.userAddress = userAddress;
         this.pseudo = pseudo;
+        this.connected = false;
+
     }
 
     public UserAddress getUserAddress() {
