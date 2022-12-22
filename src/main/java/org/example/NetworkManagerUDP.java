@@ -105,7 +105,6 @@ public class NetworkManagerUDP {
                 //throw new RuntimeException(e);
             }
             packet.portcomtcp = ListContact.selfUser.getUserAddress().getPort();
-
             packet.pseudo = ListContact.selfUser.getPseudo();
             packet.state = state;
             String data = packetToString(packet);
