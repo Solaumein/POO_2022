@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Exception.PortNotFreeException;
 import org.example.Exception.SocketComNotFoundException;
 
 import java.io.IOException;
@@ -19,9 +20,11 @@ public class NetworkManagerTCP extends Thread{
     }
     private NetworkManagerTCP(){}
 
-    public void run(){
+    public void run() {
         try {
-            serverAccept=new ServerSocket(42069);
+            int portSelf=ListContact.selfAddr.getPort();
+            if(portSelf==-1);//todo rajouter cas ou pb
+            serverAccept=new ServerSocket();//listcontact est initialisée avant networkmanagerTCP pour avoir un port libre
             while(true){
                 Socket s=listening();
                 addSocket(s);
@@ -31,7 +34,14 @@ public class NetworkManagerTCP extends Thread{
             throw new RuntimeException(e);
         }
     }
-
+    static int getPortLibre(){
+        for (int port=1024; port<=65353; port++) {
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
+                if(serverSocket.isBound()) return port;//todo peut etre enlever le if
+            } catch (IOException ignored) {}
+        }
+        return -1;//aucun port trouvé
+    }
 
 
     private Socket listening() {
@@ -54,7 +64,7 @@ public class NetworkManagerTCP extends Thread{
         InetAddress hostname=u.getUserAddress().getAddress();
         try {
             //System.out.println("on demande a user de pseudo "+u.getPseudo());
-            Socket socket =  new Socket(hostname, 42069);
+            Socket socket =  new Socket(hostname, u.getUserAddress().getPort());
             //System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
             threadManager.createThreadCommunication(socket);

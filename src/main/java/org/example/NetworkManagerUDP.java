@@ -113,7 +113,7 @@ public class NetworkManagerUDP {
             InetAddress ip = null;
             ip = addr;
 
-            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, 1024);
+            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, 1024);//todo pk 1024
             try {
                 ds.send(dp);
             } catch (IOException e) {

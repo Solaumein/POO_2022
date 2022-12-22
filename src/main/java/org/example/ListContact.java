@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.Exception.PortNotFreeException;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -10,7 +12,9 @@ public class ListContact {
 
     static {
         try {
-            selfAddr = new UserAddress(Inet4Address.getLocalHost(),42069); //todo faire fonction de choix de port libre
+            int port = NetworkManagerTCP.getPortLibre();
+            if(port==-1) ;//throw new PortNotFreeException();todo faire qquchose qd ca marche pas
+            selfAddr = new UserAddress(Inet4Address.getLocalHost(),port);
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
