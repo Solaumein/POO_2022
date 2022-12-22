@@ -37,7 +37,7 @@ public class NetworkManagerTCP extends Thread{
     static int getPortLibre(){
         for (int port=1024; port<=65353; port++) {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
-                if(serverSocket.isBound()) return port;//todo peut etre enlever le if
+                return port;//todo peut etre enlever le if
             } catch (IOException ignored) {}
         }
         return -1;//aucun port trouvé

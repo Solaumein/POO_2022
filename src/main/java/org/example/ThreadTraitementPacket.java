@@ -23,8 +23,7 @@ public class ThreadTraitementPacket extends Thread{
 
     }
 
-    private void deconnexion() {
-        ListContact.removeContactByAddr(packet.addr);
+    private void deconnexion() {ListContact.removeContactByAddr(packet.addr);
     }
 
     private void changementPseudo() {
