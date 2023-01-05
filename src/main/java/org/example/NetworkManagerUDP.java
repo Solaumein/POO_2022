@@ -4,29 +4,23 @@ import java.io.IOException;
 import java.net.*;
 
 public class NetworkManagerUDP {
-    public class Packet{
-        State.state state;
-        InetAddress addr;
-        int portcomtcp;
-        String pseudo;
 
-    }
-    public String packetToString(Packet packet){
-        String str = (packet.pseudo + "," + packet.addr.toString() + "," + packet.portcomtcp + "," + packet.state.toString());
-        return str;
-    }
-    NetworkManagerUDP(){
+    private static final NetworkManagerUDP instance = new NetworkManagerUDP();
 
+    public static NetworkManagerUDP getInstance() {
+        return instance;
     }
 
-    boolean Notify(State.state s){
+    private NetworkManagerUDP(){   }
+
+   /* public synchronized boolean Notify(State.state s){
         return true;
     }
-    boolean Answer(State.state s){
+    public synchronized boolean Answer(State.state s){
         return true;
     }
-
-    public Packet listenNotify(DatagramSocket ds) {
+*/
+    public synchronized Packet listenNotify(DatagramSocket ds) {
         //toDo ignorer le packet s'il vient de moi (car broadcast me l'envoie aussi)
         try {
             Packet packet = new Packet();
@@ -41,7 +35,7 @@ public class NetworkManagerUDP {
             packet.addr = InetAddress.getByName(packetstr[1].split("/")[1]);
             packet.portcomtcp = Integer.valueOf(packetstr[2]);
             packet.state = State.stringToState(packetstr[3]);
-            System.out.println(packetToString(packet));
+            System.out.println(packet);
 
             return packet;
         } catch (IOException e) {
@@ -52,7 +46,7 @@ public class NetworkManagerUDP {
         }
     }
 
-    boolean sendnotify(State.state state){
+    public synchronized boolean sendNotify(State.state state){
         System.out.println("sendnotify");
         DatagramSocket ds = null;
         try {
@@ -68,7 +62,7 @@ public class NetworkManagerUDP {
 
             packet.pseudo = ListContact.selfUser.getPseudo();
             packet.state = state;
-            String data = packetToString(packet);
+            String data = packet.toString();
             System.out.println(data);
             InetAddress ip = null;
             try {
@@ -92,7 +86,7 @@ public class NetworkManagerUDP {
         return true;
     }
 
-    boolean sendanswer(State.state state, InetAddress addr ){
+    public synchronized boolean sendAnswer(State.state state, InetAddress addr ){
         System.out.println("sendanswer");
         DatagramSocket ds = null;
         try {
@@ -107,7 +101,7 @@ public class NetworkManagerUDP {
             packet.portcomtcp = ListContact.selfUser.getUserAddress().getPort();
             packet.pseudo = ListContact.selfUser.getPseudo();
             packet.state = state;
-            String data = packetToString(packet);
+            String data = packet.toString();
             System.out.println(data);
             InetAddress ip = null;
             ip = addr;
@@ -128,7 +122,7 @@ public class NetworkManagerUDP {
         return true;
     }
 
-    State.state listenAnswer(){
+    public synchronized State.state listenAnswer(){
         return State.state.VALIDPSEUDO;
     }
 

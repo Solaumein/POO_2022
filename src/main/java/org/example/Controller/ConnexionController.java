@@ -5,37 +5,73 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
+import org.example.*;
+import org.example.GUI.GUIController;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.function.Consumer;
 
 public class ConnexionController {
 
     @FXML
     public Button connectButton;
+    @FXML
+    public TextField textFieldPseudo;
 
+    @FXML
+    public Text textInvalidMsg;
     public void connectButtonAction(ActionEvent event){
-        Stage mainStage = (Stage) connectButton.getScene().getWindow();
-        URL urlofFXML= null;
-        try {
-            urlofFXML = new File("src/main/java/org/example/GUI/MainScreen.fxml").toURI().toURL();
-            Parent root = FXMLLoader.load(urlofFXML);
-            mainStage.setTitle("Clavardage Entre Pote");
-            mainStage.setScene(new Scene(root));
-            mainStage.show();
+        String pseudo=textFieldPseudo.getText();
+        System.out.println("on lance un notify de notre pseudo : "+pseudo);
+        ListContact.selfUser.setPseudo(pseudo);
 
-        } catch (MalformedURLException e) {
-            System.out.println("fichier manquant MainScreen.fxml");
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        notifyUsers();//send the notify in broadcast
+        int temps=0;
+        while(temps<10 && pseudoLibre){
+            temps++;
+            try {//toute les 10ms ont test
+                Thread.sleep(10);//todo attendre réponse du premier avec future ou promesse
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if(pseudoLibre){
+            Stage mainScreenStage=(Stage) connectButton.getScene().getWindow();
+            String mainScreenTitle="Clavardage Entre Pote";
+            GUIController.openNewWindow(mainScreenStage, "src/main/java/org/example/GUI/MainScreen.fxml",mainScreenTitle);
+        }else{
+            alertInvalid(ListContact.selfUser.getPseudo());
         }
 
+
     }
+
+    private void alertInvalid(String pseudo) {
+
+        //todo popup ou pas
+        //Popup popupInvalidPseudo=GUIController.getPopupInvalidPseudo(pseudo);
+        //popupInvalidPseudo.show((Stage) connectButton.getScene().getWindow());
+        textInvalidMsg.setText("Pseudo already taken !");
+    }
+
+    boolean pseudoLibre=true;
+    Consumer<String> invalidPseudoCallback= s -> pseudoLibre=false;
+    private void notifyUsers() {
+        NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
+        networkManagerUDP.sendNotify(State.state.CONNECTION);
+        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
+        thread1.start();
+    }
+
 
 }

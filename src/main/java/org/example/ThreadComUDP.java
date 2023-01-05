@@ -3,21 +3,20 @@ package org.example;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.util.function.Consumer;
 
 public class ThreadComUDP extends Thread {
-    static int i =0;
-    NetworkManagerUDP managerUDP;
-
-    ThreadComUDP(NetworkManagerUDP managerUDP){
+    private static int i =0;
+    Consumer<String> invalidPseudoCallback;
+    public ThreadComUDP(Consumer<String> invalidPseudoCallback){
         super("thread"+i);
         i++;
-        this.managerUDP = managerUDP;
-        this.start();
+        this.invalidPseudoCallback=invalidPseudoCallback;
     }
 
 
-    private void listentIntent(NetworkManagerUDP managerUDP) {
+
+    private void listentIntent(NetworkManagerUDP managerUDP, Consumer<String> invalidPseudoCallback) {
 
         DatagramSocket ds = null;
         try {
@@ -26,10 +25,9 @@ public class ThreadComUDP extends Thread {
             throw new RuntimeException(e);
         }
         while (true) {
-            NetworkManagerUDP.Packet info = managerUDP.listenNotify(ds);
+            Packet info = managerUDP.listenNotify(ds);
             //cas connexion
-            ThreadTraitementPacket traitement = new ThreadTraitementPacket(info, managerUDP);
-
+            traitementPacket traitementPacket = new traitementPacket(info,invalidPseudoCallback);
             //toDo answer(reponse) où reponse contient mon pseudo, mon port dédié pour tcp, state (ValidPseudo) or InvalidPseudo
         }
         //ds.close();
@@ -45,7 +43,7 @@ public class ThreadComUDP extends Thread {
     @Override
     public void run() {
         //super.run();
-            listentIntent(managerUDP);}
+            listentIntent(NetworkManagerUDP.getInstance(),invalidPseudoCallback);}
 
 
 

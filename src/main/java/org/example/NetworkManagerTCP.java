@@ -20,7 +20,7 @@ public class NetworkManagerTCP extends Thread{
     }
     private NetworkManagerTCP(){}
 
-    public void run() {
+    public synchronized void run() {
         try {
             int portSelf=ListContact.selfAddr.getPort();
             if(portSelf==-1);//todo rajouter cas ou pb
@@ -34,7 +34,7 @@ public class NetworkManagerTCP extends Thread{
             throw new RuntimeException(e);
         }
     }
-    static int getPortLibre(){
+    static synchronized int getPortLibre(){
         for (int port=1024; port<=65353; port++) {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 return port;//todo peut etre enlever le if
@@ -44,7 +44,7 @@ public class NetworkManagerTCP extends Thread{
     }
 
 
-    private Socket listening() {
+    private synchronized Socket listening() {
         try {
             //System.out.println("on se met en ecoute...");
             Socket socket =  serverAccept.accept();

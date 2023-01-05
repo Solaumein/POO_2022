@@ -1,17 +1,20 @@
 package org.example;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
 
 public class ListenNotifyTest extends TestCase {
     public void testListenNotify() throws InterruptedException {
-        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
 
-        ThreadComUDP  thread1 = new ThreadComUDP(managerUDP);
+        ThreadComUDP  thread1 = new ThreadComUDP(invalidPseudoCallback);
+        thread1.start();
+
         thread1.join();
-        //NetworkManagerUDP manageUDP = new NetworkManagerUDP();
-        //manageUDP.listenNotify();
-
+        assertTrue(true);
     }
+    Consumer<String> invalidPseudoCallback= s -> fail();
 }

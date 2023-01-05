@@ -6,13 +6,20 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="50.0" style="-fx-background-color: #0390fc;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.ConnexionController">
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<VBox fx:id="connexionWindow" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="50.0" style="-fx-background-color: #0390fc;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.ConnexionController">
    <children>
-      <TextField maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo">
+      <TextField fx:id="textFieldPseudo" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo">
          <VBox.margin>
             <Insets />
          </VBox.margin>
       </TextField>
+      <Text fx:id="textInvalidMsg" fill="RED" layoutX="247.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0"  textAlignment="CENTER" wrappingWidth="254.4000000000001">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
       <Button fx:id="connectButton" mnemonicParsing="false" prefHeight="47.0" prefWidth="278.0" text="Connexion" onAction="#connectButtonAction"/>
    </children>
 </VBox>
