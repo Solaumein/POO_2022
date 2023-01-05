@@ -2,39 +2,38 @@ package org.example.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class MainScreenController {
 
     @FXML
-    public Button connectButton;
+    public Button SendButton;
+    @FXML
+    public TextArea textToSend;
+    @FXML
+    public VBox messageZone;
 
-    public void connectButtonAction(ActionEvent event){
-        Stage mainStage = (Stage) connectButton.getScene().getWindow();
-        URL urlofFXML= null;
-        try {
-            urlofFXML = new File("src/main/java/org/example/GUI/MainScreen.fxml").toURI().toURL();
-            Parent root = FXMLLoader.load(urlofFXML);
-            mainStage.setTitle("Clavardage Entre Pote");
-            mainStage.setScene(new Scene(root));
-            mainStage.show();
+    public void SendButtonAction(ActionEvent event){
 
-        } catch (MalformedURLException e) {
-            System.out.println("fichier manquant MainScreen.fxml");
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        String message = textToSend.getText();
+        Text messageBubble = new Text(message);
+        messageBubble.setFont(Font.font(20));
+        messageBubble.setTextAlignment(TextAlignment.RIGHT);
+        messageZone.getChildren().add(messageBubble);
+        textToSend.clear();
     }
 
+    public void displayReceivedMessage(String message){
+        Text messageBubble = new Text(message);
+        messageBubble.setFont(Font.font(20));
+        messageBubble.setTextAlignment(TextAlignment.LEFT);
+        messageZone.getChildren().add(messageBubble);
+    }
 }
