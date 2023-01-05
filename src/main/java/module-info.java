@@ -1,5 +1,5 @@
 module ClavardageEntrePotes {
-    exports org.example.GUI;
+    //exports org.example.GUI;
     exports org.example.Controller;
     requires javafx.graphics;
     requires javafx.fxml;
@@ -7,5 +7,6 @@ module ClavardageEntrePotes {
     requires java.sql;
 
     opens org.example;
-    opens org.example.GUI;
+    //opens org.example.GUI;
+    exports org.example;
 }

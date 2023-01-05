@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <HBox prefHeight="70.0" prefWidth="1100.0" style="-fx-background-color: #0390fc;" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="72.0" prefWidth="1099.0" style="-fx-background-color: #0390fc;" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #0390fc;" text="Changer pseudo" />
+                  <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #0390fc;" text="Deconnexion" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <VBox prefHeight="510.0" prefWidth="300.0" style="-fx-background-color: #1CD3ED;" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="686.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="586.0" prefWidth="866.0" VBox.vgrow="ALWAYS" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <TextArea prefHeight="89.0" prefWidth="700.0" promptText="Write here..." wrapText="true" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextArea>
+                  <Button mnemonicParsing="false" prefHeight="125.0" prefWidth="137.0" style="-fx-background-color: #FFFFFF;" text="Send" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

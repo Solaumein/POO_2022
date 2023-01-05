@@ -1,4 +1,4 @@
-package org.example.GUI;
+package org.example;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +17,7 @@ public class MainApp extends Application {
 
         System.out.println(urlofFXML);
         Parent root = FXMLLoader.load(urlofFXML);
-        firstStage.setTitle("Clavardage Entre Pote");
+        firstStage.setTitle("Connexion");
         firstStage.setScene(new Scene(root));
         firstStage.show();
     }

@@ -27,7 +27,7 @@ public class ThreadTraitementPacket extends Thread{
     }
 
     private void changementPseudo() {
-        if(ListContact.selfUser.getPseudo()== packet.pseudo || ListContact.isPseudoInList(packet.pseudo)){
+        if(ListContact.selfUser.getPseudo().equals(packet.pseudo) || ListContact.isPseudoInList(packet.pseudo)){
             managerUDP.sendanswer(org.example.State.state.INVALIDPSEUDO, packet.addr);
         }
         else{
