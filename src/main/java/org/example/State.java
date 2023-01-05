@@ -1,7 +1,7 @@
 package org.example;
 
 public class State {
-    enum state {
+    public enum state {
         CONNECTION,
         CHANGEPSEUDO,
         DECONNECTION,
