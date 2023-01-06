@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.example.GUI.GUIController;
+import org.example.MessageBDD.SQLiteHelper;
 
 import java.io.File;
 import java.net.URL;
@@ -15,6 +16,7 @@ public class MainApp extends Application {
     public void start(Stage firstStage) throws Exception {
         //InitApp();
         GUIController.openNewWindow(firstStage,"src/main/java/org/example/GUI/Login.fxml","Connexion");
+        SQLiteHelper sq=SQLiteHelper.getInstance();
     }
 
     private void InitApp() {
