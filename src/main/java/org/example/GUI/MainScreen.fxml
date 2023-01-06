@@ -22,27 +22,31 @@
       </HBox>
    </top>
    <left>
-      <VBox prefHeight="510.0" prefWidth="300.0" style="-fx-background-color: #1CD3ED;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="510.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="686.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="744.0" prefWidth="300.0" style="-fx-background-color: #1CD3ED; -fx-border-color: #1CD3ED;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="listWindow" fillWidth="false" prefHeight="700.0" prefWidth="300.0" style="-fx-background-color: #1CD3ED;" />
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </left>
    <center>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane prefHeight="600.0" prefWidth="800.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="538.0" prefWidth="800.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox fx:id="messageZone" prefHeight="200.0" prefWidth="100.0" />
+                  <VBox fx:id="messageZone" maxHeight="1.7976931348623157E308" prefHeight="538.0" prefWidth="187.0" />
                </content>
             </ScrollPane>
             <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
-                  <TextArea fx:id="textToSend" prefHeight="89.0" prefWidth="700.0" promptText="Write here..." wrapText="true" HBox.hgrow="ALWAYS">
+                  <TextArea fx:id="textToSend" maxHeight="-Infinity" prefHeight="125.0" prefWidth="665.0" promptText="Write here..." wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="15.0" />
                      </font></TextArea>
-                  <Button id="SendButton" mnemonicParsing="false" onAction="#SendButtonAction" prefHeight="125.0" prefWidth="137.0" style="-fx-background-color: #FFFFFF;" text="Send" HBox.hgrow="ALWAYS" />
+                  <Button id="SendButton" maxHeight="-Infinity" mnemonicParsing="false" onAction="#SendButtonAction" prefHeight="125.0" prefWidth="137.0" style="-fx-background-color: #FFFFFF;" text="Send" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>
