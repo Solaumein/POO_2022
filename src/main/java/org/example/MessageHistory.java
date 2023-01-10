@@ -7,7 +7,7 @@ public class MessageHistory {
     ArrayList<Message> listMessage;
     //InetAddress destinataire; //redondant
 
-    MessageHistory(){
+    public MessageHistory(){
         this.listMessage=new ArrayList<>();
     }
 

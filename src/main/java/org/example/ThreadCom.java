@@ -41,7 +41,7 @@ public class ThreadCom extends Thread {
             //envoie le message
             out.println(messageEnvoyer);
             //creation du message
-            Message message=new Message(messageEnvoyer,false);
+            Message message=new Message(messageEnvoyer,false,sockCom.getInetAddress());
             //sauvegarde du message
             this.messageHistory.addMessage(message);
             //System.out.println(this + ": on a lancer un message "+s);
@@ -70,7 +70,7 @@ public class ThreadCom extends Thread {
 
             String stringRecu=   in.readLine();
             //creation du message
-            Message message=new Message(stringRecu,true);
+            Message message=new Message(stringRecu,true,sockCom.getInetAddress());
             //sauvegarde du message
             this.messageHistory.addMessage(message);
 
