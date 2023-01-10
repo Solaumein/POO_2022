@@ -104,8 +104,7 @@ public class MainScreenController {
     public HBox contactFrame;
 
     public void SendButtonAction(ActionEvent event) throws IOException {
-        String message = textToSend.getText();
-        Text messageBubble = new Text(message);
+        /*Text messageBubble = new Text(message);
         messageBubble.setFont(Font.font(20));
         messageBubble.setTextAlignment(TextAlignment.RIGHT);
         messageZone.getChildren().add(messageBubble);*/

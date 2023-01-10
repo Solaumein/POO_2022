@@ -76,7 +76,7 @@ public class SQLiteHelper {
             ResultSet rs=statement.executeQuery(sql);
             while (rs.next()){
                 //todo faire un if sender deja ajouter dans la hashmap alors rajouter le message a la listMessage sinon creer hashmap
-                Message message=new Message(rs.getString(SENDER));
+               // Message message=new Message(rs.getString(SENDER));
                 System.out.println("");
             }
         } catch (SQLException e) {
