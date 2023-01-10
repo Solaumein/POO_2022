@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class GUIController {
-    public static void openNewWindow(Stage currentStage, String pathToFXML, String title) {
+    public static Stage openNewWindow(Stage currentStage, String pathToFXML, String title) {
         URL urlofFXML= null;
         try {
             urlofFXML = new File(pathToFXML).toURI().toURL();
@@ -31,6 +31,7 @@ public class GUIController {
         currentStage.setTitle(title);
         currentStage.setScene(new Scene(root));
         currentStage.show();
+        return currentStage;
     }
 
     public static Popup getPopupInvalidPseudo(String pseudo){

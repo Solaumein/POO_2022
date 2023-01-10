@@ -1,24 +1,15 @@
 package org.example.Controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import org.example.*;
 import org.example.GUI.GUIController;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.function.Consumer;
 
 public class ConnexionController {
@@ -35,7 +26,7 @@ public class ConnexionController {
         System.out.println("on lance un notify de notre pseudo : "+pseudo);
         ListContact.selfUser.setPseudo(pseudo);
 
-        notifyUsers();//send the notify in broadcast
+        notifyConnectionUsers();//send the notify in broadcast
         int temps=0;
         while(temps<10 && pseudoLibre){
             temps++;
@@ -66,7 +57,7 @@ public class ConnexionController {
 
     boolean pseudoLibre=true;
     Consumer<String> invalidPseudoCallback= s -> pseudoLibre=false;
-    private void notifyUsers() {
+    private void notifyConnectionUsers() {
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.CONNECTION);
         ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
