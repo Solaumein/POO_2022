@@ -16,7 +16,7 @@ public class MainApp extends Application {
     public void start(Stage firstStage) throws Exception {
         //InitApp();
         GUIController.openNewWindow(firstStage,"src/main/java/org/example/GUI/Login.fxml","Connexion");
-        SQLiteHelper sq=SQLiteHelper.getInstance();
+        //SQLiteHelper sq=SQLiteHelper.getInstance();
     }
 
     private void InitApp() {

@@ -1,5 +1,6 @@
 package org.example;
 
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,15 +9,22 @@ public class Message {
     private Date dateMessage;
     private boolean recu;
 
-    Message(String contenu,Date dateMessage,boolean recu){
+    private InetAddress otherHost;
+
+    public Message(String contenu, Date dateMessage, boolean recu, InetAddress otherUser ){
         this.contenu=contenu;
         this.dateMessage=dateMessage;
-
+        this.otherHost=otherUser;
+        this.recu=recu;
     }
-    Message(String contenu,boolean recu){
+    public Message(String contenu,boolean recu,InetAddress otherUser){
         this.contenu=contenu;
-        this.dateMessage= new Date();
 
+        this.dateMessage= new Date(System.currentTimeMillis());
+
+
+        this.recu=recu;
+        this.otherHost=otherUser;
     }
 
     public String getDateInString(){
@@ -34,8 +42,16 @@ public class Message {
         return recu;
     }
 
+    public boolean isRecu() {
+        return recu;
+    }
+
+    public InetAddress getOtherHost() {
+        return otherHost;
+    }
+
     @Override
     public String toString() {
-        return getDateInString()+" : "+getContenu();
+        return "msg sent by"+getOtherHost()+" at "+ getDateInString()+" : "+getContenu();
     }
 }
