@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<HBox id="messageFrameContainer" fx:id="messageFrameContainer" alignment="CENTER_RIGHT" maxHeight="10000.0" maxWidth="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox id="messageFrame" fx:id="messageFrame" alignment="CENTER_LEFT" maxHeight="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #88888870; -fx-background-radius: 10px;" HBox.hgrow="ALWAYS">
+         <children>
+            <Circle fill="DODGERBLUE" radius="26.0" stroke="BLACK" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="10.0" top="5.0" />
+               </HBox.margin>
+            </Circle>
+            <VBox maxHeight="10000.0" maxWidth="10000.0" prefWidth="561.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label id="messageTime" fx:id="messageTime1" text="Reçu à 12:34" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label id="messageContent" fx:id="messageContent1" maxWidth="10000.0" prefWidth="529.0" text="foieklgjeraoignaerognqreomgnqherommghnqrelfoieklgjeraoignaerognqreomgnqherommghnqrelfoieklgjeraoignaerognqreomgnqherommghnqrelfoieklgjeraoignaerognqreomgnqherommghnqrelfoieklgjeraoignaerognqreomgnqherommghnqrelfoieklgjeraoignaerognqreomgnqherommghnqrelfoieklgjeraoignaerognqreomgnqherommghnqrel" textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="10.0" right="10.0" top="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+         <HBox.margin>
+            <Insets left="300.0" right="10.0" />
+         </HBox.margin>
+      </HBox>
+   </children>
+</HBox>

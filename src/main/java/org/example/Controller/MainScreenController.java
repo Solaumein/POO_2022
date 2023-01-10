@@ -3,6 +3,8 @@ package org.example.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -22,6 +28,9 @@ import org.example.State;
 import org.example.ThreadComUDP;
 
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import org.example.User;
+import org.example.UserAddress;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,6 +39,8 @@ import java.util.function.Consumer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainScreenController {
 
@@ -89,26 +100,102 @@ public class MainScreenController {
         //todo
     }
 
+    @FXML
+    public Button sendButton;
+
+    @FXML
+    public HBox contactFrame;
+
+    private void afficherMessageEnvoye(String message) throws IOException {
+        FXMLLoader messageLoader = new FXMLLoader();
+        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
+        messageLoader.load();
+        Node node;
+        node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
+        Label messageToDisplay = (Label)node.lookup("#messageContent");
+        messageToDisplay.setText(message);
+        Label messageTime = (Label)node.lookup("#messageTime");
+        messageTime.setText("Envoyé à " + "HEURE");
+        messageZone.getChildren().add(node);
+
+    }
+
+    public void afficherMessageRecu() throws IOException {
+        FXMLLoader messageLoader = new FXMLLoader();
+        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
+        messageLoader.load();
+        Node node;
+        node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
+        Label messageToDisplay = (Label)node.lookup("#messageContent");
+        messageToDisplay.setText("message");
+        Label messageTime = (Label)node.lookup("#messageTime");
+        messageTime.setText("Reçu à " + "HEURE");
+        HBox hbox =(HBox)node.lookup("#messageFrameContainer");
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(hbox, Priority.ALWAYS);
+        HBox hbox2 = (HBox)node.lookup("#messageFrame");
+        HBox.setMargin(hbox2, new Insets(0,300,0,10));
+        messageZone.getChildren().add(node);
+    }
+
     public void SendButtonAction(ActionEvent event) throws IOException {
-        String message = textToSend.getText();
-        Text messageBubble = new Text(message);
+        /*Text messageBubble = new Text(message);
         messageBubble.setFont(Font.font(20));
         messageBubble.setTextAlignment(TextAlignment.RIGHT);
-        messageZone.getChildren().add(messageBubble);
+        messageZone.getChildren().add(messageBubble);*/
+
+        String message = textToSend.getText();
+        afficherMessageEnvoye(message);
         textToSend.clear();
 
-        FXMLLoader loader = new FXMLLoader((new File("src/main/java/org/example/GUI/ContactFrame.fxml").toURI().toURL()));
-        System.out.println(loader.getLocation());
-        Node n = loader.load();
-        listWindow.getChildren().add(n);
 
-        Node node = (Node)loader.getNamespace().get("contactFrame");
 
-// Look up the label element inside the node
-        Label label = (Label)node.lookup("#elementId");
+        ArrayList<String> li = new ArrayList<>();
+        li.add("Tanguy");
+        li.add("Onnig");
+        li.add("Stefou");
+        li.add("Gabi");
+        li.add("Mattew");
+        li.add("Romain");
+        li.add("Aude");
+        for (String pseudo : li) {
+            UserAddress addr = null;
+            User test = new User(addr, pseudo);
+            afficherNouveauUser(test);
 
-// Modify the label's text property
-        label.setText("New label text");
+        }
+
+
+    }
+
+    public void sendButtonEnteredAction(){
+        sendButton.setStyle("-fx-background-color:  #5E636E");}
+
+    public void sendButtonExitAction(){
+        sendButton.setStyle("-fx-background-color:  #282b30");}
+
+    public void changePseudoButtonEnteredAction(){
+        changePseudoButton.setStyle("-fx-background-color:  #424549");}
+
+    public void changePseudoButtonExitAction(){
+        changePseudoButton.setStyle("-fx-background-color: #1e2124");}
+
+    public void DeconnexionButtonEnteredAction(){
+        deconnectButton.setStyle("-fx-background-color:  #424549");}
+
+    public void DeconnexionButtonExitAction(){
+        deconnectButton.setStyle("-fx-background-color: #1e2124");}
+
+    public void contactFrameEnteredAction(){
+        contactFrame.setStyle("-fx-background-color: #424549;-fx-background-radius: 10px");}
+
+    public void contactFrameExitAction(){
+        contactFrame.setStyle("-fx-background-color: #282b30;-fx-background-radius: 10px");}
+
+
+
+    public void afficherNouveauUser(User user){
+        listWindow.getChildren().add(user.getNode());
     }
 
     private void notifyDeconection() {
@@ -120,6 +207,7 @@ public class MainScreenController {
         messageBubble.setFont(Font.font(20));
         messageBubble.setTextAlignment(TextAlignment.LEFT);
         messageZone.getChildren().add(messageBubble);
+
     }
         private void notifyChangePseudo() {
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();

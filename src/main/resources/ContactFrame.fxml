@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<HBox id="contactFrame" fx:id="contactFrame" accessibleRole="BUTTON" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#contactFrameEnteredAction" onMouseExited="#contactFrameExitAction" prefHeight="70.0" prefWidth="270.0" style="-fx-background-color: #282b30; -fx-background-radius: 10px; " xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.MainScreenController">
+   <children>
+      <Circle fill="DODGERBLUE" radius="30.0" stroke="#40ff00" strokeType="INSIDE" strokeWidth="2.0">
+         <HBox.margin>
+            <Insets left="10.0" />
+         </HBox.margin></Circle>
+      <Label id="pseudoUser" fx:id="pseudoUser" alignment="CENTER" prefHeight="94.0" prefWidth="272.0" text="Pseudo User" textFill="#cdcdcd">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</HBox>

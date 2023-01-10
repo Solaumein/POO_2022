@@ -1,45 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.TextField?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.MainScreenController">
    <top>
-      <HBox prefHeight="70.0" prefWidth="1100.0" style="-fx-background-color: #0390fc;" BorderPane.alignment="CENTER">
+      <HBox prefHeight="70.0" prefWidth="1100.0" style="-fx-background-color: #1e2124;" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="72.0" prefWidth="1099.0" style="-fx-background-color: #0390fc;" HBox.hgrow="ALWAYS">
+            <HBox prefHeight="72.0" prefWidth="1099.0" style="-fx-background-color: #1e2124;" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="changePseudoButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #0390fc;" text="Changer pseudo" />
-                  <Button fx:id="deconnectButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #0390fc;" text="Deconnexion" />
-                  <TextField fx:id="textFieldNewPseudo" visible="false" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo"/>
+                  <Button fx:id="changePseudoButton" mnemonicParsing="false" onMouseClicked="#afficherMessageRecu" onMouseEntered="#changePseudoButtonEnteredAction" onMouseExited="#changePseudoButtonExitAction" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #1e2124;" text="Changer pseudo" textFill="#cdcdcd">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <Button fx:id="deconnectButton" mnemonicParsing="false" onMouseEntered="#DeconnexionButtonEnteredAction" onMouseExited="#DeconnexionButtonExitAction" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #1e2124;" text="Deconnexion" textFill="#cdcdcd">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <TextField fx:id="textFieldNewPseudo" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo" visible="false" />
                </children>
             </HBox>
          </children>
       </HBox>
    </top>
    <left>
-      <VBox prefHeight="510.0" prefWidth="300.0" style="-fx-background-color: #1CD3ED;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="510.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="686.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="744.0" prefWidth="300.0" style="-fx-background-color: #282b30;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="listWindow" alignment="TOP_CENTER" fillWidth="false" prefHeight="700.0" prefWidth="300.0" spacing="7.0" style="-fx-background-color: #282b30;">
+                     <padding>
+                        <Insets top="7.0" />
+                     </padding></VBox>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </left>
    <center>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="586.0" prefWidth="866.0" VBox.vgrow="ALWAYS" />
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="messageZone" maxHeight="1.7976931348623157E308" prefHeight="538.0" prefWidth="187.0" spacing="10.0" style="-fx-background-color: #36393e;">
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding></VBox>
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #36393e;" VBox.vgrow="ALWAYS">
                <children>
-                  <TextArea prefHeight="89.0" prefWidth="700.0" promptText="Write here..." wrapText="true" HBox.hgrow="ALWAYS">
+                  <TextArea fx:id="textToSend" maxHeight="-Infinity" prefHeight="80.0" prefWidth="660.0" promptText="Write here..." style="-fx-control-inner-background: #5E636E; -fx-background-color: #5E636E;" wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="15.0" />
-                     </font></TextArea>
-                  <Button mnemonicParsing="false" prefHeight="125.0" prefWidth="137.0" style="-fx-background-color: #FFFFFF;" text="Send" HBox.hgrow="ALWAYS" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin></TextArea>
+                  <Button id="SendButton" fx:id="sendButton" maxHeight="-Infinity" mnemonicParsing="false" onAction="#SendButtonAction" onMouseEntered="#sendButtonEnteredAction" onMouseExited="#sendButtonExitAction" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: #282b30;" text="Send" textFill="#cccccc" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="Calibri" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
          </children>
