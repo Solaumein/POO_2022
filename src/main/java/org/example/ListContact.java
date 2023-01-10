@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Controller.MainScreenController;
 import org.example.Exception.PortNotFreeException;
 
 import java.net.Inet4Address;
@@ -28,6 +29,7 @@ public class ListContact {
 
     public static void addContact(User user){
         listContact.add(user);
+
 
     }
 

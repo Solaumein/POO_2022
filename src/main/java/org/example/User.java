@@ -1,6 +1,14 @@
 package org.example;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.util.Objects;
 
 public class User implements Serializable{
@@ -9,10 +17,34 @@ public class User implements Serializable{
 
     private boolean connected;
 
+
+    private FXMLLoader loader;
+
+
+    private Node node;
+
     public User(UserAddress userAddress, String pseudo) {
         this.userAddress = userAddress;
         this.pseudo = pseudo;
         this.connected = false;
+        //try {
+            this.loader = new FXMLLoader();
+            this.loader.setLocation(getClass().getResource("/ContactFrame.fxml"));
+            //this.loader = new FXMLLoader((new File("src/main/java/org/example/GUI/ContactFrame.fxml").toURI().toURL()));
+//        } catch (MalformedURLException e) {
+//            System.out.print("erreur load fxml file");
+//            throw new RuntimeException(e);
+//        }
+        System.out.println((String) this.loader.getRoot());
+        try {
+            this.loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.node = (Node)this.loader.getNamespace().get("contactFrame");
+        Label label = (Label)this.node.lookup("#pseudoUser");
+        label.setText(this.pseudo);
+
 
     }
 
@@ -44,4 +76,21 @@ public class User implements Serializable{
     public int hashCode() {
         return Objects.hash(getUserAddress(), getPseudo());
     }
+
+    public FXMLLoader getLoader() {
+        return loader;
+    }
+
+    public void setLoader(FXMLLoader loader) {
+        this.loader = loader;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
 }
+
