@@ -3,6 +3,8 @@ package org.example.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -103,6 +106,38 @@ public class MainScreenController {
     @FXML
     public HBox contactFrame;
 
+    private void afficherMessageEnvoye(String message) throws IOException {
+        FXMLLoader messageLoader = new FXMLLoader();
+        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
+        messageLoader.load();
+        Node node;
+        node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
+        Label messageToDisplay = (Label)node.lookup("#messageContent");
+        messageToDisplay.setText(message);
+        Label messageTime = (Label)node.lookup("#messageTime");
+        messageTime.setText("Envoyé à " + "HEURE");
+        messageZone.getChildren().add(node);
+
+    }
+
+    public void afficherMessageRecu() throws IOException {
+        FXMLLoader messageLoader = new FXMLLoader();
+        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
+        messageLoader.load();
+        Node node;
+        node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
+        Label messageToDisplay = (Label)node.lookup("#messageContent");
+        messageToDisplay.setText("message");
+        Label messageTime = (Label)node.lookup("#messageTime");
+        messageTime.setText("Reçu à " + "HEURE");
+        HBox hbox =(HBox)node.lookup("#messageFrameContainer");
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(hbox, Priority.ALWAYS);
+        HBox hbox2 = (HBox)node.lookup("#messageFrame");
+        HBox.setMargin(hbox2, new Insets(0,300,0,10));
+        messageZone.getChildren().add(node);
+    }
+
     public void SendButtonAction(ActionEvent event) throws IOException {
         /*Text messageBubble = new Text(message);
         messageBubble.setFont(Font.font(20));
@@ -110,16 +145,7 @@ public class MainScreenController {
         messageZone.getChildren().add(messageBubble);*/
 
         String message = textToSend.getText();
-        FXMLLoader messageLoader = new FXMLLoader();
-        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
-        messageLoader.load();
-        Node node;
-        node = (Node)messageLoader.getNamespace().get("messageFrame");
-        Label messageToDisplay = (Label)node.lookup("#messageContent");
-        messageToDisplay.setText(message);
-        Label messageTime = (Label)node.lookup("#messageTime");
-        messageTime.setText("Envoyé à " + "HEURE");
-        messageZone.getChildren().add(node);
+        afficherMessageEnvoye(message);
         textToSend.clear();
 
 
@@ -148,11 +174,23 @@ public class MainScreenController {
     public void sendButtonExitAction(){
         sendButton.setStyle("-fx-background-color:  #282b30");}
 
+    public void changePseudoButtonEnteredAction(){
+        changePseudoButton.setStyle("-fx-background-color:  #424549");}
+
+    public void changePseudoButtonExitAction(){
+        changePseudoButton.setStyle("-fx-background-color: #1e2124");}
+
+    public void DeconnexionButtonEnteredAction(){
+        deconnectButton.setStyle("-fx-background-color:  #424549");}
+
+    public void DeconnexionButtonExitAction(){
+        deconnectButton.setStyle("-fx-background-color: #1e2124");}
+
     public void contactFrameEnteredAction(){
         contactFrame.setStyle("-fx-background-color: #424549;-fx-background-radius: 10px");}
 
     public void contactFrameExitAction(){
-        contactFrame.setStyle("-fx-background-color:  #282b30;-fx-background-radius: 10px");}
+        contactFrame.setStyle("-fx-background-color: #282b30;-fx-background-radius: 10px");}
 
 
 
