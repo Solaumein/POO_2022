@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 
 public class ThreadCom extends Thread {
     Socket sockCom;
@@ -94,5 +95,18 @@ public class ThreadCom extends Thread {
     @Override
     public String toString() {
         return this.getName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ThreadCom threadCom = (ThreadCom) o;
+        return Objects.equals(sockCom, threadCom.sockCom) && Objects.equals(messageHistory, threadCom.messageHistory) && Objects.equals(in, threadCom.in);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sockCom, messageHistory, in);
     }
 }
