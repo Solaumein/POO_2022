@@ -33,7 +33,7 @@ public class MessageHistory {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass() ||this.listMessage.size()!=((MessageHistory) o).listMessage.size()) return false;
         MessageHistory that = (MessageHistory) o;
         boolean result=true;
         for (int i = 0; i < this.listMessage.size() && result ; i++) {//si le result est false alors la boucle est cassée et result est false
