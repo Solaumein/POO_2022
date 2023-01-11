@@ -1,12 +1,9 @@
-package org.example;
+package org.example.Network;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.example.Exception.ThreadComNotFoundException;
-import org.example.Network.NetworkManagerTCP;
-import org.example.Network.ThreadCom;
-import org.example.Network.ThreadManager;
 
 import java.io.PrintWriter;
 import java.net.InetAddress;

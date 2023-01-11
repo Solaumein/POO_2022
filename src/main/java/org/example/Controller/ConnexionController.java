@@ -42,7 +42,7 @@ public class ConnexionController {
         if(pseudoLibre){
             Stage mainScreenStage=(Stage) connectButton.getScene().getWindow();
             String mainScreenTitle="Clavardage Entre Pote";
-            GUIController.openNewWindow(mainScreenStage, "src/main/java/org/example/GUI/MainScreen.fxml",mainScreenTitle);
+            GUIController.openNewWindow(mainScreenStage, "src/main/resources/MainScreen.fxml",mainScreenTitle);
         }else{
             alertInvalid(ListContact.selfUser.getPseudo());
         }

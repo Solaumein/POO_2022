@@ -32,9 +32,6 @@ import java.util.function.Consumer;
 import java.util.ArrayList;
 
 public class MainScreenController {
-
-
-
     @FXML
     public Button changePseudoButton;
     @FXML
@@ -56,7 +53,7 @@ public class MainScreenController {
         notifyDeconection();//send a notify of deconnection
 
         Stage mainStage = (Stage) deconnectButton.getScene().getWindow();
-        String pathMainScreenFXML="src/main/java/org/example/GUI/Login.fxml";
+        String pathMainScreenFXML="src/main/resources/Login.fxml";
         Stage decoStage= GUIController.openNewWindow(mainStage,pathMainScreenFXML,"Connexion");
         //todo mettre le textfield de la co a son ancien pseudo
     }

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Network;
 
 import junit.framework.TestCase;
 import org.example.Network.ThreadComUDP;

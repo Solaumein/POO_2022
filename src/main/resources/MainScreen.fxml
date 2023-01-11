@@ -24,7 +24,7 @@
                      <children>
                         <GNAvatarView prefHeight="70.0" prefWidth="61.0" stroke="#51ff00" type="CIRCLE">
                            <image>
-                              <Image url="@../../../../resources/favpng_avatar-steam-cat-wallpaper.png" />
+                              <Image url="@favpng_avatar-steam-cat-wallpaper.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="10.0" />
@@ -44,7 +44,7 @@
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../../resources/edit.png" />
+                                          <Image url="@edit.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -106,7 +106,7 @@
                      <graphic>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../resources/send-message.png" />
+                              <Image url="@send-message.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>

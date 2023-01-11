@@ -35,7 +35,7 @@ public class NetworkManagerTCP extends Thread{
             throw new RuntimeException(e);
         }
     }
-    static synchronized int getPortLibre(){
+    public static synchronized int getPortLibre(){
         for (int port=1024; port<=65353; port++) {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 return port;//todo peut etre enlever le if

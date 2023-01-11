@@ -9,14 +9,13 @@ public class MainApp extends Application {
     @Override
     public void start(Stage firstStage) throws Exception {
         //InitApp();
-        GUIController.openNewWindow(firstStage,"src/main/java/org/example/GUI/Login.fxml","Connexion");
+        GUIController.openNewWindow(firstStage,"src/main/resources/Login.fxml","Connexion");
 
        // ListContact.addNewContactSubscriber((user) -> MainScreenController.afficher);
     }
     User user=null;
 
-    private void InitApp() {
-    }
+    private void InitApp() {}
 
     public static void main(String[] args) {
         launch(args);
