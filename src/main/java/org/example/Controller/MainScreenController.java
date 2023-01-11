@@ -97,7 +97,7 @@ public class MainScreenController {
 
     private void afficherMessageEnvoye(String message) throws IOException {
         FXMLLoader messageLoader = new FXMLLoader();
-        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
+        messageLoader.setLocation(getClass().getResource("/MessageFrameSent.fxml"));
         messageLoader.load();
         Node node;
         node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
@@ -116,7 +116,7 @@ public class MainScreenController {
         Node node;
         node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
         Label messageToDisplay = (Label)node.lookup("#messageContent");
-        messageToDisplay.setText("message");
+        messageToDisplay.setText("message  #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e");
         Label messageTime = (Label)node.lookup("#messageTime");
         messageTime.setText("Reçu à " + "HEURE");
         HBox hbox =(HBox)node.lookup("#messageFrameContainer");
