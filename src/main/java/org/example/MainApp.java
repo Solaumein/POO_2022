@@ -1,15 +1,9 @@
 package org.example;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.Controller.MainScreenController;
 import org.example.GUI.GUIController;
-
-import java.io.File;
-import java.net.URL;
+import org.example.User.User;
 
 public class MainApp extends Application {
     @Override

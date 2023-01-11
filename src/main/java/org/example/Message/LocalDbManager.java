@@ -1,13 +1,12 @@
-package org.example;
+package org.example.Message;
 
-import org.example.MessageBDD.SQLiteHelper;
+import org.example.User.User;
 
 import java.net.InetAddress;
 import java.util.HashMap;
 
 public class LocalDbManager {
-    private HashMap<InetAddress,MessageHistory> messageHistoryDB;
-
+    private HashMap<InetAddress, MessageHistory> messageHistoryDB;
     public synchronized MessageHistory getMessageHistory(InetAddress inetAddress){
         return messageHistoryDB.get(inetAddress);
     }
@@ -20,13 +19,21 @@ public class LocalDbManager {
     }
     private static final LocalDbManager instance = new LocalDbManager();
 
-    public HashMap<InetAddress, MessageHistory> getMessageHistoryDB() {
+    public synchronized void addMessage(Message message){
+        InetAddress user=message.getOtherHost();
+        if(this.messageHistoryDB.get(user)==null){
+            this.messageHistoryDB.put(user,new MessageHistory());
+        }
+        this.messageHistoryDB.get(user).addMessage(message);
+        //System.out.println("new message added "+user);
+    }
+    public synchronized HashMap<InetAddress, MessageHistory> getMessageHistoryDB() {
         return messageHistoryDB;
     }
-
     public static LocalDbManager getInstance() {
         return instance;
     }
-    private LocalDbManager() {}
-
+    private LocalDbManager() {
+        this.messageHistoryDB=new HashMap<>();
+    }
 }

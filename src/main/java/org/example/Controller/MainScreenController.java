@@ -5,15 +5,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
@@ -22,25 +17,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.GUI.GUIController;
-import org.example.ListContact;
-import org.example.NetworkManagerUDP;
-import org.example.State;
-import org.example.ThreadComUDP;
+import org.example.User.ListContact;
+import org.example.Network.NetworkManagerUDP;
+import org.example.Network.State;
+import org.example.Network.ThreadComUDP;
 
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import org.example.User;
-import org.example.UserAddress;
-import java.io.File;
+import org.example.User.User;
+import org.example.User.UserAddress;
+
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.function.Consumer;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainScreenController {
 

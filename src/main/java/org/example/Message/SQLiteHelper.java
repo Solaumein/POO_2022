@@ -1,10 +1,6 @@
-package org.example.MessageBDD;
+package org.example.Message;
 
 
-
-import org.example.LocalDbManager;
-import org.example.Message;
-import org.example.MessageHistory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,7 +8,6 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SQLiteHelper {
@@ -23,7 +18,7 @@ public class SQLiteHelper {
     private static final String RECU = "RECU";
     private static final String TABLE_NAME = "message";
 
-   private static final SQLiteHelper instance = new SQLiteHelper();
+    private static final SQLiteHelper instance = new SQLiteHelper();
 
     public static SQLiteHelper getInstance() {
         return instance;
@@ -49,8 +44,6 @@ public class SQLiteHelper {
         }
         return con;
     }
-
-
     public synchronized void createTableMessage() {
         String sqlQuerry = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + ID + " integer PRIMARY KEY,"
                 + MESSAGE_CONTENT + " text NOT NULL,"
@@ -66,13 +59,14 @@ public class SQLiteHelper {
         }
     }
 
-
     public synchronized boolean insert(Message msg) {//return true if no error
         String contentMessage=msg.getContenu();
         String otherHostSTR=msg.getOtherHost().toString();
-
+        if(otherHostSTR.matches("(.)*/[^/]+")){
+            otherHostSTR= otherHostSTR.split("/")[1];
+        }
         String dateMsg=dateFormat.format(msg.getDateMessage());
-System.out.println(dateMsg);
+        //System.out.println(dateMsg);
         boolean recu=msg.getRecu();
 
         String sql = "INSERT INTO " + TABLE_NAME + "(" + MESSAGE_CONTENT + ", "+ OTHER_HOST + ", "+ MESSAGE_DATE + ", "+ RECU + ") VALUES(?,?,?,?)";
@@ -99,12 +93,10 @@ System.out.println(dateMsg);
                 String idMSG=rs.getString(ID);
                 Message msg = parseMessageFromResultSet(rs);//
                 System.out.println(idMSG + ":Message : " + msg);
-
             }
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private Message parseMessageFromResultSet(ResultSet rs) {
@@ -118,12 +110,11 @@ System.out.println(dateMsg);
         } catch (SQLException | ParseException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private InetAddress getOtherHostFromRS(ResultSet rs) {
         try {
-            return InetAddress.getByName(rs.getString(OTHER_HOST).split("/")[1]);
+            return InetAddress.getByName(rs.getString(OTHER_HOST));
         } catch (UnknownHostException | SQLException e) {
             throw new RuntimeException(e);
         }

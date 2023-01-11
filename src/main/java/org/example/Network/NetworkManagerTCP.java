@@ -1,7 +1,8 @@
-package org.example;
+package org.example.Network;
 
-import org.example.Exception.PortNotFreeException;
 import org.example.Exception.SocketComNotFoundException;
+import org.example.User.ListContact;
+import org.example.User.User;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -22,7 +23,7 @@ public class NetworkManagerTCP extends Thread{
 
     public synchronized void run() {
         try {
-            int portSelf=ListContact.selfAddr.getPort();
+            int portSelf= ListContact.selfAddr.getPort();
             if(portSelf==-1);//todo rajouter cas ou pb
             serverAccept=new ServerSocket();//listcontact est initialisée avant networkmanagerTCP pour avoir un port libre
             while(true){

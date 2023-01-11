@@ -1,7 +1,6 @@
-package org.example;
+package org.example.User;
 
-import org.example.Controller.MainScreenController;
-import org.example.Exception.PortNotFreeException;
+import org.example.Network.NetworkManagerTCP;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;

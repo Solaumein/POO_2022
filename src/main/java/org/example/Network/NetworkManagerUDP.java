@@ -1,4 +1,6 @@
-package org.example;
+package org.example.Network;
+
+import org.example.User.ListContact;
 
 import java.io.IOException;
 import java.net.*;

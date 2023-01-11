@@ -1,13 +1,14 @@
-package org.example;
+package org.example.Network;
+
+import org.example.Message.LocalDbManager;
+import org.example.Message.Message;
+import org.example.Message.MessageHistory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 public class ThreadCom extends Thread {
     Socket sockCom;

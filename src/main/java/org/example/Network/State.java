@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Network;
 
 public class State {
     public enum state {

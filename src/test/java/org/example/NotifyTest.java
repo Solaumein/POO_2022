@@ -1,7 +1,8 @@
 package org.example;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.example.Network.NetworkManagerUDP;
+import org.example.Network.State;
 
 import static java.lang.Thread.sleep;
 

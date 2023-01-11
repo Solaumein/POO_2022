@@ -9,4 +9,10 @@ module ClavardageEntrePotes {
     opens org.example;
     //opens org.example.GUI;
     exports org.example;
+    exports org.example.Message;
+    opens org.example.Message;
+    exports org.example.Network;
+    opens org.example.Network;
+    exports org.example.User;
+    opens org.example.User;
 }

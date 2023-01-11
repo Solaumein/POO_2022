@@ -1,4 +1,8 @@
-package org.example;
+package org.example.Network;
+
+import org.example.User.ListContact;
+import org.example.User.User;
+import org.example.User.UserAddress;
 
 import java.util.function.Consumer;
 
@@ -20,29 +24,30 @@ public class traitementPacket {
 
 
 
-    private void deconnexion() {ListContact.removeContactByAddr(packet.addr);
+    private void deconnexion() {
+        ListContact.removeContactByAddr(packet.addr);
     }
 
     private void changementPseudo() {
         if(ListContact.selfUser.getPseudo().equals(packet.pseudo) || ListContact.isPseudoInList(packet.pseudo)){
-            NetworkManagerUDP.getInstance().sendAnswer(org.example.State.state.INVALIDPSEUDO, packet.addr);
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.addr);
         }
         else{
             ListContact.updatePseudoByAddr(packet.addr, packet.pseudo);
-            NetworkManagerUDP.getInstance().sendAnswer(org.example.State.state.VALIDPSEUDO, packet.addr);
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.addr);
         }
     }
 
     private void connexion() {
         if(ListContact.selfUser.getPseudo()== packet.pseudo || ListContact.isPseudoInList(packet.pseudo)){
-            NetworkManagerUDP.getInstance().sendAnswer(org.example.State.state.INVALIDPSEUDO, packet.addr);
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.addr);
 
         }
         else{
             UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
             User user = new User(addr, packet.pseudo);
             ListContact.addContact(user);
-            NetworkManagerUDP.getInstance().sendAnswer(org.example.State.state.VALIDPSEUDO, packet.addr);
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.addr);
         }
     }
 }
