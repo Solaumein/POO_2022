@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox id="contactFrame" fx:id="contactFrame" accessibleRole="BUTTON" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#contactFrameEnteredAction" onMouseExited="#contactFrameExitAction" prefHeight="70.0" prefWidth="270.0" style="-fx-background-color: #282b30; -fx-background-radius: 10px; " xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.MainScreenController">
+<HBox id="contactFrame" fx:id="contactFrame" accessibleRole="BUTTON" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#contactFrameClickAction" onMouseEntered="#contactFrameEnteredAction" onMouseExited="#contactFrameExitAction" prefHeight="70.0" prefWidth="270.0" style="-fx-background-color: #282b30; -fx-background-radius: 10px; " xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.MainScreenController">
    <children>
       <VBox alignment="CENTER" prefHeight="57.0" prefWidth="50.0">
          <children>

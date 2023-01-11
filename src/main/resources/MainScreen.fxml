@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.MainScreenController">
+<BorderPane fx:id="mainScreenPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.MainScreenController">
    <top>
       <HBox prefHeight="70.0" prefWidth="1100.0" style="-fx-background-color: #1e2124;" BorderPane.alignment="CENTER">
          <children>
@@ -22,22 +22,22 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="300.0" spacing="15.0">
                      <children>
-                        <GNAvatarView prefHeight="70.0" prefWidth="61.0" stroke="#51ff00" type="CIRCLE">
+                        <GNAvatarView minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" stroke="#51ff00" type="CIRCLE">
                            <image>
-                              <Image url="@favpng_avatar-steam-cat-wallpaper.png" />
+                              <Image url="@./profileIcon_hbkgqnbdlz151.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
                         </GNAvatarView>
-                        <Label text="Mon Pseudo" textFill="WHITE">
+                        <Label prefHeight="88.0" prefWidth="106.0" text="Mon Pseudo" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <HBox alignment="CENTER" prefHeight="70.0" prefWidth="38.0">
+                        <HBox alignment="CENTER" maxWidth="80.0" prefHeight="70.0" prefWidth="94.0">
                            <children>
-                              <Button id="SendButton" fx:id="changePseudoButton" maxHeight="-Infinity" mnemonicParsing="false" onMouseClicked="#afficherMessageRecu" onMouseEntered="#changePseudoButtonEnteredAction" onMouseExited="#changePseudoButtonExitAction" prefHeight="41.0" prefWidth="24.0" style="-fx-background-color: #1e2124;" textFill="#cccccc">
+                              <Button id="SendButton" fx:id="changePseudoButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#afficherMessageRecu" onMouseEntered="#changePseudoButtonEnteredAction" onMouseExited="#changePseudoButtonExitAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" textFill="#cccccc">
                                  <font>
                                     <Font name="Calibri" size="18.0" />
                                  </font>
@@ -49,13 +49,21 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
+                              <Button fx:id="deconnectButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseEntered="#DeconnexionButtonEnteredAction" onMouseExited="#DeconnexionButtonExitAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" textFill="#cdcdcd">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@logout.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
                            </children>
                         </HBox>
                      </children></HBox>
-                  <Button fx:id="deconnectButton" mnemonicParsing="false" onMouseEntered="#DeconnexionButtonEnteredAction" onMouseExited="#DeconnexionButtonExitAction" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #1e2124;" text="Deconnexion" textFill="#cdcdcd">
-                     <font>
-                        <Font size="14.0" />
-                     </font></Button>
                   <TextField fx:id="textFieldNewPseudo" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo" visible="false" />
                </children>
             </HBox>
@@ -77,9 +85,9 @@
       </VBox>
    </left>
    <center>
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" style="-fx-background-color: #36393e;" BorderPane.alignment="CENTER">
+      <VBox fx:id="messageVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" style="-fx-background-color: #36393e;" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hvalue="1.0" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" vbarPolicy="NEVER" vvalue="1.0" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="messageZone" maxHeight="1.7976931348623157E308" prefHeight="538.0" prefWidth="187.0" spacing="10.0" style="-fx-background-color: #36393e;">
                      <padding>

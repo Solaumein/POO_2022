@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -178,10 +179,26 @@ public class MainScreenController {
     public void contactFrameExitAction(){
         contactFrame.setStyle("-fx-background-color: #282b30;-fx-background-radius: 10px");}
 
+    /*public void contactFrameClickAction() throws IOException {
+        Label labelPseudo = (Label)contactFrame.getChildren().get(1);
+        String pseudo = labelPseudo.getText();
+        System.out.println(pseudo);
 
+    }*/
+
+    public void contactFrameClickAction(){
+        messageZone.getChildren().clear();
+    }
 
     public void afficherNouveauUser(User user){
-        listWindow.getChildren().add(user.getNode());
+        //listWindow.getChildren().add(user.getNode());
+        Node userNode = user.getNode();
+        userNode.setOnMouseClicked(
+                event -> {
+                    contactFrameClickAction();
+                }
+        );
+        listWindow.getChildren().add(userNode);
     }
 
     private void notifyDeconection() {
@@ -193,7 +210,6 @@ public class MainScreenController {
         messageBubble.setFont(Font.font(20));
         messageBubble.setTextAlignment(TextAlignment.LEFT);
         messageZone.getChildren().add(messageBubble);
-
     }
         private void notifyChangePseudo() {
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();

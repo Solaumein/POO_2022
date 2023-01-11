@@ -33,7 +33,7 @@
                <children>
                   <GNAvatarView maxHeight="40.0" maxWidth="40.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="40.0" strokeWidth="0.0" type="CIRCLE">
                      <image>
-                        <Image url="@favpng_avatar-steam-cat-wallpaper.png" />
+                        <Image url="@profileIcon_hbkgqnbdlz151.png" />
                      </image>
                   </GNAvatarView>
                </children>

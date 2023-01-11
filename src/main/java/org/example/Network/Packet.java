@@ -8,8 +8,8 @@ public class Packet {
         int portcomtcp;
         String pseudo;
 
-    public String toString(Packet packet){
-        String str = (packet.pseudo + "," + packet.addr.toString() + "," + packet.portcomtcp + "," + packet.state.toString());
+    public String toString(){
+        String str = (this.pseudo + "," + this.addr.toString() + "," + this.portcomtcp + "," + this.state.toString());
         return str;
     }
 }
