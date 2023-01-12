@@ -13,6 +13,7 @@ public class traitementPacket {
         this.packet = packet;
         switch (packet.state){
             case CONNECTION -> connexion();
+            case VALIDPSEUDO -> validPseudoCallback();
             case CHANGEPSEUDO -> changementPseudo();
             case DECONNECTION -> deconnexion();
             case INVALIDPSEUDO -> invalidPseudoCallback.accept("toto");
@@ -20,8 +21,13 @@ public class traitementPacket {
         }
     }
 
-
-
+    private void validPseudoCallback() {
+        if(!ListContact.isAdressInList(packet.addr)){
+            UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
+            User user = new User(addr, packet.pseudo);
+            ListContact.addContact(user);
+        }
+    }
 
 
     private void deconnexion() {
@@ -31,8 +37,7 @@ public class traitementPacket {
     private void changementPseudo() {
         if(ListContact.selfUser.getPseudo().equals(packet.pseudo) || ListContact.isPseudoInList(packet.pseudo)){
             NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.addr);
-        }
-        else{
+        }else{
             ListContact.updatePseudoByAddr(packet.addr, packet.pseudo);
             NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.addr);
         }

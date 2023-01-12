@@ -66,6 +66,15 @@ public class ListContact {
         return false;
     }
 
+    public static boolean isAdressInList(InetAddress addr){
+        for (User user : listContact){
+            if (user.getUserAddress().getAddress().equals(addr)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void removeContactByAddr(InetAddress addr){
         int index = searchByAddress(addr);
         listContact.remove(index);
