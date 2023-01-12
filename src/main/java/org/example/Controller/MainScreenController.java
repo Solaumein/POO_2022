@@ -33,6 +33,8 @@ import java.util.function.Consumer;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class MainScreenController {
     @FXML
     public Button changePseudoButton;
@@ -50,6 +52,12 @@ public class MainScreenController {
     @FXML
     public VBox messageZone;
 
+    @FXML
+    public Label myPseudo;
+
+    public void initialize() {
+
+    }
 
     public void deconnectButtonAction(ActionEvent event) {
         notifyDeconection();//send a notify of deconnection
@@ -71,7 +79,7 @@ public class MainScreenController {
             while(temps<10 && pseudoLibre){
                 temps++;
                 try {//toute les 10ms ont test
-                    Thread.sleep(10);//todo attendre réponse du premier avec future ou promesse
+                    sleep(10);//todo attendre réponse du premier avec future ou promesse
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

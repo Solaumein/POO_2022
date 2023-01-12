@@ -29,6 +29,7 @@ public class GUIController {
         currentStage.setTitle(title);
         currentStage.setScene(new Scene(root));
         currentStage.show();
+
         return controller;
     }
     public static Stage openNewWindow(Stage currentStage, String pathToFXML, String title) {

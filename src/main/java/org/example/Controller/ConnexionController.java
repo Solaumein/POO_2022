@@ -18,6 +18,8 @@ import org.example.User.User;
 
 import java.util.function.Consumer;
 
+import static java.lang.Thread.sleep;
+
 public class ConnexionController {
 
     @FXML
@@ -27,7 +29,9 @@ public class ConnexionController {
 
     @FXML
     public Text textInvalidMsg;
-    public void connectButtonAction(ActionEvent event){
+
+
+    public void connectButtonAction(ActionEvent event) throws InterruptedException {
         String pseudo=textFieldPseudo.getText();
         System.out.println("on lance un notify de notre pseudo : "+pseudo);
         ListContact.selfUser.setPseudo(pseudo);
@@ -37,7 +41,7 @@ public class ConnexionController {
         while(temps<10 && pseudoLibre){
             temps++;
             try {//toute les 10ms ont test
-                Thread.sleep(10);//todo attendre réponse du premier avec future ou promesse
+                sleep(10);//todo attendre réponse du premier avec future ou promesse
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -48,15 +52,25 @@ public class ConnexionController {
             GUIController guiController = new GUIController();
 
             MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
+            mainScreenController.myPseudo.setText(ListContact.selfUser.getPseudo());
             System.out.println("on init le handler");
             ContactEventHandler contactEventHandler= user -> Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     mainScreenController.afficherNouveauUser(user);
+                    if(ListContact.listContact!=null){
+                        for (User user : ListContact.listContact) {
+                            //User usersave = user;
+                            ListContact.listContact.remove(user);
+                            ListContact.listContact.add(user);
+                        }}
                 }
             });
 
             ListContact.addHandler(contactEventHandler);
+
+
+
         }else{
             alertInvalid(ListContact.selfUser.getPseudo());
         }

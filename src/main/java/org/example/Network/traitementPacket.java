@@ -23,9 +23,11 @@ public class traitementPacket {
 
     private void validPseudoCallback() {
         if(!ListContact.isAdressInList(packet.addr)){
+
             UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
             User user = new User(addr, packet.pseudo);
             ListContact.addContact(user);
+            System.out.println("on ajoute le user "+packet.pseudo);
         }
     }
 

@@ -30,7 +30,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </GNAvatarView>
-                        <Label prefHeight="88.0" prefWidth="106.0" text="Mon Pseudo" textFill="WHITE">
+                        <Label fx:id="myPseudo" prefHeight="88.0" prefWidth="106.0" text="Mon Pseudo" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>
