@@ -212,9 +212,11 @@ public class MainScreenController {
     }
 
     public void deconnexionButtonClickAction(){
-        Label label = (Label)listWindow.getChildren().get(1).lookup("#pseudoUser");
+        Label label = (Label)listWindow.getChildren().get(0).lookup("#pseudoUser");
         System.out.println(label.getText());
-        listWindow.getChildren().remove(1);
+        listWindow.getChildren().remove(0);
+        Label label2 = (Label)listWindow.getChildren().get(1).lookup("#pseudoUser");
+        label2.setText("ChangedPseudo");
     }
 
     private void notifyDeconection() {
