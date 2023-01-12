@@ -10,8 +10,10 @@ import javafx.event.ActionEvent;
 import org.example.GUI.GUIController;
 import org.example.Network.NetworkManagerUDP;
 import org.example.Network.ThreadComUDP;
+import org.example.User.ContactEventHandler;
 import org.example.User.ListContact;
 import org.example.Network.State;
+import org.example.User.User;
 
 import java.util.function.Consumer;
 
@@ -42,7 +44,12 @@ public class ConnexionController {
         if(pseudoLibre){
             Stage mainScreenStage=(Stage) connectButton.getScene().getWindow();
             String mainScreenTitle="Clavardage Entre Pote";
-            GUIController.openNewWindow(mainScreenStage, "src/main/resources/MainScreen.fxml",mainScreenTitle);
+            GUIController guiController = new GUIController();
+
+            MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
+            System.out.println("on init le handler");
+            ContactEventHandler contactEventHandler= user -> mainScreenController.afficherNouveauUser(user);
+            ListContact.addHandler(contactEventHandler);
         }else{
             alertInvalid(ListContact.selfUser.getPseudo());
         }

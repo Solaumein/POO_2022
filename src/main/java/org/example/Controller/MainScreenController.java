@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.GUI.GUIController;
+import org.example.User.ContactEventHandler;
 import org.example.User.ListContact;
 import org.example.Network.NetworkManagerUDP;
 import org.example.Network.State;
@@ -89,6 +90,7 @@ public class MainScreenController {
 
     @FXML
     public Button sendButton;
+
 
     @FXML
     public HBox contactFrame;

@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import org.example.Controller.MainScreenController;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class GUIController {
+
+    public MainScreenController openAndGetController(Stage currentStage, String title){
+
+        MainScreenController controller;
+        Parent root=null;
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainScreen.fxml"));
+            root = loader.load();
+            controller = loader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        currentStage.setTitle(title);
+        currentStage.setScene(new Scene(root));
+        currentStage.show();
+        return controller;
+    }
     public static Stage openNewWindow(Stage currentStage, String pathToFXML, String title) {
         URL urlofFXML= null;
         try {

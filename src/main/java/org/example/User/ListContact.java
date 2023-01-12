@@ -1,11 +1,13 @@
 package org.example.User;
 
+import org.example.Controller.MainScreenController;
 import org.example.Network.NetworkManagerTCP;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListContact {
     public static UserAddress selfAddr;
@@ -26,10 +28,17 @@ public class ListContact {
 
     public static ArrayList<User> listContact = new ArrayList<>();
 
+    private static List<ContactEventHandler> handlers = new ArrayList<> ();
+    public static void addHandler(ContactEventHandler handler) {
+        handlers.add(handler);
+    }
+
     public static void addContact(User user){
         listContact.add(user);
 
-
+        for (ContactEventHandler handler : handlers) {
+            handler.newContactAdded(user);
+        }
     }
 
     private static int searchByAddress(InetAddress addr){
