@@ -20,8 +20,8 @@ public class ListContact {
         }
     }
 
-    public static String pseudoDur="tengui";
-    public static User selfUser = new User(selfAddr, pseudoDur);
+    public static String selfPseudo="tengui";
+    public static User selfUser = new User(selfAddr, selfPseudo);
 
 
     public static ArrayList<User> listContact = new ArrayList<>();
