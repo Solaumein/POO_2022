@@ -34,7 +34,7 @@ public class NetworkManagerUDP {
             String data = new String(dp.getData(), 0, dp.getLength());
             String[] packetstr = data.split(",");
             packet.pseudo = packetstr[0];
-            packet.addr = InetAddress.getByName(ds.getInetAddress().toString().split("/")[1]) ;// InetAddress.getByName(packetstr[1].split("/")[1]);
+            packet.addr = InetAddress.getByName(dp.getAddress().toString().split("/")[1]) ;// InetAddress.getByName(packetstr[1].split("/")[1]);
             packet.portcomtcp = Integer.parseInt(packetstr[2]);
             packet.state = State.stringToState(packetstr[3]);
             System.out.println(packet);
