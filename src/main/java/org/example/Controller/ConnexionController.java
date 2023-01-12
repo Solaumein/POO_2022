@@ -54,22 +54,25 @@ public class ConnexionController {
             MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
             mainScreenController.myPseudo.setText(ListContact.selfUser.getPseudo());
             System.out.println("on init le handler");
-            ListContact.addContact(new User(null,"test"));
+
+            System.out.println("on init le handler");
             ContactEventHandler contactEventHandler= user -> Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    System.out.println("On entre dans le runLater");
                     mainScreenController.afficherNouveauUser(user);
-                    if(ListContact.listContact!=null){
+                    /*if(ListContact.listContact!=null){
                         for (User user : ListContact.listContact) {
                             //User usersave = user;
                             ListContact.listContact.remove(user);
                             ListContact.listContact.add(user);
-                        }}
+                        }}*/
                     System.out.println("Initiated");
                 }
             });
 
             ListContact.addHandler(contactEventHandler);
+            ListContact.addContact(new User(null,"test"));
 
 
 

@@ -6,6 +6,8 @@ import org.example.User.UserAddress;
 
 import java.util.function.Consumer;
 
+import static java.lang.Thread.sleep;
+
 public class traitementPacket {
     private Packet packet;
 
@@ -13,7 +15,13 @@ public class traitementPacket {
         this.packet = packet;
         switch (packet.state){
             case CONNECTION -> connexion();
-            case VALIDPSEUDO -> validPseudoCallback();
+            case VALIDPSEUDO -> {
+                try {
+                    validPseudoCallback();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             case CHANGEPSEUDO -> changementPseudo();
             case DECONNECTION -> deconnexion();
             case INVALIDPSEUDO -> invalidPseudoCallback.accept("toto");
@@ -21,12 +29,15 @@ public class traitementPacket {
         }
     }
 
-    private void validPseudoCallback() {
+    private void validPseudoCallback() throws InterruptedException {
         if(!ListContact.isAdressInList(packet.addr)){
+            System.out.println("ValidPseudoCallback");
 
             UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
             User user = new User(addr, packet.pseudo);
+            sleep(5000);
             ListContact.addContact(user);
+
             System.out.println("on ajoute le user "+packet.pseudo);
         }
     }
