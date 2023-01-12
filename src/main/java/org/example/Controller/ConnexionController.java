@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -48,7 +49,13 @@ public class ConnexionController {
 
             MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
             System.out.println("on init le handler");
-            ContactEventHandler contactEventHandler= user -> mainScreenController.afficherNouveauUser(user);
+            ContactEventHandler contactEventHandler= user -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    mainScreenController.afficherNouveauUser(user);
+                }
+            });
+
             ListContact.addHandler(contactEventHandler);
         }else{
             alertInvalid(ListContact.selfUser.getPseudo());
