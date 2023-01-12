@@ -20,7 +20,7 @@ public class ThreadComUDP extends Thread {
 
         DatagramSocket ds = null;
         try {
-            ds = new DatagramSocket(1024);
+            ds = new DatagramSocket(NetworkManagerUDP.portUDP);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
