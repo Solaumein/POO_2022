@@ -25,7 +25,7 @@ public class NetworkManagerTCP extends Thread{
         try {
             int portSelf= ListContact.selfAddr.getPort();
             if(portSelf==-1);//todo rajouter cas ou pb
-            serverAccept=new ServerSocket();//listcontact est initialisée avant networkmanagerTCP pour avoir un port libre
+            serverAccept=new ServerSocket(portSelf);//listcontact est initialisée avant networkmanagerTCP pour avoir un port libre
             while(true){
                 Socket s=listening();
                 addSocket(s);

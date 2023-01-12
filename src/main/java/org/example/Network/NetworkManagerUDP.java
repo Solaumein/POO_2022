@@ -22,20 +22,20 @@ public class NetworkManagerUDP {
         return true;
     }
 */
+    static final int portUDP=1111;
     public synchronized Packet listenNotify(DatagramSocket ds) {
         //toDo ignorer le packet s'il vient de moi (car broadcast me l'envoie aussi)
         try {
             Packet packet = new Packet();
-            //DatagramSocket ds = new DatagramSocket(1024);
             byte[] buf = new byte[10240];
-            DatagramPacket dp = new DatagramPacket(buf, 1024);
+            DatagramPacket dp = new DatagramPacket(buf, portUDP);
             ds.receive(dp); //a garder ici
             //ds.close();
             String data = new String(dp.getData(), 0, dp.getLength());
             String[] packetstr = data.split(",");
             packet.pseudo = packetstr[0];
-            packet.addr = InetAddress.getByName(packetstr[1].split("/")[1]);
-            packet.portcomtcp = Integer.valueOf(packetstr[2]);
+            packet.addr = InetAddress.getByName(ds.getInetAddress().toString().split("/")[1]) ;// InetAddress.getByName(packetstr[1].split("/")[1]);
+            packet.portcomtcp = Integer.parseInt(packetstr[2]);
             packet.state = State.stringToState(packetstr[3]);
             System.out.println(packet);
 
@@ -72,7 +72,7 @@ public class NetworkManagerUDP {
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }
-            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, 1024);
+            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, portUDP);
             try {
                 ds.send(dp);
             } catch (IOException e) {
@@ -108,7 +108,7 @@ public class NetworkManagerUDP {
             InetAddress ip = null;
             ip = addr;
 
-            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, 1024);//port par defaut de l'application (car pas de communication avant udp)
+            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), ip, portUDP);//port par defaut de l'application (car pas de communication avant udp)
             try {
                 ds.send(dp);
             } catch (IOException e) {
