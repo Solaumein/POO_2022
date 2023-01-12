@@ -64,6 +64,7 @@ public class ConnexionController {
                             ListContact.listContact.remove(user);
                             ListContact.listContact.add(user);
                         }}
+                    System.out.println("Initiated");
                 }
             });
 
