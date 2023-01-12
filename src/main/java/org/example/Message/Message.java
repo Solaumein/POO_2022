@@ -16,12 +16,13 @@ public class Message {
         this.dateMessage=dateMessage;
         this.otherHost=otherUser;
         this.recu=recu;
+
     }
     public Message(String contenu, boolean recu, InetAddress otherUser){
         this.contenu=contenu;
-        this.dateMessage= new Date(System.currentTimeMillis());
-        this.recu=recu;
+        this.dateMessage=new Date(System.currentTimeMillis());
         this.otherHost=otherUser;
+        this.recu=recu;
     }
 
     public String getDateInString(){
