@@ -124,7 +124,7 @@ public class MainScreenController {
         Node node;
         node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
         Label messageToDisplay = (Label)node.lookup("#messageContent");
-        messageToDisplay.setText("message  #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e #36393e");
+        messageToDisplay.setText("message");
         Label messageTime = (Label)node.lookup("#messageTime");
         messageTime.setText("Reçu à " + "HEURE");
         HBox hbox =(HBox)node.lookup("#messageFrameContainer");
@@ -209,6 +209,12 @@ public class MainScreenController {
                 }
         );
         listWindow.getChildren().add(userNode);
+    }
+
+    public void deconnexionButtonClickAction(){
+        Label label = (Label)listWindow.getChildren().get(1).lookup("#pseudoUser");
+        System.out.println(label.getText());
+        listWindow.getChildren().remove(1);
     }
 
     private void notifyDeconection() {

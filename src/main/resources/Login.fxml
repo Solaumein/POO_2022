@@ -10,7 +10,7 @@
 
 <VBox fx:id="connexionWindow" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="30.0" style="-fx-background-color: #1e2124;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller.ConnexionController">
    <children>
-      <TextField fx:id="textFieldPseudo" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo" style="-fx-background-color: #36393e; -fx-border-radius: 40px; -fx-background-radius: 25px;">
+      <TextField fx:id="textFieldPseudo" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo" style="-fx-background-color: #36393e; -fx-border-radius: 40px; -fx-background-radius: 25px; -fx-text-fill: #c0c0c0;">
          <VBox.margin>
             <Insets />
          </VBox.margin>
