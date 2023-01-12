@@ -3,6 +3,7 @@ package org.example.Network;
 import org.example.Message.LocalDbManager;
 import org.example.Message.Message;
 import org.example.Message.MessageHistory;
+import org.example.Message.SQLiteHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class ThreadCom extends Thread {
             Message message=new Message(messageEnvoyer,false,sockCom.getInetAddress());
             //sauvegarde du message
             this.messageHistory.addMessage(message);
+            SQLiteHelper.getInstance().insert(message);//dans la BDD
             //System.out.println(this + ": on a lancer un message "+s);
             return true;
         } catch (IOException e) {
@@ -55,28 +57,25 @@ public class ThreadCom extends Thread {
 
     }
     private String readMultipleLine(BufferedReader in){
-        StringBuilder everything = new StringBuilder();
+        StringBuilder SB = new StringBuilder();
         String line;
         try {
             while ((line = in.readLine()) != null) {//car 0 pour simuler
-                everything.append(line).append("\n");
+                SB.append(line).append("\n");
             }
         }catch (IOException e){
             e.printStackTrace();
         }
-        return everything.toString();
+        return SB.toString();
     }
     String receive() {
         try {
-            //System.out.println(this + ": on va lancer le read");
-
-            String stringRecu=   in.readLine();
+            String stringRecu=in.readLine();
             //creation du message
             Message message=new Message(stringRecu,true,sockCom.getInetAddress());
             //sauvegarde du message
             this.messageHistory.addMessage(message);
-
-            //System.out.println(sockCom.getInetAddress()+" a envoyer le message suivant :\n"+message.toString());
+            SQLiteHelper.getInstance().insert(message);
             return stringRecu;
         } catch (IOException e) {
             e.printStackTrace();
