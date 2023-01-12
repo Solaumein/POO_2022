@@ -54,6 +54,7 @@ public class ConnexionController {
             MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
             mainScreenController.myPseudo.setText(ListContact.selfUser.getPseudo());
             System.out.println("on init le handler");
+            ListContact.addContact(new User(null,"test"));
             ContactEventHandler contactEventHandler= user -> Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
