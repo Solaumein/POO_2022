@@ -39,6 +39,7 @@ public class traitementPacket {
             ListContact.addContact(user);
 
             System.out.println("on ajoute le user "+packet.pseudo);
+            //ok, merci le sleep
         }
     }
 
