@@ -275,9 +275,11 @@ public class MainScreenController {
         confirmNewpseudo.setVisible(false);
         textFieldNewPseudo.setDisable(true);
         confirmNewpseudo.setDisable(true);
+        myPseudo.setText(textFieldNewPseudo.getText());
         ListContact.selfUser.setPseudo(textFieldNewPseudo.getText());
         NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
+        textFieldNewPseudo.clear();
 
 
 

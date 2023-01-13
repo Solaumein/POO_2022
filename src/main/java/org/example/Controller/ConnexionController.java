@@ -83,7 +83,7 @@ public class ConnexionController {
                 @Override
                 public void run() {
                     System.out.println("On entre dans le runLater");
-                    mainScreenController.updatePseudo("hjv", "gr");
+                    mainScreenController.updatePseudo(oldPseudo, newPseudo);
 
                     System.out.println("Initiated");
                 }
