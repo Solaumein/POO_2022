@@ -29,8 +29,12 @@ public class ListContact {
     public static ArrayList<User> listContact = new ArrayList<>();
 
     private static List<ContactEventHandler> handlers = new ArrayList<> ();
+    private static List<ContactEventHandlerDeco> handlersDeco = new ArrayList<>();
     public static void addHandler(ContactEventHandler handler) {
         handlers.add(handler);
+    }
+    public static void addHandlerDeco(ContactEventHandlerDeco handler) {
+        handlersDeco.add(handler);
     }
 
     public static void addContact(User user){
@@ -77,6 +81,9 @@ public class ListContact {
 
     public static void removeContactByAddr(InetAddress addr){
         int index = searchByAddress(addr);
+        for (ContactEventHandlerDeco handler : handlersDeco) {
+            handler.deleteContact(listContact.get(index));
+        }
         listContact.remove(index);
     }
 

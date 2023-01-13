@@ -4,4 +4,5 @@ public interface ContactEventHandler {
 
     void newContactAdded(User user);
 
+
 }

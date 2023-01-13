@@ -211,12 +211,25 @@ public class MainScreenController {
         listWindow.getChildren().add(userNode);
     }
 
+    public void deleteAffUser(User user){
+        String pseudo = user.getPseudo();
+        for (Node child : listWindow.getChildren()) {
+            Label label = (Label)child.lookup("#pseudoUser");
+            if (label.getText().equals(pseudo)){
+                listWindow.getChildren().remove(child);
+            }
+
+        }
+    }
+
     public void deconnexionButtonClickAction(){
-        Label label = (Label)listWindow.getChildren().get(0).lookup("#pseudoUser");
+        /*Label label = (Label)listWindow.getChildren().get(0).lookup("#pseudoUser");
         System.out.println(label.getText());
         listWindow.getChildren().remove(0);
         Label label2 = (Label)listWindow.getChildren().get(1).lookup("#pseudoUser");
-        label2.setText("ChangedPseudo");
+        label2.setText("ChangedPseudo");*/
+        NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
+        networkManagerUDP.sendNotify(State.state.DECONNECTION);
     }
 
     private void notifyDeconection() {

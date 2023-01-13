@@ -12,6 +12,7 @@ import org.example.GUI.GUIController;
 import org.example.Network.NetworkManagerUDP;
 import org.example.Network.ThreadComUDP;
 import org.example.User.ContactEventHandler;
+import org.example.User.ContactEventHandlerDeco;
 import org.example.User.ListContact;
 import org.example.Network.State;
 import org.example.User.User;
@@ -71,8 +72,19 @@ public class ConnexionController {
                 }
             });
 
+            ContactEventHandlerDeco contactEventHandlerDeco= user -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("On entre dans le runLater");
+                    mainScreenController.deleteAffUser(user);
+
+                    System.out.println("Initiated");
+                }
+            });
+
             ListContact.addHandler(contactEventHandler);
-            ListContact.addContact(new User(null,"test"));
+            ListContact.addHandlerDeco(contactEventHandlerDeco);
+            //ListContact.addContact(new User(null,"test"));
 
 
 
