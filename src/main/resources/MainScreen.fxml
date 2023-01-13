@@ -18,7 +18,7 @@
    <top>
       <HBox prefHeight="70.0" prefWidth="1100.0" style="-fx-background-color: #1e2124;" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="72.0" prefWidth="1099.0" style="-fx-background-color: #1e2124;" HBox.hgrow="ALWAYS">
+            <HBox prefHeight="72.0" prefWidth="1099.0" spacing="10.0" style="-fx-background-color: #1e2124;" HBox.hgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER" prefHeight="70.0" prefWidth="300.0" spacing="15.0">
                      <children>

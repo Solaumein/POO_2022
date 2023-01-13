@@ -264,9 +264,11 @@ public class MainScreenController {
     }
 
     public void confirmNewPseudoEnteredAction(){
+        confirmNewpseudo.setStyle("-fx-background-color: #424549");
 
     }
     public void confirmNewPseudoExitAction(){
+        confirmNewpseudo.setStyle("-fx-background-color: #1e2124");
 
     }
 
