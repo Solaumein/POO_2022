@@ -7,11 +7,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -57,6 +54,7 @@ public class MainScreenController {
 
     @FXML
     public Button confirmNewpseudo;
+
 
 
     public void initialize() {
@@ -157,7 +155,7 @@ public class MainScreenController {
 
 
 
-        ArrayList<String> li = new ArrayList<>();
+       /* ArrayList<String> li = new ArrayList<>();
         li.add("Tanguy");
         li.add("Onnig");
         li.add("Stefou");
@@ -170,7 +168,7 @@ public class MainScreenController {
             User test = new User(addr, pseudo);
             afficherNouveauUser(test);
 
-        }
+        }*/
 
 
     }

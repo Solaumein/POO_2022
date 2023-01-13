@@ -100,7 +100,7 @@
    <center>
       <VBox fx:id="messageVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" style="-fx-background-color: #36393e;" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hvalue="1.0" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" vbarPolicy="NEVER" vvalue="1.0" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="messageScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hvalue="1.0" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" vbarPolicy="NEVER" vvalue="1.0" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="messageZone" maxHeight="1.7976931348623157E308" prefHeight="538.0" prefWidth="187.0" spacing="10.0" style="-fx-background-color: #36393e;">
                      <padding>

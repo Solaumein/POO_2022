@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox id="messageFrameContainer" fx:id="messageFrameContainer" alignment="CENTER_RIGHT" maxHeight="10000.0" maxWidth="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" style="-fx-background-color: #36393e;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<HBox id="messageFrameContainer" fx:id="messageFrameContainer" alignment="CENTER_RIGHT" maxHeight="10000.0" maxWidth="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" style="-fx-background-color: #36393e; -fx-border-color: #36393e;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox id="messageFrame" fx:id="messageFrame" alignment="CENTER_LEFT" maxHeight="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #88888870; -fx-background-radius: 10px;" HBox.hgrow="ALWAYS">
          <children>
