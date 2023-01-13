@@ -211,15 +211,18 @@ public class MainScreenController {
         listWindow.getChildren().add(userNode);
     }
 
-    public void deleteAffUser(User user){
+    public synchronized void deleteAffUser(User user){
+        int index = -1;
         String pseudo = user.getPseudo();
         for (Node child : listWindow.getChildren()) {
             Label label = (Label)child.lookup("#pseudoUser");
             if (label.getText().equals(pseudo)){
-                listWindow.getChildren().remove(child);
+                index = listWindow.getChildren().indexOf(child);
             }
 
         }
+        listWindow.getChildren().remove(index);
+        ListContact.listContact.remove(user);
     }
 
     public void deconnexionButtonClickAction(){
@@ -230,6 +233,10 @@ public class MainScreenController {
         label2.setText("ChangedPseudo");*/
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.DECONNECTION);
+        //NetworkManagerUDP.getInstance().
+        //ToDo Fermer socket + client
+
+
     }
 
     private void notifyDeconection() {
@@ -245,7 +252,7 @@ public class MainScreenController {
         private void notifyChangePseudo() {
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
-        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
-        thread1.start();
+        //ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);//sert a rien car Un seul
+        //thread1.start();
     }
 }

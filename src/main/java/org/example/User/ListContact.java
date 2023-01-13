@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class ListContact {
     public static UserAddress selfAddr;
 
@@ -48,7 +50,7 @@ public class ListContact {
     private static int searchByAddress(InetAddress addr){
         int i=0;
         for (User user : listContact) {
-            if(user.getUserAddress().getAddress()==addr){return i;}
+            if(user.getUserAddress().getAddress().equals(addr)){return i;}
             i++;
         }
         return -1;
@@ -84,7 +86,7 @@ public class ListContact {
         for (ContactEventHandlerDeco handler : handlersDeco) {
             handler.deleteContact(listContact.get(index));
         }
-        listContact.remove(index);
+
     }
 
     public static boolean isContactinLIst(InetAddress addr){
