@@ -20,7 +20,7 @@
          <children>
             <HBox prefHeight="72.0" prefWidth="1099.0" style="-fx-background-color: #1e2124;" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="300.0" spacing="15.0">
+                  <HBox alignment="CENTER" prefHeight="70.0" prefWidth="300.0" spacing="15.0">
                      <children>
                         <GNAvatarView minHeight="60.0" minWidth="60.0" prefHeight="60.0" prefWidth="60.0" stroke="#51ff00" type="CIRCLE">
                            <image>
@@ -37,7 +37,7 @@
                         </Label>
                         <HBox alignment="CENTER" maxWidth="80.0" prefHeight="70.0" prefWidth="94.0">
                            <children>
-                              <Button id="SendButton" fx:id="changePseudoButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#afficherMessageRecu" onMouseEntered="#changePseudoButtonEnteredAction" onMouseExited="#changePseudoButtonExitAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" textFill="#cccccc">
+                              <Button id="SendButton" fx:id="changePseudoButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#changePseudoButtonClick" onMouseEntered="#changePseudoButtonEnteredAction" onMouseExited="#changePseudoButtonExitAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" textFill="#cccccc">
                                  <font>
                                     <Font name="Calibri" size="18.0" />
                                  </font>
@@ -64,7 +64,20 @@
                            </children>
                         </HBox>
                      </children></HBox>
-                  <TextField fx:id="textFieldNewPseudo" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="Pseudo" visible="false" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="335.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="textFieldNewPseudo" disable="true" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="New pseudo Here" style="-fx-text-fill: #c0c0c0; -fx-background-color: #36393e;" visible="false" />
+                        <Button fx:id="confirmNewpseudo" disable="true" mnemonicParsing="false" onMouseClicked="#confirmNewPseudoClickAction" onMouseEntered="#confirmNewPseudoEnteredAction" onMouseExited="#confirmNewPseudoExitAction" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" visible="false">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@check.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </children>

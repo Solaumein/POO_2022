@@ -66,8 +66,8 @@ public class HeaderController {
     private void notifyChangePseudo() {
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
-        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
-        thread1.start();
+        //ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
+        //thread1.start();
     }
 
 }

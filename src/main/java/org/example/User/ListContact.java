@@ -32,12 +32,16 @@ public class ListContact {
 
     private static List<ContactEventHandler> handlers = new ArrayList<> ();
     private static List<ContactEventHandlerDeco> handlersDeco = new ArrayList<>();
+
+    private static List<ContactEventHandlerUpdatePseudo> handlersUpdate = new ArrayList<>();
     public static void addHandler(ContactEventHandler handler) {
         handlers.add(handler);
     }
     public static void addHandlerDeco(ContactEventHandlerDeco handler) {
         handlersDeco.add(handler);
     }
+
+    public static void addHandlerUpdatePseudo(ContactEventHandlerUpdatePseudo handler){handlersUpdate.add(handler);}
 
     public static void addContact(User user){
         listContact.add(user);
@@ -47,7 +51,7 @@ public class ListContact {
         }
     }
 
-    private static int searchByAddress(InetAddress addr){
+    public static int searchByAddress(InetAddress addr){
         int i=0;
         for (User user : listContact) {
             if(user.getUserAddress().getAddress().equals(addr)){return i;}
@@ -56,11 +60,14 @@ public class ListContact {
         return -1;
     }
 
-    public static void updatePseudoByAddr(InetAddress addr, String pseudo){
+    public static void updatePseudoByAddr(InetAddress addr, String pseudo, String oldPseudo){
         int index = searchByAddress(addr);
         User user = listContact.get(index);
         user.setPseudo(pseudo);
         listContact.set(index, user);
+        for (ContactEventHandlerUpdatePseudo handler : handlersUpdate) {
+            handler.updatecontact(oldPseudo,pseudo);
+        }
     }
 
     public static boolean isPseudoInList(String pseudo){

@@ -11,11 +11,8 @@ import javafx.event.ActionEvent;
 import org.example.GUI.GUIController;
 import org.example.Network.NetworkManagerUDP;
 import org.example.Network.ThreadComUDP;
-import org.example.User.ContactEventHandler;
-import org.example.User.ContactEventHandlerDeco;
-import org.example.User.ListContact;
+import org.example.User.*;
 import org.example.Network.State;
-import org.example.User.User;
 
 import java.util.function.Consumer;
 
@@ -82,8 +79,19 @@ public class ConnexionController {
                 }
             });
 
+            ContactEventHandlerUpdatePseudo contactEventHandlerUpdate= (oldPseudo, newPseudo) -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("On entre dans le runLater");
+                    mainScreenController.updatePseudo("hjv", "gr");
+
+                    System.out.println("Initiated");
+                }
+            });
+
             ListContact.addHandler(contactEventHandler);
             ListContact.addHandlerDeco(contactEventHandlerDeco);
+            ListContact.addHandlerUpdatePseudo(contactEventHandlerUpdate);
             //ListContact.addContact(new User(null,"test"));
 
 

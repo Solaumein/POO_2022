@@ -15,10 +15,9 @@ public class ThreadComUDP extends Thread {
     }
 
 
-
+    DatagramSocket ds;
     private void listentIntent(NetworkManagerUDP managerUDP, Consumer<String> invalidPseudoCallback) {
 
-        DatagramSocket ds = null;
         try {
             ds = new DatagramSocket(NetworkManagerUDP.portUDP);
         } catch (SocketException e) {

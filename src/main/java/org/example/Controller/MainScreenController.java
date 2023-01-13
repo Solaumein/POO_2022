@@ -55,6 +55,10 @@ public class MainScreenController {
     @FXML
     public Label myPseudo;
 
+    @FXML
+    public Button confirmNewpseudo;
+
+
     public void initialize() {
 
     }
@@ -117,7 +121,7 @@ public class MainScreenController {
 
     }
 
-    public void afficherMessageRecu() throws IOException {
+    public void changePseudoButtonClick() throws IOException {
         FXMLLoader messageLoader = new FXMLLoader();
         messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
         messageLoader.load();
@@ -133,6 +137,12 @@ public class MainScreenController {
         HBox hbox2 = (HBox)node.lookup("#messageFrame");
         HBox.setMargin(hbox2, new Insets(0,300,0,10));
         messageZone.getChildren().add(node);
+
+
+        textFieldNewPseudo.setVisible(true);
+        confirmNewpseudo.setVisible(true);
+        textFieldNewPseudo.setDisable(false);
+        confirmNewpseudo.setDisable(false);
     }
 
     public void SendButtonAction(ActionEvent event) throws IOException {
@@ -225,6 +235,20 @@ public class MainScreenController {
         ListContact.listContact.remove(user);
     }
 
+    public synchronized void updatePseudo(String oldPseudo, String newPseudo){
+        int index = -1;
+        for (Node child : listWindow.getChildren()) {
+            Label label = (Label)child.lookup("#pseudoUser");
+            if (label.getText().equals(oldPseudo)){
+                index = listWindow.getChildren().indexOf(child);
+            }
+
+        }
+        HBox contactToUpdate = (HBox)listWindow.getChildren().get(index);
+        Label pseudoToUpdate = (Label)contactToUpdate.lookup("#pseudoUser");
+        pseudoToUpdate.setText(newPseudo);
+    }
+
     public void deconnexionButtonClickAction(){
         /*Label label = (Label)listWindow.getChildren().get(0).lookup("#pseudoUser");
         System.out.println(label.getText());
@@ -235,6 +259,26 @@ public class MainScreenController {
         networkManagerUDP.sendNotify(State.state.DECONNECTION);
         //NetworkManagerUDP.getInstance().
         //ToDo Fermer socket + client
+
+
+    }
+
+    public void confirmNewPseudoEnteredAction(){
+
+    }
+    public void confirmNewPseudoExitAction(){
+
+    }
+
+    public void confirmNewPseudoClickAction(){
+        textFieldNewPseudo.setVisible(false);
+        confirmNewpseudo.setVisible(false);
+        textFieldNewPseudo.setDisable(true);
+        confirmNewpseudo.setDisable(true);
+        ListContact.selfUser.setPseudo(textFieldNewPseudo.getText());
+        NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
+        networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
+
 
 
     }

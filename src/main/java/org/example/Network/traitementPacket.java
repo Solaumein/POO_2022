@@ -52,7 +52,9 @@ public class traitementPacket {
         if(ListContact.selfUser.getPseudo().equals(packet.pseudo) || ListContact.isPseudoInList(packet.pseudo)){
             NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.addr);
         }else{
-            ListContact.updatePseudoByAddr(packet.addr, packet.pseudo);
+            int index = ListContact.searchByAddress(packet.addr);
+            String oldPseudo = ListContact.listContact.get(index).getPseudo();
+            ListContact.updatePseudoByAddr(packet.addr, packet.pseudo, oldPseudo);
             NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.addr);
         }
     }
