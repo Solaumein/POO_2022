@@ -35,7 +35,7 @@ public class traitementPacket {
 
             UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
             User user = new User(addr, packet.pseudo);
-            sleep(5000);
+            sleep(1000);
             ListContact.addContact(user);
 
             System.out.println("on ajoute le user "+packet.pseudo);

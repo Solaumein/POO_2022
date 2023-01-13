@@ -50,7 +50,7 @@ public class NetworkManagerUDP {
         }
     }
 
-    public synchronized boolean sendNotify(State.state state){
+    public boolean sendNotify(State.state state){
         System.out.println("sendnotify");
         DatagramSocket ds = null;
         try {
@@ -90,7 +90,7 @@ public class NetworkManagerUDP {
         return true;
     }
 
-    public synchronized boolean sendAnswer(State.state state, InetAddress addr ){
+    public  boolean sendAnswer(State.state state, InetAddress addr ){
         System.out.println("sendanswer");
         DatagramSocket ds = null;
         try {
