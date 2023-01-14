@@ -1,43 +1,49 @@
 package org.example.Network;
 
 import junit.framework.TestCase;
-import org.example.Exception.ThreadComNotFoundException;
+import org.example.Exception.ThreadNotFoundException;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.function.Consumer;
 
 public class ThreadManagerTest extends TestCase {
-    public void testGetThreadFromIP(){
-        ThreadManager threadManager =ThreadManager.getInstance();
-        Socket socket = null;
+    ThreadManager threadManager;
+    Socket socket = null;
+    ThreadCom threadCom;
+    @Override
+    protected void setUp()  {//est executé avant chaque test (evite redondance de code)
+       threadManager= ThreadManager.getInstance();
         try{
             socket =  new Socket(InetAddress.getByName("google.fr"), 80);
             //System.out.println("c bon sock co");
         }catch (IOException e ) {
-            e.printStackTrace();
+           fail();
         }
+        threadCom= threadManager.createThreadCommunication(socket);
 
+    }
+    public void testGetThreadFromIP(){
+
+        assertEquals(threadManager.getListThread().size(),1);
         try {
-            ThreadCom threadCom=new ThreadCom(socket);
-            threadManager.getListThread().add(threadCom);
-            ThreadCom threadCom1=threadManager.getThreadFromIP(socket.getInetAddress());
+            ThreadCom threadCom1=(ThreadCom) threadManager.getThreadFromName(socket.getInetAddress().toString());
             assert(threadCom.equals(threadCom1));
-        } catch (ThreadComNotFoundException e ) {
+        } catch (ThreadNotFoundException e ) {
             fail();
         }
         try {
-            ThreadCom threadCom=new ThreadCom(socket);
-            threadManager.getListThread().add(threadCom);
-            ThreadCom threadCom1=threadManager.getThreadFromIP(InetAddress.getLocalHost());
-            assert false;
-        } catch (ThreadComNotFoundException e ) {
-            assert true;
+            ThreadCom threadCom1=(ThreadCom) threadManager.getThreadFromName(InetAddress.getLocalHost().toString());
+            assert false;//n'est pas censé le trouver
+        } catch (ThreadNotFoundException ignored) {
         } catch (UnknownHostException e) {
             fail();
         }
+    }
+    public void testCreateAndKill(){
+        assertEquals(threadManager.getListThread().size(),1);
+        threadManager.killThread(threadCom);
+        assertEquals(threadManager.getListThread().size(),0);
     }
 }

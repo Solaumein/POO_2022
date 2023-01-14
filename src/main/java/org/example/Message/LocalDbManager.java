@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class LocalDbManager {
     private HashMap<InetAddress, MessageHistory> messageHistoryDB;
     public synchronized MessageHistory getMessageHistory(InetAddress inetAddress){
+        if(messageHistoryDB.get(inetAddress)==null)return new MessageHistory();
         return messageHistoryDB.get(inetAddress);
     }
     public synchronized void updateSavedMessages(){

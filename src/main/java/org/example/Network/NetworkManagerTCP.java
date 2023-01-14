@@ -1,6 +1,7 @@
 package org.example.Network;
 
 import org.example.Exception.SocketComNotFoundException;
+import org.example.Exception.ThreadNotFoundException;
 import org.example.User.ListContact;
 import org.example.User.User;
 
@@ -11,31 +12,39 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class NetworkManagerTCP extends Thread{
-    private ArrayList<Socket> listSocket =new ArrayList<>();;
+    private ArrayList<Socket> listSocket =new ArrayList<>();
     private ServerSocket serverAccept;
-    private ThreadManager threadManager =ThreadManager.getInstance();
+
+    private final ThreadManager threadManager =ThreadManager.getInstance();
     private static final NetworkManagerTCP instance = new NetworkManagerTCP();
+
+    public ThreadManager getThreadManager() {
+        return threadManager;
+    }
 
     public static NetworkManagerTCP getInstance() {
         return instance;
     }
     private NetworkManagerTCP(){}
-
-    public synchronized void run() {
-        try {
-            int portSelf= ListContact.selfAddr.getPort();
-            if(portSelf==-1);//todo rajouter cas ou pb
-            serverAccept=new ServerSocket(portSelf);//listcontact est initialisée avant networkmanagerTCP pour avoir un port libre
-            while(true){
-                Socket s=listening();
-                addSocket(s);
-                threadManager.createThreadCommunication(s);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private ListenConnectTCPThread listenConnectTCPThread;
+    public synchronized void launchListenThread(int port){
+        listenConnectTCPThread=new ListenConnectTCPThread(port);
+        listenConnectTCPThread.start();
+    }
+    public void stopListenThread(){
+        if (listenConnectTCPThread!=null)listenConnectTCPThread.interrupt();
+    }
+    public synchronized int getPortListeningConnection(){
+        return this.listenConnectTCPThread.getServerPort();
+    }
+    public synchronized void stopAllSocket(){
+        System.out.println("on deco de tt le monde");
+        for (int i = 0; i < getListSocket().size(); i++) {
+            deconnect(getListSocket().get(i).getInetAddress());
         }
     }
-    public static synchronized int getPortLibre(){
+
+    public static int getPortLibre(){
         for (int port=1024; port<=65353; port++) {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 return port;//todo peut etre enlever le if
@@ -45,23 +54,8 @@ public class NetworkManagerTCP extends Thread{
     }
 
 
-    private synchronized Socket listening() {
-        try {
-            //System.out.println("on se met en ecoute...");
-            Socket socket =  serverAccept.accept();
-            InetAddress addr= socket.getInetAddress();
-            //System.out.println("on s'est co avec"+addr);
-            return socket;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    //argument sera utile pour rajouter/modifier la liste des contact
-    //boolean sera utile pour montrer si pb de co
-
-
     public synchronized boolean connect(User u){
+        System.out.println("on se co au user "+u);
         InetAddress hostname=u.getUserAddress().getAddress();
         try {
             //System.out.println("on demande a user de pseudo "+u.getPseudo());
@@ -76,12 +70,40 @@ public class NetworkManagerTCP extends Thread{
         }
     }
 
+    public synchronized boolean deconnect(InetAddress address){
+        System.out.println("on se deco de addr "+address);
+        try {
+            ThreadCom threadCom= (ThreadCom) threadManager.getThreadFromName(address.toString());
+            Socket sock=getSocketFromIP(address);
+            threadManager.killThread(threadCom);
+            threadCom.getSockCom().close();
+            listSocket.remove(sock);
+            return true;
+        } catch (ThreadNotFoundException | IOException | SocketComNotFoundException e) {
+            return false;
+        }
+    }
+    public synchronized boolean deconnect(User u){
+        System.out.println("on se deco au user "+u);
+        InetAddress address=u.getUserAddress().getAddress();
+        try {
+            ThreadCom threadCom= (ThreadCom) threadManager.getThreadFromName(address.toString());
+            Socket sock=getSocketFromIP(address);
+            threadManager.killThread(threadCom);
+            threadCom.getSockCom().close();
+            listSocket.remove(sock);
+            return true;
+        } catch (ThreadNotFoundException | IOException | SocketComNotFoundException e) {
+            return false;
+        }
+    }
+
     public synchronized ArrayList<Socket> getListSocket() {
         return listSocket;
     }
 
-    public synchronized Socket getSocketFromIP(InetAddress ip) throws SocketComNotFoundException{
-        for (Socket socket : listSocket) {
+    public Socket getSocketFromIP(InetAddress ip) throws SocketComNotFoundException{//demander au prof si on peut mettre 1 synchro ou 2
+        for (Socket socket : getListSocket()) {
             if (ip.equals(socket.getInetAddress())){
                 return socket;
             }
@@ -115,10 +137,14 @@ public class NetworkManagerTCP extends Thread{
 //        return null;
 //    }
 
-    public synchronized void addSocket(Socket s){this.listSocket.add(s);}
+    public synchronized void addSocket(Socket s){
+        System.out.println("on rajoute le sock "+s);
+        this.listSocket.add(s);
+    }
 
     @Override
     public synchronized String toString() {
         return listSocket.toString();
     }
+
 }

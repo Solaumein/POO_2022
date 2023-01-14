@@ -13,9 +13,9 @@ import java.net.Socket;
 import java.util.Objects;
 
 public class ThreadCom extends Thread {
-    Socket sockCom;
-    MessageHistory messageHistory;
-    BufferedReader in;
+    private Socket sockCom;
+    private MessageHistory messageHistory;
+    private BufferedReader in;
     ThreadCom(Socket s){
         super(s.getInetAddress().toString());
         this.sockCom=s;
@@ -25,6 +25,25 @@ public class ThreadCom extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Socket getSockCom() {
+        return sockCom;
+    }
+
+    public MessageHistory getMessageHistory() {
+        return messageHistory;
+    }
+
+    @Override
+    public void interrupt() {//before being killed it closes its socket
+        try {
+            this.in.close();
+            this.sockCom.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        super.interrupt();
     }
 
     @Override
@@ -38,17 +57,17 @@ public class ThreadCom extends Thread {
 
     boolean send(String messageEnvoyer){
         try {
-            //System.out.println(this + ": on va lancer le write du message "+s);
+            System.out.println( "on lance un message "+messageEnvoyer);
+            String messageSansRetour=messageEnvoyer.replace("\n",""+(char)0);
             PrintWriter out;
             out = new PrintWriter(sockCom.getOutputStream(), true);
             //envoie le message
-            out.println(messageEnvoyer);
+            out.println(messageSansRetour);
             //creation du message
-            Message message=new Message(messageEnvoyer,false,sockCom.getInetAddress());
+            Message message=new Message(messageSansRetour,false,sockCom.getInetAddress());
             //sauvegarde du message
             this.messageHistory.addMessage(message);
             SQLiteHelper.getInstance().insert(message);//dans la BDD
-            //System.out.println(this + ": on a lancer un message "+s);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,27 +75,20 @@ public class ThreadCom extends Thread {
         }
 
     }
-    private String readMultipleLine(BufferedReader in){
-        StringBuilder SB = new StringBuilder();
-        String line;
-        try {
-            while ((line = in.readLine()) != null) {//car 0 pour simuler
-                SB.append(line).append("\n");
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return SB.toString();
-    }
+
     String receive() {
         try {
             String stringRecu=in.readLine();
+            //System.out.println("message avant parse "+stringRecu);
+            String messageWithMultipleLine=stringRecu.replace(""+(char)0,"\n");
+            //System.out.println("message apres parse "+messageWithMultipleLine);
             //creation du message
-            Message message=new Message(stringRecu,true,sockCom.getInetAddress());
+            Message message=new Message(messageWithMultipleLine,true,sockCom.getInetAddress());
             //sauvegarde du message
             this.messageHistory.addMessage(message);
             SQLiteHelper.getInstance().insert(message);
-            return stringRecu;
+            System.out.println("message recu "+message);
+            return messageWithMultipleLine;
         } catch (IOException e) {
             e.printStackTrace();
         }

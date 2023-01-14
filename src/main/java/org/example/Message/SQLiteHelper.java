@@ -82,6 +82,7 @@ public class SQLiteHelper {
             return false;
         }
     }
+
     public synchronized void printAll(){
         String sql="SELECT * FROM "+TABLE_NAME;
         //ArrayList<String> listMSGInSTring=new ArrayList<>();
@@ -119,6 +120,31 @@ public class SQLiteHelper {
             throw new RuntimeException(e);
         }
     }
+
+
+    public synchronized MessageHistory getMessageHistoryFromUser(InetAddress otherUser){
+        String addrOfOtherHost=otherUser.toString().substring(1);
+        System.out.println("on cherche les message du user "+addrOfOtherHost);
+        String sql="SELECT * FROM "+TABLE_NAME+" WHERE "+OTHER_HOST+" = \'"+addrOfOtherHost+"'";
+        MessageHistory savedMessageHistory =new MessageHistory();
+        try {
+            Statement statement= connect().createStatement();
+            ResultSet rs=statement.executeQuery(sql);
+            while (rs.next()){
+                String addrOtherHostSaved= getOtherHostFromRS(rs).toString().substring(1);;
+                if(addrOtherHostSaved.equals(addrOfOtherHost)){
+                    System.out.println("c le bon user "+addrOtherHostSaved);
+                }
+                //String idMSG=rs.getString(ID);
+                Message message=parseMessageFromResultSet(rs);
+                savedMessageHistory.addMessage(message);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return savedMessageHistory;
+    }
+
 
     public synchronized HashMap<InetAddress, MessageHistory> getMessageHistory(){
         String sql="SELECT * FROM "+TABLE_NAME;

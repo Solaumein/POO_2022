@@ -12,12 +12,19 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 public class ListContact {
-    public static UserAddress selfAddr;
+    private static UserAddress selfAddr;
+
+    public static UserAddress getSelfAddr() {
+        return selfAddr;
+    }
 
     static {
         try {
             int port = NetworkManagerTCP.getPortLibre();
-            if(port==-1) ;//throw new PortNotFreeException();todo faire qquchose qd ca marche pas
+            if(port==-1) {
+                System.out.println("pas de port libre pour le moment reesayez plus tard");
+                throw new RuntimeException();
+            }
             selfAddr = new UserAddress(Inet4Address.getLocalHost(),port);
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -26,7 +33,6 @@ public class ListContact {
 
     public static String selfPseudo="tengui";
     public static User selfUser = new User(selfAddr, selfPseudo);
-
 
     public static ArrayList<User> listContact = new ArrayList<>();
 
@@ -40,9 +46,7 @@ public class ListContact {
     public static void addHandlerDeco(ContactEventHandlerDeco handler) {
         handlersDeco.add(handler);
     }
-
     public static void addHandlerUpdatePseudo(ContactEventHandlerUpdatePseudo handler){handlersUpdate.add(handler);}
-
     public static void addContact(User user){
         listContact.add(user);
 
