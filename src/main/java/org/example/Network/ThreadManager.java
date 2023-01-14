@@ -1,36 +1,47 @@
 package org.example.Network;
 
-import org.example.Exception.ThreadComNotFoundException;
+import org.example.Exception.ThreadNotFoundException;
 
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class ThreadManager {
 
-    private ArrayList<ThreadCom> listThreadCom=new ArrayList<>();
+    private ArrayList<Thread> listThread =new ArrayList<>();
     private static final ThreadManager instance = new ThreadManager();
 
     public static ThreadManager getInstance() {
         return instance;
     }
     private ThreadManager() {}
-    ArrayList<ThreadCom> getListThread(){
-        return listThreadCom;
+    public synchronized ArrayList<Thread> getListThread(){
+        return listThread;
     }
 
-    public synchronized void createThreadCommunication(Socket socket){
-       ThreadCom threadCom = new ThreadCom(socket);
-       //threadCom.start();todo a remettre plus tard
-        listThreadCom.add(threadCom);
+    public synchronized void addThread(Thread thread){
+        this.listThread.add(thread);
     }
-
-    public synchronized ThreadCom getThreadFromIP(InetAddress ip) throws ThreadComNotFoundException{
-        for (ThreadCom threadCom : listThreadCom) {
-            System.out.println(threadCom);
-            if(ip.toString().equals(threadCom.getName())) return threadCom;
+    public synchronized void killThread(Thread thread){
+        try {
+            Thread threadSaved= this.getThreadFromName(thread.getName());
+            threadSaved.interrupt();
+            this.listThread.remove(threadSaved);
+        } catch (ThreadNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        throw new ThreadComNotFoundException();
     }
 
+    public synchronized Thread getThreadFromName(String name) throws ThreadNotFoundException {
+        for (Thread thread : listThread) {
+            if(name.equals(thread.getName())) return thread;
+        }
+        throw new ThreadNotFoundException();
+    }
+
+    public synchronized ThreadCom createThreadCommunication(Socket socket) {//todo demander au prof si c bon
+        ThreadCom threadCom= new ThreadCom(socket);
+        this.listThread.add(threadCom);
+        threadCom.start();
+        return threadCom;
+    }
 }

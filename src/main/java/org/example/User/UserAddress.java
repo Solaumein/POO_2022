@@ -15,4 +15,12 @@ public class UserAddress {
     public int getPort() {
         return port;
     }
+
+    @Override
+    public String toString() {
+        return "UserAddress{" +
+                "address=" + address +
+                ", port=" + port +
+                '}';
+    }
 }

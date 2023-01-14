@@ -32,7 +32,7 @@ public class NetworkManagerUDP {
             ds.receive(dp); //a garder ici
             //ds.close();
             String data = new String(dp.getData(), 0, dp.getLength());
-            String[] packetstr = data.split(",");
+            String[] packetstr = data.split(",");//todo check if virgule dans pseudo
             packet.pseudo = packetstr[0];
             String parsedAddr=dp.getAddress().toString().split("/")[1];
             System.out.println();

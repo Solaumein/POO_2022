@@ -50,7 +50,8 @@ public class Message {
 
     @Override
     public String toString() {
-        return "msg sent by "+getOtherHost()+" at "+ getDateInString()+" : "+getContenu();
+        String stateOfMsg=((recu) ? "Recu" : "envoyé");;
+        return "msg "+stateOfMsg+ " par toi et l'addresse "+getOtherHost()+" at "+ getDateInString()+" : "+getContenu();
     }
 
     @Override
