@@ -55,10 +55,11 @@ public class MainScreenController {
     @FXML
     public Button confirmNewpseudo;
 
+    @FXML
+    public ScrollPane messageScrollPane;
 
 
     public void initialize() {
-
     }
 
     public void deconnectButtonAction(ActionEvent event) {
@@ -135,12 +136,16 @@ public class MainScreenController {
         HBox hbox2 = (HBox)node.lookup("#messageFrame");
         HBox.setMargin(hbox2, new Insets(0,300,0,10));
         messageZone.getChildren().add(node);
-
+        messageScrollPane.applyCss();
+        messageScrollPane.layout();
+        messageScrollPane.setVvalue(1.0d);
+        
 
         textFieldNewPseudo.setVisible(true);
         confirmNewpseudo.setVisible(true);
         textFieldNewPseudo.setDisable(false);
         confirmNewpseudo.setDisable(false);
+
     }
 
     public void SendButtonAction(ActionEvent event) throws IOException {
@@ -155,7 +160,7 @@ public class MainScreenController {
 
 
 
-       /* ArrayList<String> li = new ArrayList<>();
+        ArrayList<String> li = new ArrayList<>();
         li.add("Tanguy");
         li.add("Onnig");
         li.add("Stefou");
@@ -168,7 +173,7 @@ public class MainScreenController {
             User test = new User(addr, pseudo);
             afficherNouveauUser(test);
 
-        }*/
+        }
 
 
     }

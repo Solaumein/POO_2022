@@ -1,0 +1,11 @@
+.scroll-bar:vertical {-fx-background-color: #282b30;
+-fx-border-color:  #282b30;}
+.scroll-bar:vertical .thumb{-fx-background-color: #1e2124;
+-fx-background-radius: 5px;}
+.scroll-bar:vertical .increment-arrow, .scroll-bar:horizontal .increment-arrow {
+    -fx-background-color: #282b30;
+    -fx-border-color: #282b30;
+    -fx-fill:#282b30;
+}
+
+

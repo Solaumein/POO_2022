@@ -66,7 +66,7 @@
                      </children></HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="335.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="textFieldNewPseudo" disable="true" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="New pseudo Here" style="-fx-text-fill: #c0c0c0; -fx-background-color: #36393e;" visible="false" />
+                        <TextField fx:id="textFieldNewPseudo" disable="true" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="New pseudo Here" style="-fx-text-fill: #c0c0c0; -fx-background-color: #36393e; -fx-background-radius: 25px;" visible="false" />
                         <Button fx:id="confirmNewpseudo" disable="true" mnemonicParsing="false" onMouseClicked="#confirmNewPseudoClickAction" onMouseEntered="#confirmNewPseudoEnteredAction" onMouseExited="#confirmNewPseudoExitAction" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" visible="false">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -86,7 +86,7 @@
    <left>
       <VBox prefHeight="510.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="744.0" prefWidth="300.0" style="-fx-background-color: #282b30;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="744.0" prefWidth="300.0" style="-fx-background-color: #282b30;" stylesheets="@ContactScrollBar.css" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="listWindow" alignment="TOP_CENTER" fillWidth="false" prefHeight="700.0" prefWidth="300.0" spacing="7.0" style="-fx-background-color: #282b30;">
                      <padding>
@@ -100,13 +100,16 @@
    <center>
       <VBox fx:id="messageVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1159.0" style="-fx-background-color: #36393e;" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane fx:id="messageScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hvalue="1.0" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" vbarPolicy="NEVER" vvalue="1.0" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="messageScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hvalue="1.0" prefHeight="538.0" prefWidth="800.0" style="-fx-background-color: #36393e;" stylesheets="@messageScrollBarCSS.css" vbarPolicy="ALWAYS" vvalue="1.0" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="messageZone" maxHeight="1.7976931348623157E308" prefHeight="538.0" prefWidth="187.0" spacing="10.0" style="-fx-background-color: #36393e;">
                      <padding>
                         <Insets top="10.0" />
                      </padding></VBox>
                </content>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </ScrollPane>
             <HBox alignment="CENTER_LEFT" maxHeight="110.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #36393e;" VBox.vgrow="ALWAYS">
                <children>
