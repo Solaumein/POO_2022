@@ -158,7 +158,7 @@ public class MainScreenController {
         afficherMessageEnvoye(message);
         textToSend.clear();
         System.out.println(ListContact.listContact);
-        InetAddress inetAddress= ListContact.listContact.get(0).getUserAddress().getAddress();
+        InetAddress inetAddress= selectedUser.getUserAddress().getAddress();
         try {
 
             SendMessageTCPThread threadCom= (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(inetAddress.toString());
