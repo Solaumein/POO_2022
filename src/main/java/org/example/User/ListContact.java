@@ -109,6 +109,15 @@ public class ListContact {
         return false;
     }
 
+    public static int getUserByName(String pseudo){
+        int i=0;
+        for (User user : listContact) {
+            if(user.getPseudo().equals(pseudo)){return i;}
+            i++;
+        }
+        return -1;
+    }
+
 //    public User getSelfUser() {
 //        return selfUser;
 //    }
