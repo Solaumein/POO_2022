@@ -8,8 +8,11 @@ import java.net.Socket;
 public class ListenConnectTCPThread extends Thread{
     private ServerSocket serverAccept;
     private int serverPort;
-    public ListenConnectTCPThread(int serverPort){
+
+    private MessageReceivedHandler messageReceivedHandler;
+    public ListenConnectTCPThread(int serverPort,MessageReceivedHandler messageReceivedHandler){
         this.serverPort=serverPort;
+
     }
     @Override
     public void run() {
@@ -27,7 +30,7 @@ public class ListenConnectTCPThread extends Thread{
             try {
                 //Thread.sleep(100);
                 socket = listening();
-                NetworkManagerTCP.getInstance().getThreadManager().createThreadCommunication(socket);
+                NetworkManagerTCP.getInstance().getThreadManager().createThreadCommunication(socket,messageReceivedHandler);
                 NetworkManagerTCP.getInstance().addSocket(socket);
             } catch (IOException e) {
                 //e.printStackTrace();

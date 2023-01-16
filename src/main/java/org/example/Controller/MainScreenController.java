@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -14,22 +13,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import org.example.Exception.SocketComNotFoundException;
 import org.example.Exception.ThreadNotFoundException;
 import org.example.GUI.GUIController;
 import org.example.Network.*;
-import org.example.User.ContactEventHandler;
 import org.example.User.ListContact;
 
 import javafx.scene.text.Text;
 import org.example.User.User;
-import org.example.User.UserAddress;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.function.Consumer;
-
-import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
@@ -61,8 +55,10 @@ public class MainScreenController {
 
 
     public void initialize() {
+        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandler);
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
     }
+    MessageReceivedHandler messageReceivedHandler= message -> System.out.println("message recu "+message);
 
     public void deconnectButtonAction(ActionEvent event) {
         notifyDeconection();//send a notify of deconnection
@@ -163,7 +159,7 @@ public class MainScreenController {
         InetAddress inetAddress= ListContact.listContact.get(0).getUserAddress().getAddress();
         try {
 
-            ThreadCom threadCom= (ThreadCom) NetworkManagerTCP.getInstance().getThreadManager().getThreadFromName(inetAddress.toString());
+            SendMessageTCPThread threadCom= (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(inetAddress.toString());
             System.out.println("on envoie "+message);
             threadCom.send(message);
         } catch (ThreadNotFoundException e) {
