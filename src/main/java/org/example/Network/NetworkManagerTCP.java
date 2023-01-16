@@ -2,7 +2,6 @@ package org.example.Network;
 
 import org.example.Exception.SocketComNotFoundException;
 import org.example.Exception.ThreadNotFoundException;
-import org.example.User.ListContact;
 import org.example.User.User;
 import org.example.User.UserAddress;
 
@@ -19,20 +18,34 @@ public class NetworkManagerTCP extends Thread{
     private final ThreadManager threadManager =ThreadManager.getInstance();
     private static final NetworkManagerTCP instance = new NetworkManagerTCP();
 
-    public ThreadManager getThreadManager() {
+    public synchronized static MessageReceivedHandler getMessageReceivedHandler() {
+        return messageReceivedHandler;
+    }
+
+    public synchronized ThreadManager getThreadManager() {
         return threadManager;
+    }
+    private static MessageReceivedHandler messageReceivedHandler=null;
+
+    public static synchronized void setMessageReceivedHandler(MessageReceivedHandler messageReceivedHandler){
+        NetworkManagerTCP.messageReceivedHandler=messageReceivedHandler;
     }
 
     public static NetworkManagerTCP getInstance() {
+        if(NetworkManagerTCP.messageReceivedHandler==null){
+            throw new RuntimeException("pas de messageHandlerInitialiser");
+
+        }
         return instance;
     }
     private NetworkManagerTCP(){}
     private ListenConnectTCPThread listenConnectTCPThread;
     public synchronized void launchListenThread(int port){
-        listenConnectTCPThread=new ListenConnectTCPThread(port);
+        listenConnectTCPThread=new ListenConnectTCPThread(port,NetworkManagerTCP.messageReceivedHandler);
         listenConnectTCPThread.start();
     }
-    public void stopListenThread(){
+
+    public synchronized void stopListenThread(){
         if (listenConnectTCPThread!=null)listenConnectTCPThread.interrupt();
     }
     public synchronized int getPortListeningConnection(){
@@ -40,9 +53,11 @@ public class NetworkManagerTCP extends Thread{
     }
     public synchronized void stopAllSocket(){
         System.out.println("on deco de tt le monde");
-        for (int i = 0; i < getListSocket().size(); i++) {
-            deconnect(getListSocket().get(i).getInetAddress());
+        ArrayList<Socket> listSock= (ArrayList<Socket>) getListSocket().clone();
+        for (Socket socket : listSock) {
+            deconnect(socket.getInetAddress());
         }
+        ThreadManager.getInstance().killAllThread();
     }
 
     public static int getPortLibre(){
@@ -56,26 +71,31 @@ public class NetworkManagerTCP extends Thread{
 
 
     public synchronized boolean connect(UserAddress userAddress){
-        System.out.println("on se co au user "+userAddress);
+        System.out.println("on veut se co au user "+userAddress);
         try {
             //System.out.println("on demande a user de pseudo "+u.getPseudo());
             Socket socket =  new Socket(userAddress.getAddress(), userAddress.getPort());
-            //System.out.println("il a accept on ecoute sur le port "+socket.getPort());
+            System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
-            threadManager.createThreadCommunication(socket);
+            threadManager.createThreadCommunication(socket,NetworkManagerTCP.messageReceivedHandler);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("co pas marche");
             return false;
         }
+    }
+    public void killCommunication(Communication communication) throws ThreadNotFoundException {
+
+        threadManager.killThread(communication.getListenMessageTCPThread());
+        threadManager.killThread(communication.getSendMessageTCPThread());
     }
 
     public synchronized boolean deconnect(InetAddress address){
         System.out.println("on se deco de addr "+address);
-        try {
-            ThreadCom threadCom= (ThreadCom) threadManager.getThreadFromName(address.toString());
+        try{
+            SendMessageTCPThread threadCom= (SendMessageTCPThread) threadManager.getThreadSendFromName(address.toString());
             Socket sock=getSocketFromIP(address);
-            threadManager.killThread(threadCom);
             threadCom.getSockCom().close();
             listSocket.remove(sock);
             return true;
@@ -87,7 +107,7 @@ public class NetworkManagerTCP extends Thread{
         System.out.println("on se deco au user "+u);
         InetAddress address=u.getUserAddress().getAddress();
         try {
-            ThreadCom threadCom= (ThreadCom) threadManager.getThreadFromName(address.toString());
+            SendMessageTCPThread threadCom= (SendMessageTCPThread) threadManager.getThreadSendFromName(address.toString());
             Socket sock=getSocketFromIP(address);
             threadManager.killThread(threadCom);
             threadCom.getSockCom().close();

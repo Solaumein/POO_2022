@@ -3,9 +3,6 @@ package org.example.Network;
 import junit.framework.TestCase;
 import org.example.Exception.SocketComNotFoundException;
 import org.example.Exception.ThreadNotFoundException;
-import org.example.Message.Message;
-import org.example.Message.SQLiteHelper;
-import org.example.User.User;
 import org.example.User.UserAddress;
 
 import java.io.BufferedReader;
@@ -24,12 +21,13 @@ public class NetworkManagerTCPTest
     extends TestCase
 {
 
-    NetworkManagerTCP networkManagerTCP;
 
     @Override
-    protected void setUp() throws Exception {
-        networkManagerTCP= NetworkManagerTCP.getInstance();
-
+    protected void setUp() throws InterruptedException {
+        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandler2);
+        while(NetworkManagerTCP.getMessageReceivedHandler()==null){
+            Thread.sleep(100);
+        }
     }
 
 
@@ -66,64 +64,83 @@ public class NetworkManagerTCPTest
         listMessageAtest.add("");//message vide a tester
         listMessageAtest.add("é#яйца");//ascii compliqué
     }
+    ArrayList<String> messageRecu=new ArrayList<>();
+    MessageReceivedHandler messageReceivedHandler2= new MessageReceivedHandler() {
+        @Override
+        public void newMessageArrived(String message) {
+            System.out.println("MESSSSSSSSSSSSSSSSSSSSsage " + message);
+            messageRecu.add(message);
+        }
+    };
 
     public void testEchangeTCP(){
         //connection et deconnection
-        networkManagerTCP.launchListenThread(NetworkManagerTCP.getPortLibre());//on lance l'ecoute
+
+        NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());//on lance l'ecoute
         try {
-            int portServTCP=networkManagerTCP.getPortListeningConnection();
+            int portServTCP=NetworkManagerTCP.getInstance().getPortListeningConnection();
             System.out.println("on va se co sur le port "+portServTCP);
-            Socket socket=new Socket(InetAddress.getLoopbackAddress(), portServTCP);
-            Thread.sleep(1000);//le temps que s'ajoute dans la liste le socket
-            System.out.println(networkManagerTCP.getListSocket());
-            assertEquals(1,networkManagerTCP.getListSocket().size());
-            Socket remoteSocketSaved=networkManagerTCP.getSocketFromIP(InetAddress.getLoopbackAddress());
-            assertEquals(socket.getPort(),remoteSocketSaved.getLocalPort());
-            assertEquals(socket.getLocalPort(),remoteSocketSaved.getPort());
-        } catch (SocketComNotFoundException | IOException | InterruptedException e) {
+            NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getLoopbackAddress(), portServTCP));//Socket socket=new Socket(InetAddress.getLoopbackAddress(), portServTCP);
+            System.out.println("on s'est co "+NetworkManagerTCP.getInstance().getListSocket());
+            Socket socket=NetworkManagerTCP.getInstance().getSocketFromIP(InetAddress.getLoopbackAddress());
+            Thread.sleep(100);//le temps que s'ajoute dans la liste le socket
+            System.out.println(NetworkManagerTCP.getInstance().getListSocket());
+            assertEquals(2,NetworkManagerTCP.getInstance().getListSocket().size());
+            Socket remoteSocketSaved=NetworkManagerTCP.getInstance().getSocketFromIP(InetAddress.getLoopbackAddress());
+            assertEquals(socket.getPort(),remoteSocketSaved.getPort());
+            assertEquals(socket.getLocalPort(),remoteSocketSaved.getLocalPort());
+        } catch (SocketComNotFoundException  | InterruptedException e) {
             e.printStackTrace();
             fail();
         }
-        networkManagerTCP.stopListenThread();
-        try {
-            Socket socket=new Socket(InetAddress.getLoopbackAddress(), networkManagerTCP.getPortListeningConnection());
+        NetworkManagerTCP.getInstance().stopListenThread();
+        boolean co= NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getLoopbackAddress(), NetworkManagerTCP.getInstance().getPortListeningConnection()));
+        //System.out.println("cooooo "+co);
+        if( co){
             fail();
-        } catch (IOException e) {
+        }else{
             assert true;
-        }
-        networkManagerTCP.stopAllSocket();
-        assertEquals(0,networkManagerTCP.getListSocket().size());
+            }
 
-        //System.out.println("list sock "+networkManagerTCP.getListSocket());
+        NetworkManagerTCP.getInstance().stopAllSocket();
+        assertEquals(0,NetworkManagerTCP.getInstance().getListSocket().size());
+
+        System.out.println("list sock "+NetworkManagerTCP.getInstance().getListSocket());
         //emission et reception message
         initListMSG();
+        messageRecu.clear();
         System.out.println("on a init les MSG");
-        networkManagerTCP.launchListenThread(NetworkManagerTCP.getPortLibre());
+        NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
         System.out.println("on a lancé l'écoute");
         try {
             Thread.sleep(100);//le temps que l'écoute se lance
             //System.out.println("list sock "+networkManagerTCP.getListSocket());
-            assertEquals(0,networkManagerTCP.getListSocket().size());
-            networkManagerTCP.connect(new UserAddress(InetAddress.getByName("127.0.0.1"),networkManagerTCP.getPortListeningConnection()));
+            assertEquals(0,NetworkManagerTCP.getInstance().getListSocket().size());
+            NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getByName("127.0.0.1"),NetworkManagerTCP.getInstance().getPortListeningConnection()));
             Thread.sleep(100);//le temps que s'ajoute dans la liste le socket
             //System.out.println("list sock "+networkManagerTCP.getListSocket());
-            assertEquals(2,networkManagerTCP.getListSocket().size());
+            assertEquals(2,NetworkManagerTCP.getInstance().getListSocket().size());
 
-            System.out.println("la list "+networkManagerTCP.getThreadManager().getListThread());
-            ThreadCom threadPuit= (ThreadCom) networkManagerTCP.getThreadManager().getListThread().get(0);
-            ThreadCom threadSource= (ThreadCom) networkManagerTCP.getThreadManager().getListThread().get(1);
-            System.out.println("le thread Com "+threadPuit.getMessageHistory());
+            System.out.println("la list thread "+NetworkManagerTCP.getInstance().getThreadManager().getListThread());
+            System.out.println("la list sock "+NetworkManagerTCP.getInstance().getListSocket());
+
+            //ListenMessageTCPThread threadPuit= (ListenMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadListenFromName(InetAddress.getLoopbackAddress().toString());
+            SendMessageTCPThread threadSource= (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(InetAddress.getByName("127.0.0.1").toString());
             for (String s1 : listMessageAtest) {
                threadSource.send(s1);
-               String recu= threadPuit.receive();
-               assertEquals(s1,recu);
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ThreadNotFoundException e) {
             e.printStackTrace();
             fail();
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals(listMessageAtest,messageRecu);
     }
     /*
     public void testReception() {
@@ -182,13 +199,7 @@ public class NetworkManagerTCPTest
 
 */
 
-    private void testMessageRecu(ThreadCom tc, String expectedString,InetAddress inetExpected) {
-        String msgRecu =tc.receive();
-        //Message message=new Message(msgRecu);
-        System.out.println("on a recu "+msgRecu);
-        assertEquals(expectedString, msgRecu);
-        assertEquals(tc.getSockCom().getInetAddress(),inetExpected);
-    }
+
 
     private void launchSend() {//simule la co et l'envoie en TCP d'un autre utilisateur
         try {
