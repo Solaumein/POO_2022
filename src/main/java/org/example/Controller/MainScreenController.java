@@ -61,6 +61,7 @@ public class MainScreenController {
 
 
     public void initialize() {
+        NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
     }
 
     public void deconnectButtonAction(ActionEvent event) {
