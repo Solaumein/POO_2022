@@ -219,9 +219,6 @@ public class MainScreenController {
 
     public void contactFrameClickAction(){
         messageZone.getChildren().clear();
-        Label label = (Label)contactFrame.lookup("#pseudoUser");
-        int indexselectedUser = ListContact.getUserByName(label.getText());
-        selectedUser = ListContact.listContact.get(indexselectedUser);
         System.out.println(selectedUser);
     }
 
@@ -231,6 +228,7 @@ public class MainScreenController {
         userNode.setOnMouseClicked(
                 event -> {
                     contactFrameClickAction();
+                    selectedUser = user;
                 }
         );
         listWindow.getChildren().add(userNode);
