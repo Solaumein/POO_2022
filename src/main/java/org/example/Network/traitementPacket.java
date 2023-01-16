@@ -37,7 +37,8 @@ public class traitementPacket {
             User user = new User(addr, packet.pseudo);
             sleep(1000);
             ListContact.addContact(user);
-
+            UserAddress userAddress=new UserAddress(packet.addr,packet.portcomtcp);
+            NetworkManagerTCP.getInstance().connect(userAddress);
             System.out.println("on ajoute le user "+packet.pseudo);
             //ok, merci le sleep
         }

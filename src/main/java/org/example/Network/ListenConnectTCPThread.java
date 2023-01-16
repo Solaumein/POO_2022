@@ -20,7 +20,9 @@ public class ListenConnectTCPThread extends Thread{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        int i=0;
         while (true){
+            i++;
             Socket socket= null;
             try {
                 //Thread.sleep(100);
@@ -28,8 +30,10 @@ public class ListenConnectTCPThread extends Thread{
                 NetworkManagerTCP.getInstance().getThreadManager().createThreadCommunication(socket);
                 NetworkManagerTCP.getInstance().addSocket(socket);
             } catch (IOException e) {
+                //e.printStackTrace();
                 //throw new RuntimeException(e);//sera throw au moment de interrupt
            }
+            //System.out.println("i="+i);
         }
     }
 
@@ -48,10 +52,11 @@ public class ListenConnectTCPThread extends Thread{
     }
 
     private synchronized Socket listening() throws IOException {
-            //System.out.println("on se met en ecoute...");//todo demander au prof pk ca print a l'infini
-            Socket socket =  serverAccept.accept();
-            InetAddress addr= socket.getInetAddress();
-            System.out.println("on s'est co avec"+addr);
-            return socket;
+        //System.out.println("on se met en ecoute...");//todo demander au prof pk ca print a l'infini
+
+        Socket socket =  serverAccept.accept();
+        InetAddress addr= socket.getInetAddress();
+        System.out.println("on s'est co avec"+addr);
+        return socket;
     }
 }
