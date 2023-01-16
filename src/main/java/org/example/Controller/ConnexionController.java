@@ -28,8 +28,11 @@ public class ConnexionController {
     @FXML
     public Text textInvalidMsg;
 
+    private boolean threaddemare=false;
+
 
     public void connectButtonAction(ActionEvent event) throws InterruptedException {
+        pseudoLibre=true;
         String pseudo=textFieldPseudo.getText();
         System.out.println("on lance un notify de notre pseudo : "+pseudo);
         ListContact.selfUser.setPseudo(pseudo);
@@ -115,10 +118,14 @@ public class ConnexionController {
     boolean pseudoLibre=true;
     Consumer<String> invalidPseudoCallback= s -> pseudoLibre=false;
     private void notifyConnectionUsers() {
+        System.out.print("threaddemarre : "+ this.threaddemare + "   gjoifghgesfrihoier");
+        if(!this.threaddemare){
+            ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
+            thread1.start();
+            this.threaddemare=true;
+        }
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.CONNECTION);
-        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
-        thread1.start();
     }
 
 
