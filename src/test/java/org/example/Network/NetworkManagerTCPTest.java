@@ -61,7 +61,7 @@ public class NetworkManagerTCPTest
     static ArrayList<String> listMessageAtest=new ArrayList<>();;
     private void initListMSG(){
         listMessageAtest.add("bonjour");//message normale
-        listMessageAtest.add("aie aie aie\n plusieurs ligne");//todo a tester quand on delimittera a la main les message avecv de cara de valeur ascii 0
+        listMessageAtest.add("aie aie aie\n plusieurs ligne");
         listMessageAtest.add("\n");
         listMessageAtest.add("");//message vide a tester
         listMessageAtest.add("é#яйца");//ascii compliqué
@@ -104,7 +104,7 @@ public class NetworkManagerTCPTest
             Thread.sleep(100);//le temps que l'écoute se lance
             //System.out.println("list sock "+networkManagerTCP.getListSocket());
             assertEquals(0,networkManagerTCP.getListSocket().size());
-            networkManagerTCP.connect(new User(new UserAddress(InetAddress.getByName("127.0.0.1"),networkManagerTCP.getPortListeningConnection()),"google"));
+            networkManagerTCP.connect(new UserAddress(InetAddress.getByName("127.0.0.1"),networkManagerTCP.getPortListeningConnection()));
             Thread.sleep(100);//le temps que s'ajoute dans la liste le socket
             //System.out.println("list sock "+networkManagerTCP.getListSocket());
             assertEquals(2,networkManagerTCP.getListSocket().size());
@@ -115,7 +115,6 @@ public class NetworkManagerTCPTest
             System.out.println("le thread Com "+threadPuit.getMessageHistory());
             for (String s1 : listMessageAtest) {
                threadSource.send(s1);
-               Thread.sleep(100);
                String recu= threadPuit.receive();
                assertEquals(s1,recu);
             }

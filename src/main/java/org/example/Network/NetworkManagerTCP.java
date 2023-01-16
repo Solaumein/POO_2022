@@ -4,6 +4,7 @@ import org.example.Exception.SocketComNotFoundException;
 import org.example.Exception.ThreadNotFoundException;
 import org.example.User.ListContact;
 import org.example.User.User;
+import org.example.User.UserAddress;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -54,12 +55,11 @@ public class NetworkManagerTCP extends Thread{
     }
 
 
-    public synchronized boolean connect(User u){
-        System.out.println("on se co au user "+u);
-        InetAddress hostname=u.getUserAddress().getAddress();
+    public synchronized boolean connect(UserAddress userAddress){
+        System.out.println("on se co au user "+userAddress);
         try {
             //System.out.println("on demande a user de pseudo "+u.getPseudo());
-            Socket socket =  new Socket(hostname, u.getUserAddress().getPort());
+            Socket socket =  new Socket(userAddress.getAddress(), userAddress.getPort());
             //System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
             threadManager.createThreadCommunication(socket);
