@@ -26,14 +26,14 @@ public class User implements Serializable{
         this.connected = false;
         //try {
             this.loader = new FXMLLoader();
-            //this.loader.setLocation(getClass().getResource("/ContactFrame.fxml"));
+            this.loader.setLocation(getClass().getResource("/ContactFrame.fxml"));
             //this.loader = new FXMLLoader((new File("src/main/java/org/example/GUI/ContactFrame.fxml").toURI().toURL()));
 //        } catch (MalformedURLException e) {
 //            System.out.print("erreur load fxml file");
 //            throw new RuntimeException(e);
 //        }
         System.out.println((String) this.loader.getRoot());
-        /*try {
+        try {
             this.loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -41,7 +41,7 @@ public class User implements Serializable{
         this.node = (Node)this.loader.getNamespace().get("contactFrame");
         Label label = (Label)this.node.lookup("#pseudoUser");
         label.setText(this.pseudo);
-*/
+
 
     }
 

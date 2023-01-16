@@ -1,5 +1,11 @@
 .scroll-bar:vertical {-fx-background-color: #36393e;
--fx-border-color:  #36393e;}
+-fx-border-color:  #36393e;
+    }
 .scroll-bar:vertical .thumb{-fx-background-color: #1e2124;
 -fx-background-radius: 5px;}
 .scroll-bar:vertical .increment-button{}
+
+.scroll-pane .increment-button {-fx-fill: #36393e;-fx-padding: 0;
+    -fx-background-inset: 0;
+
+}
