@@ -55,7 +55,7 @@ public class ThreadCom extends Thread {
 
     }
 
-    boolean send(String messageEnvoyer){
+    public boolean send(String messageEnvoyer){
         try {
             System.out.println( "on lance un message "+messageEnvoyer);
             String messageSansRetour=messageEnvoyer.replace("\n",""+(char)0);
@@ -76,7 +76,7 @@ public class ThreadCom extends Thread {
 
     }
 
-    String receive() {
+    public String receive() {
         try {
             String stringRecu=in.readLine();
             //System.out.println("message avant parse "+stringRecu);

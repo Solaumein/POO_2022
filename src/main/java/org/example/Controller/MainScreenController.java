@@ -162,7 +162,10 @@ public class MainScreenController {
         System.out.println(ListContact.listContact);
         InetAddress inetAddress= ListContact.listContact.get(0).getUserAddress().getAddress();
         try {
-            NetworkManagerTCP.getInstance().getThreadManager().getThreadFromName(inetAddress.toString());
+
+            ThreadCom threadCom= (ThreadCom) NetworkManagerTCP.getInstance().getThreadManager().getThreadFromName(inetAddress.toString());
+            System.out.println("on envoie "+message);
+            threadCom.send(message);
         } catch (ThreadNotFoundException e) {
             throw new RuntimeException(e);
         }
