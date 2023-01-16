@@ -64,8 +64,13 @@
                            </children>
                         </HBox>
                      </children></HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="335.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="478.0" spacing="10.0">
                      <children>
+                        <Label fx:id="pseudoSelectedContact" maxWidth="-Infinity" minWidth="0.0" prefHeight="30.0" prefWidth="800.0" text="No contact selected, please choose one" textFill="WHITE" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
                         <TextField fx:id="textFieldNewPseudo" disable="true" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="New pseudo Here" style="-fx-text-fill: #c0c0c0; -fx-background-color: #36393e; -fx-background-radius: 25px;" visible="false" />
                         <Button fx:id="confirmNewpseudo" disable="true" mnemonicParsing="false" onMouseClicked="#confirmNewPseudoClickAction" onMouseEntered="#confirmNewPseudoEnteredAction" onMouseExited="#confirmNewPseudoExitAction" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" visible="false">
                            <graphic>

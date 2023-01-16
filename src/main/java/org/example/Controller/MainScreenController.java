@@ -20,9 +20,11 @@ import org.example.User.ListContact;
 
 import javafx.scene.text.Text;
 import org.example.User.User;
+import org.example.User.UserAddress;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
@@ -52,6 +54,9 @@ public class MainScreenController {
 
     @FXML
     public ScrollPane messageScrollPane;
+
+    @FXML
+    public Label pseudoSelectedContact;
 
     private User selectedUser;
 
@@ -139,8 +144,8 @@ public class MainScreenController {
         messageScrollPane.applyCss();
         messageScrollPane.layout();
         messageScrollPane.setVvalue(1.0d);
-        
 
+        pseudoSelectedContact.setPrefWidth(0);
         textFieldNewPseudo.setVisible(true);
         confirmNewpseudo.setVisible(true);
         textFieldNewPseudo.setDisable(false);
@@ -153,22 +158,24 @@ public class MainScreenController {
         messageBubble.setFont(Font.font(20));
         messageBubble.setTextAlignment(TextAlignment.RIGHT);
         messageZone.getChildren().add(messageBubble);*/
+        if(selectedUser!=null) {
 
-        String message = textToSend.getText();
-        afficherMessageEnvoye(message);
-        textToSend.clear();
-        System.out.println(ListContact.listContact);
-        InetAddress inetAddress= selectedUser.getUserAddress().getAddress();
-        try {
+            String message = textToSend.getText();
+            afficherMessageEnvoye(message);
+            textToSend.clear();
+            System.out.println(ListContact.listContact);
+            InetAddress inetAddress = selectedUser.getUserAddress().getAddress();
+            try {
 
-            SendMessageTCPThread threadCom= (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(inetAddress.toString());
-            System.out.println("on envoie "+message);
-            threadCom.send(message);
-        } catch (ThreadNotFoundException e) {
-            throw new RuntimeException(e);
+                SendMessageTCPThread threadCom = (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(inetAddress.toString());
+                System.out.println("on envoie " + message);
+                threadCom.send(message);
+            } catch (ThreadNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
-/*
-        ArrayList<String> li = new ArrayList<>();
+
+        /*ArrayList<String> li = new ArrayList<>();
         li.add("Tanguy");
         li.add("Onnig");
         li.add("Stefou");
@@ -181,9 +188,9 @@ public class MainScreenController {
             User test = new User(addr, pseudo);
             afficherNouveauUser(test);
 
-        }
+        }*/
 
-*/
+
     }
 
     public void sendButtonEnteredAction(){
@@ -229,6 +236,7 @@ public class MainScreenController {
                 event -> {
                     contactFrameClickAction();
                     selectedUser = user;
+                    pseudoSelectedContact.setText(user.getPseudo());
                 }
         );
         listWindow.getChildren().add(userNode);
@@ -290,11 +298,13 @@ public class MainScreenController {
         confirmNewpseudo.setVisible(false);
         textFieldNewPseudo.setDisable(true);
         confirmNewpseudo.setDisable(true);
+        pseudoSelectedContact.setPrefWidth(850);
         myPseudo.setText(textFieldNewPseudo.getText());
         ListContact.selfUser.setPseudo(textFieldNewPseudo.getText());
         NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
         textFieldNewPseudo.clear();
+
 
 
 
