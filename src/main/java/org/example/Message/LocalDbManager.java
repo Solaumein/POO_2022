@@ -26,6 +26,7 @@ public class LocalDbManager {
             this.messageHistoryDB.put(user,new MessageHistory());
         }
         this.messageHistoryDB.get(user).addMessage(message);
+        SQLiteHelper.getInstance().insert(message);
         //System.out.println("new message added "+user);
     }
     public synchronized HashMap<InetAddress, MessageHistory> getMessageHistoryDB() {

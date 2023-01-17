@@ -17,7 +17,7 @@ public class MessageHistory {
 
     @Override
     public String toString() {
-        StringBuilder listMessageInString=new StringBuilder();
+        StringBuilder listMessageInString=new StringBuilder().append("MESSAGEHISTORY :");
         for (Message message : listMessage) {
             if(message.getRecu()) listMessageInString.append("Destinataire :");
             else listMessageInString.append("Vous :");

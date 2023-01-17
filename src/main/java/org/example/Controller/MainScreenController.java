@@ -16,6 +16,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.Exception.ThreadNotFoundException;
 import org.example.GUI.GUIController;
+import org.example.Message.LocalDbManager;
+import org.example.Message.Message;
+import org.example.Message.MessageHistory;
+import org.example.Message.SQLiteHelper;
 import org.example.Network.*;
 import org.example.User.ListContact;
 
@@ -65,8 +69,15 @@ public class MainScreenController {
     public void initialize() {
         NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandlerInit);
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
+
+
+        LocalDbManager.getInstance().updateSavedMessages();//prends les msg de la bdd
     }
-    MessageReceivedHandler messageReceivedHandlerInit= (message, address) -> System.out.println("message recu "+message+ " par l'address "+address);
+    MessageReceivedHandler messageReceivedHandlerInit= (messageInString, address) -> {
+        Message message=new Message(messageInString,true,address);
+        LocalDbManager.getInstance().addMessage(message);
+        System.out.println("message recu "+message+ " par l'address "+address);
+    };
 
     public void deconnectButtonAction(ActionEvent event) {
         notifyDeconection();//send a notify of deconnection
@@ -112,7 +123,7 @@ public class MainScreenController {
     @FXML
     public HBox contactFrame;
 
-    private void afficherMessageEnvoye(String message) throws IOException {
+    private void afficherMessageEnvoye(String message) throws IOException {//todo mettre fonction dans GUI controller
         FXMLLoader messageLoader = new FXMLLoader();
         messageLoader.setLocation(getClass().getResource("/MessageFrameSent.fxml"));
         messageLoader.load();
@@ -165,19 +176,21 @@ public class MainScreenController {
         messageZone.getChildren().add(messageBubble);*/
         if(selectedUser!=null) {
 
-            String message = textToSend.getText();
-            afficherMessageEnvoye(message);
+            String messageInString = textToSend.getText();
+            afficherMessageEnvoye(messageInString);
             textToSend.clear();
             System.out.println(ListContact.listContact);
             InetAddress inetAddress = selectedUser.getUserAddress().getAddress();
             try {
 
                 SendMessageTCPThread threadCom = (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(inetAddress.toString());
-                System.out.println("on envoie " + message);
-                threadCom.send(message);
+                System.out.println("on envoie " + messageInString);
+                threadCom.send(messageInString);
             } catch (ThreadNotFoundException e) {
                 throw new RuntimeException(e);
             }
+            Message message=new Message(messageInString,false,inetAddress);
+            LocalDbManager.getInstance().addMessage(message);
         }
 
         /*ArrayList<String> li = new ArrayList<>();
@@ -232,6 +245,7 @@ public class MainScreenController {
 
     public void contactFrameClickAction(){
         messageZone.getChildren().clear();
+
         NetworkManagerTCP.setMessageReceivedHandler(new MessageReceivedHandler() {
             @Override
             public void newMessageArrivedFromAddr(String message,InetAddress address) {
@@ -240,6 +254,7 @@ public class MainScreenController {
                     @Override
                     public void run() {
                         System.out.println("on est dans runlater de reception");
+
                         if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
                     }
                 });
@@ -255,6 +270,22 @@ public class MainScreenController {
                 event -> {
                     contactFrameClickAction();
                     selectedUser = user;
+                    //System.out.println("la bdd ");
+                    //SQLiteHelper.getInstance().printAll();
+                    MessageHistory messageHistoryOfSelectedUser= LocalDbManager.getInstance().getMessageHistory(selectedUser.getUserAddress().getAddress());
+                    System.out.println("on a recup les message de "+selectedUser+" \nmessage "+ messageHistoryOfSelectedUser);
+                    for (Message message : messageHistoryOfSelectedUser.getListMessage()) {
+                        System.out.println("on a un message sauvegarder "+message);
+                        if(message.getRecu()){
+                            displayReceivedMessage(message.getContenu());
+                        }else {
+                            try {
+                                afficherMessageEnvoye(message.getContenu());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
                     pseudoSelectedContact.setText(user.getPseudo());
                 }
         );
