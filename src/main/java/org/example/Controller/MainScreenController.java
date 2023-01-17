@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -62,10 +63,10 @@ public class MainScreenController {
 
 
     public void initialize() {
-        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandler);
+        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandlerInit);
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
     }
-    MessageReceivedHandler messageReceivedHandler= message -> System.out.println("message recu "+message);
+    MessageReceivedHandler messageReceivedHandlerInit= (message, address) -> System.out.println("message recu "+message+ " par l'address "+address);
 
     public void deconnectButtonAction(ActionEvent event) {
         notifyDeconection();//send a notify of deconnection
@@ -227,8 +228,22 @@ public class MainScreenController {
 
     }*/
 
+
     public void contactFrameClickAction(){
         messageZone.getChildren().clear();
+        NetworkManagerTCP.setMessageReceivedHandler(new MessageReceivedHandler() {
+            @Override
+            public void newMessageArrivedFromAddr(String message,InetAddress address) {
+                System.out.println("on est dans handler");
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("on est dans runlater de reception");
+                        if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
+                    }
+                });
+            }
+        });
         System.out.println(selectedUser);
     }
 
@@ -319,10 +334,28 @@ public class MainScreenController {
         networkManagerUDP.sendNotify(State.state.DECONNECTION);
     }
     public void displayReceivedMessage(String message){
-        Text messageBubble = new Text(message);
-        messageBubble.setFont(Font.font(20));
-        messageBubble.setTextAlignment(TextAlignment.LEFT);
-        messageZone.getChildren().add(messageBubble);
+        FXMLLoader messageLoader = new FXMLLoader();
+        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
+        try {
+            messageLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Node node;
+        node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
+        Label messageToDisplay = (Label)node.lookup("#messageContent");
+        messageToDisplay.setText(message);
+        Label messageTime = (Label)node.lookup("#messageTime");
+        messageTime.setText("Reçu à " + "HEURE");//todo mettre date
+        HBox hbox =(HBox)node.lookup("#messageFrameContainer");
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(hbox, Priority.ALWAYS);
+        HBox hbox2 = (HBox)node.lookup("#messageFrame");
+        HBox.setMargin(hbox2, new Insets(0,300,0,10));
+        messageZone.getChildren().add(node);
+        messageScrollPane.applyCss();
+        messageScrollPane.layout();
+        messageScrollPane.setVvalue(1.0d);
     }
         private void notifyChangePseudo() {
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();

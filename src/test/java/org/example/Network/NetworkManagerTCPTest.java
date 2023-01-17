@@ -67,8 +67,8 @@ public class NetworkManagerTCPTest
     ArrayList<String> messageRecu=new ArrayList<>();
     MessageReceivedHandler messageReceivedHandler2= new MessageReceivedHandler() {
         @Override
-        public void newMessageArrived(String message) {
-            System.out.println("MESSSSSSSSSSSSSSSSSSSSsage " + message);
+        public void newMessageArrivedFromAddr(String message,InetAddress address) {
+            System.out.println("MESSSSSSSSSSSSSSSSSSSSsage " + message+" from Address "+address);
             messageRecu.add(message);
         }
     };

@@ -1,5 +1,7 @@
 package org.example.Network;
 
+import java.net.InetAddress;
+
 public interface MessageReceivedHandler {
-    void newMessageArrived(String message);
+    void newMessageArrivedFromAddr(String message, InetAddress address);
 }

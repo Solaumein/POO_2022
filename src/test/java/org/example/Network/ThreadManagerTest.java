@@ -24,7 +24,7 @@ public class ThreadManagerTest extends TestCase {
     }
     MessageReceivedHandler messageReceivedHandler=new MessageReceivedHandler() {
         @Override
-        public void newMessageArrived(String message) {
+        public void newMessageArrivedFromAddr(String message) {
             }
     };
     public void testGetThreadFromIP(){
