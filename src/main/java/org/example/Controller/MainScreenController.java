@@ -122,6 +122,9 @@ public class MainScreenController {
         Label messageTime = (Label)node.lookup("#messageTime");
         messageTime.setText("Envoyé à " + "HEURE");
         messageZone.getChildren().add(node);
+        messageScrollPane.applyCss();
+        messageScrollPane.layout();
+        messageScrollPane.setVvalue(1.0d);
 
     }
 
@@ -278,6 +281,7 @@ public class MainScreenController {
         label2.setText("ChangedPseudo");*/
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.DECONNECTION);
+        System.exit(0);
         //NetworkManagerUDP.getInstance().
         //ToDo Fermer socket + client
 
