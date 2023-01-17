@@ -49,6 +49,9 @@ public class ConnexionController {
         }
         if(pseudoLibre){
             Stage mainScreenStage=(Stage) connectButton.getScene().getWindow();
+            mainScreenStage.setOnCloseRequest(evt -> {
+                System.exit(0);
+            });
             String mainScreenTitle="Clavardage Entre Pote";
             GUIController guiController = new GUIController();
 
