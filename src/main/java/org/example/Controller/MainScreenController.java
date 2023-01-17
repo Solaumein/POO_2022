@@ -149,6 +149,7 @@ public class MainScreenController {
         messageScrollPane.layout();
         messageScrollPane.setVvalue(1.0d);
 
+        textFieldNewPseudo.setPromptText("New pseudo here");
         pseudoSelectedContact.setPrefWidth(0);
         textFieldNewPseudo.setVisible(true);
         confirmNewpseudo.setVisible(true);
@@ -313,16 +314,20 @@ public class MainScreenController {
     }
 
     public void confirmNewPseudoClickAction(){
-        textFieldNewPseudo.setVisible(false);
-        confirmNewpseudo.setVisible(false);
-        textFieldNewPseudo.setDisable(true);
-        confirmNewpseudo.setDisable(true);
-        pseudoSelectedContact.setPrefWidth(850);
-        myPseudo.setText(textFieldNewPseudo.getText());
-        ListContact.selfUser.setPseudo(textFieldNewPseudo.getText());
-        NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
-        networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
-        textFieldNewPseudo.clear();
+        if(!textFieldNewPseudo.getText().contains(",")){
+            textFieldNewPseudo.setVisible(false);
+            confirmNewpseudo.setVisible(false);
+            textFieldNewPseudo.setDisable(true);
+            confirmNewpseudo.setDisable(true);
+            pseudoSelectedContact.setPrefWidth(850);
+
+            myPseudo.setText(textFieldNewPseudo.getText());
+            ListContact.selfUser.setPseudo(textFieldNewPseudo.getText());
+            NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
+            networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
+            textFieldNewPseudo.clear();
+        }
+        else {textFieldNewPseudo.clear(); textFieldNewPseudo.setPromptText("Pas de virgule svp");}
 
 
 
