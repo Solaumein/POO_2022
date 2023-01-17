@@ -50,6 +50,8 @@ public class ConnexionController {
         if(pseudoLibre){
             Stage mainScreenStage=(Stage) connectButton.getScene().getWindow();
             mainScreenStage.setOnCloseRequest(evt -> {
+                NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
+                networkManagerUDP.sendNotify(State.state.DECONNECTION);
                 System.exit(0);
             });
             String mainScreenTitle="Clavardage Entre Pote";
