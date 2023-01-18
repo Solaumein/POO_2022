@@ -69,7 +69,7 @@ public class MainScreenController {
     public void initialize() {
         NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandlerInit);
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
-
+        SQLiteHelper.getInstance().createTableMessage();//initalise la bdd
 
         LocalDbManager.getInstance().updateSavedMessages();//prends les msg de la bdd
     }
