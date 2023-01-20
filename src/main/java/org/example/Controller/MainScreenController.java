@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -34,7 +35,7 @@ import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
 
-public class MainScreenController {
+public class MainScreenController{
     @FXML
     public Button changePseudoButton;
     @FXML
@@ -71,7 +72,7 @@ public class MainScreenController {
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
         SQLiteHelper.getInstance().createTableMessage();//initalise la bdd
 
-        LocalDbManager.getInstance().updateSavedMessages();//prends les msg de la bdd
+
     }
     MessageReceivedHandler messageReceivedHandlerInit= (messageInString, address) -> {
         Message message=new Message(messageInString,true,address);
@@ -141,25 +142,6 @@ public class MainScreenController {
     }
 
     public void changePseudoButtonClick() throws IOException {
-        FXMLLoader messageLoader = new FXMLLoader();
-        messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
-        messageLoader.load();
-        Node node;
-        node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
-        Label messageToDisplay = (Label)node.lookup("#messageContent");
-        messageToDisplay.setText("message");
-        Label messageTime = (Label)node.lookup("#messageTime");
-        messageTime.setText("Reçu à " + "HEURE");
-        HBox hbox =(HBox)node.lookup("#messageFrameContainer");
-        hbox.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(hbox, Priority.ALWAYS);
-        HBox hbox2 = (HBox)node.lookup("#messageFrame");
-        HBox.setMargin(hbox2, new Insets(0,300,0,10));
-        messageZone.getChildren().add(node);
-        messageScrollPane.applyCss();
-        messageScrollPane.layout();
-        messageScrollPane.setVvalue(1.0d);
-
         textFieldNewPseudo.setPromptText("New pseudo here");
         pseudoSelectedContact.setPrefWidth(0);
         textFieldNewPseudo.setVisible(true);

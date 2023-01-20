@@ -13,7 +13,8 @@ public class ListenNotifyTest extends TestCase {
         ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
         thread1.start();
 
-        thread1.join();
+        sleep(5000);
+        thread1.interrupt();
         assertTrue(true);
     }
     Consumer<String> invalidPseudoCallback= s -> fail();
