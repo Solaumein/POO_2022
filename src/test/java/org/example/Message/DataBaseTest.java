@@ -10,7 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class DataBaseTest extends TestCase {
-    public void testGetListMessageHistory() throws InterruptedException {
+
+    public void testDB(){//test tous mis les uns après les autres pour eviter les tests jenkins qui se font en thread pour eviter les acces concurrents aux listes
+        GetListMessageHistoryTest();
+        SelectContactTest();
+    }
+    public void GetListMessageHistoryTest()  {
         SQLiteHelper.getInstance().createTableMessage();
         SQLiteHelper.getInstance().reset();
         LocalDbManager localDbManager=LocalDbManager.getInstance();
@@ -60,7 +65,7 @@ public class DataBaseTest extends TestCase {
         }
     }
 
-    public void testSelectContact(){
+    public void SelectContactTest(){
         SQLiteHelper.getInstance().reset();
         SQLiteHelper.getInstance().createTableMessage();
         //SQLiteHelper.selectAll();
