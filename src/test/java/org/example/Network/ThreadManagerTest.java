@@ -22,12 +22,15 @@ public class ThreadManagerTest extends TestCase {
         }
          communication= ThreadManager.getInstance().createThreadCommunication(socket,messageReceivedHandler);
     }
-    MessageReceivedHandler messageReceivedHandler=new MessageReceivedHandler() {
-        @Override
-        public void newMessageArrivedFromAddr(String message,InetAddress address) {
-            }
-    };
-    public void testGetThreadFromIP(){
+    MessageReceivedHandler messageReceivedHandler= (message, address) -> {};
+
+
+    public void testThread(){//oblige l'execution des test les uns après les autres
+        GetThreadFromIPtest();
+        setUp();
+        CreateAndKilltest();
+    }
+    public void GetThreadFromIPtest(){
 
         assertEquals(ThreadManager.getInstance().getListThread().size(),2);//2 car ecoute et envoie
         try {
@@ -50,7 +53,7 @@ public class ThreadManagerTest extends TestCase {
         ThreadManager.getInstance().killAllThread();
         System.out.println(ThreadManager.getInstance().getListThread());
     }
-    public void testCreateAndKill(){
+    private void CreateAndKilltest(){
         System.out.println(ThreadManager.getInstance().getListThread());
 
         assertEquals(2,ThreadManager.getInstance().getListThread().size());
