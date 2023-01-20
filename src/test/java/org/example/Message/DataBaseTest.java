@@ -28,7 +28,7 @@ public class DataBaseTest extends TestCase {
             listMsg.add(new Message("reponse de moi a deepl",false,listAddr.get(1)));
             listMsg.add(new Message("reponse de ent",false, listAddr.get(2)));
             for (Message message : listMsg) {
-                SQLiteHelper.getInstance().insert(message);
+                //SQLiteHelper.getInstance().insert(message);
                 localDbManager.addMessage(message);
             }
         } catch (UnknownHostException e) {
@@ -61,10 +61,8 @@ public class DataBaseTest extends TestCase {
     }
 
     public void testSelectContact(){
-        SQLiteHelper sqLiteHelper = SQLiteHelper.getInstance();
-        sqLiteHelper.reset();
-        LocalDbManager localDbManager=LocalDbManager.getInstance();
-        sqLiteHelper.createTableMessage();
+        SQLiteHelper.getInstance().reset();
+        SQLiteHelper.getInstance().createTableMessage();
         //SQLiteHelper.selectAll();
         ArrayList<Message> listMsg=new ArrayList<>();
         MessageHistory listMsgFromDeepl=new MessageHistory();
@@ -84,8 +82,7 @@ public class DataBaseTest extends TestCase {
 
             listMsg.add(new Message("reponse de ent",false, listAddr.get(2)));
             for (Message message : listMsg) {
-                sqLiteHelper.insert(message);
-                localDbManager.addMessage(message);
+                LocalDbManager.getInstance().addMessage(message);
             }
             System.out.println(listMsgFromDeepl+"\n"+SQLiteHelper.getInstance().getMessageHistoryFromUser(listAddr.get(1)));
             assertEquals(listMsgFromDeepl,SQLiteHelper.getInstance().getMessageHistoryFromUser(listAddr.get(1)));
@@ -95,7 +92,7 @@ public class DataBaseTest extends TestCase {
 
 
         //System.out.println("BDD saved "+bddSaved);
-        System.out.println("history saved "+localDbManager.getMessageHistoryDB());
+        System.out.println("history saved "+LocalDbManager.getInstance().getMessageHistoryDB());
 
     }
 }
