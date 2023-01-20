@@ -11,10 +11,10 @@ import java.util.HashMap;
 
 public class DataBaseTest extends TestCase {
     public void testGetListMessageHistory() throws InterruptedException {
-        SQLiteHelper sqLiteHelper = SQLiteHelper.getInstance();
-        sqLiteHelper.reset();
+        SQLiteHelper.getInstance().createTableMessage();
+        SQLiteHelper.getInstance().reset();
         LocalDbManager localDbManager=LocalDbManager.getInstance();
-        sqLiteHelper.createTableMessage();
+        SQLiteHelper.getInstance().createTableMessage();
         //SQLiteHelper.selectAll();
         ArrayList<Message> listMsg=new ArrayList<>();
         ArrayList<InetAddress> listAddr=new ArrayList<>();
@@ -28,14 +28,14 @@ public class DataBaseTest extends TestCase {
             listMsg.add(new Message("reponse de moi a deepl",false,listAddr.get(1)));
             listMsg.add(new Message("reponse de ent",false, listAddr.get(2)));
             for (Message message : listMsg) {
-                sqLiteHelper.insert(message);
+                SQLiteHelper.getInstance().insert(message);
                 localDbManager.addMessage(message);
             }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-        sqLiteHelper.printAll();
-        HashMap<InetAddress, MessageHistory> bddSaved=sqLiteHelper.getMessageHistory();
+        SQLiteHelper.getInstance().printAll();
+        HashMap<InetAddress, MessageHistory> bddSaved=SQLiteHelper.getInstance().getMessageHistory();
 
         System.out.println("BDD saved "+bddSaved);
         System.out.println("history saved "+localDbManager.getMessageHistoryDB());
