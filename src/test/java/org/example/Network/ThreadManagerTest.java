@@ -25,7 +25,7 @@ public class ThreadManagerTest extends TestCase {
     MessageReceivedHandler messageReceivedHandler= (message, address) -> {};
 
 
-    public void testThread(){//oblige l'execution des test les uns après les autres
+    public void testThread(){//test tous mis les uns après les autres pour eviter les tests jenkins qui se font en thread pour eviter les acces concurrents aux listes
         GetThreadFromIPtest();
         setUp();
         CreateAndKilltest();

@@ -94,7 +94,10 @@ public class NetworkManagerTCPTest
          Thread.sleep(100);//le temps que l'écoute se lance
          //System.out.println("list sock "+networkManagerTCP.getListSocket());
          assertEquals(0,NetworkManagerTCP.getInstance().getListSocket().size());
-         NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getByName("127.0.0.1"),NetworkManagerTCP.getInstance().getPortListeningConnection()));
+         if(!NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getByName("127.0.0.1"),NetworkManagerTCP.getInstance().getPortListeningConnection()))){
+             System.out.println("connection impossible");
+             fail();
+         }
          Thread.sleep(100);//le temps que s'ajoute dans la liste le socket
          //System.out.println("list sock "+networkManagerTCP.getListSocket());
          assertEquals(2,NetworkManagerTCP.getInstance().getListSocket().size());
