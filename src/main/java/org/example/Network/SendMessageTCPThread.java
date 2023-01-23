@@ -11,12 +11,10 @@ import java.util.Objects;
 
 public class SendMessageTCPThread extends Thread {
     private Socket sockCom;
-    private MessageHistory messageHistory;
     private OutputStream outputStream;
     public SendMessageTCPThread(Socket s){
         super(s.getInetAddress().toString()+ThreadManager.endNameSend);
         this.sockCom=s;
-        this.messageHistory=new MessageHistory();
         try {
             outputStream=sockCom.getOutputStream();
         } catch (IOException e) {
@@ -27,11 +25,6 @@ public class SendMessageTCPThread extends Thread {
     public Socket getSockCom() {
         return sockCom;
     }
-
-    public MessageHistory getMessageHistory() {
-        return messageHistory;
-    }
-
     @Override
     public void interrupt() {//before being killed it closes its socket
         try {
@@ -46,23 +39,23 @@ public class SendMessageTCPThread extends Thread {
     @Override
     public void run() {
         System.out.println("ca commence");
-        //chargement des anciens messages
+        /*//chargement des anciens messages//todo sert a rien donc a enlever
         LocalDbManager localDbManager=LocalDbManager.getInstance();
-        this.messageHistory=localDbManager.getMessageHistory(sockCom.getInetAddress());
+        this.messageHistory=localDbManager.getMessageHistory(sockCom.getInetAddress());*/
 
     }
 
     public boolean send(String messageEnvoyer){
         System.out.println( "on lance un message "+messageEnvoyer);
-        String messageSansRetour=messageEnvoyer.replace("\n",""+(char)0);
+        String messageSansRetourChariot=messageEnvoyer.replace("\n",""+(char)0);
         PrintWriter printWriter = new PrintWriter(outputStream, true);
         //envoie le message
-        printWriter.println(messageSansRetour);
-        //creation du message
+        printWriter.println(messageSansRetourChariot);
+        /*//creation du message//todo g enlever ca avant test fonctionnel car utilise les couches superieures
         Message message=new Message(messageSansRetour,false,sockCom.getInetAddress());
         //sauvegarde du message
         this.messageHistory.addMessage(message);
-        SQLiteHelper.getInstance().insert(message);//dans la BDD
+        SQLiteHelper.getInstance().insert(message);//dans la BDD*/
         return true;
 
 
@@ -87,11 +80,11 @@ public class SendMessageTCPThread extends Thread {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SendMessageTCPThread threadCom = (SendMessageTCPThread) o;
-        return Objects.equals(sockCom, threadCom.sockCom) && Objects.equals(messageHistory, threadCom.messageHistory) && Objects.equals(outputStream, threadCom.outputStream);
+        return Objects.equals(sockCom, threadCom.sockCom) &&  Objects.equals(outputStream, threadCom.outputStream);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sockCom, messageHistory, outputStream);
+        return Objects.hash(sockCom, outputStream);
     }
 }

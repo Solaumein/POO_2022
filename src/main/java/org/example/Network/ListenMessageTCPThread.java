@@ -13,7 +13,6 @@ public class ListenMessageTCPThread extends Thread {
 
     private MessageReceivedHandler messageReceivedHandler;
     private Socket sockCom;
-    private MessageHistory messageHistory;
     private BufferedReader in;
 
     public ListenMessageTCPThread(Socket socket, MessageReceivedHandler messageReceivedHandler) {
@@ -22,7 +21,6 @@ public class ListenMessageTCPThread extends Thread {
 
         this.messageReceivedHandler = messageReceivedHandler;
         this.sockCom=socket;
-        this.messageHistory=new MessageHistory();
         try {
             in=new BufferedReader(new InputStreamReader(sockCom.getInputStream()));
         } catch (IOException e) {
@@ -35,30 +33,35 @@ public class ListenMessageTCPThread extends Thread {
         try {
             String stringRecu= in.readLine();
             if(stringRecu==null) return null;
-                String messageWithMultipleLine = stringRecu.replace("" + (char) 0, "\n");
-                //System.out.println("message apres parse "+messageWithMultipleLine);
-                //creation du message
-                Message message = new Message(messageWithMultipleLine, true, sockCom.getInetAddress());
-                //sauvegarde du message
+            String messageWithMultipleLine =cleanStringRecu(stringRecu);
+            //System.out.println("message apres parse "+messageWithMultipleLine);
+            //creation du message
+            Message message = new Message(messageWithMultipleLine, true, sockCom.getInetAddress());
+               /* //sauvegarde du message
                 this.messageHistory.addMessage(message);
-                SQLiteHelper.getInstance().insert(message);
-                System.out.println("message recccu " + message);
-                return messageWithMultipleLine;
+                SQLiteHelper.getInstance().insert(message);*/
+            System.out.println("message recccu " + message);
+            return messageWithMultipleLine;
 
         } catch (IOException e) {
            return null;
         }
     }
+
+    private String cleanStringRecu(String stringRecu) {
+        return stringRecu.replace("" + (char) 0, "\n");
+    }
+
     @Override
     public void run() {
         while (true) {
             String msgReceived= receive();
-            if(msgReceived==null || NetworkManagerTCP.getMessageReceivedHandler()==null ) {
+            if(msgReceived==null || messageReceivedHandler==null ) {
                 try {
                     sleep(100);
                 } catch (InterruptedException ignored) {} //ignored car lors du kill ca fait erreur
             }else {
-                NetworkManagerTCP.getMessageReceivedHandler().newMessageArrivedFromAddr(msgReceived,sockCom.getInetAddress());
+                messageReceivedHandler.newMessageArrivedFromAddr(msgReceived,sockCom.getInetAddress());
             }
         }
     }

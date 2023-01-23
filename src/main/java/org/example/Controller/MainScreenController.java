@@ -152,18 +152,20 @@ public class MainScreenController{
         if(selectedUser!=null) {
 
             String messageInString = textToSend.getText();
-            afficherMessageEnvoye(messageInString);
-            textToSend.clear();
+
             System.out.println(ListContact.listContact);
             InetAddress inetAddress = selectedUser.getUserAddress().getAddress();
             try {
 
-                SendMessageTCPThread threadCom = (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(inetAddress.toString());
+                SendMessageTCPThread threadCom = (SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(inetAddress.toString());//todo ligne changée avant test fonctionnel
                 System.out.println("on envoie " + messageInString);
                 threadCom.send(messageInString);
             } catch (ThreadNotFoundException e) {
                 throw new RuntimeException(e);
             }
+            //une fois que message a ete envoyer on peut sauvegarder le message envoyé
+            afficherMessageEnvoye(messageInString);
+            textToSend.clear();
             Message message=new Message(messageInString,false,inetAddress);
             LocalDbManager.getInstance().addMessage(message);
         }
@@ -221,16 +223,21 @@ public class MainScreenController{
     public void contactFrameClickAction(){
         messageZone.getChildren().clear();
 
-        NetworkManagerTCP.setMessageReceivedHandler(new MessageReceivedHandler() {
+            NetworkManagerTCP.setMessageReceivedHandler(new MessageReceivedHandler() {
             @Override
-            public void newMessageArrivedFromAddr(String message,InetAddress address) {
+            public void newMessageArrivedFromAddr(String messageStr,InetAddress address) {
                 System.out.println("on est dans handler");
+                //on save le message
+                Message message=new Message(messageStr,false,address);
+                LocalDbManager.getInstance().addMessage(message);
+                //on le montre dans la boite de dialogue
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
                         System.out.println("on est dans runlater de reception");
 
-                        if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
+                        if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(messageStr);
+
                     }
                 });
             }
@@ -244,27 +251,31 @@ public class MainScreenController{
         userNode.setOnMouseClicked(
                 event -> {
                     contactFrameClickAction();
-                    selectedUser = user;
+                    selectedUser = user;//todo on pourrait pas tout mettre dans le contactFrameClickAction ?
                     //System.out.println("la bdd ");
                     //SQLiteHelper.getInstance().printAll();
                     MessageHistory messageHistoryOfSelectedUser= LocalDbManager.getInstance().getMessageHistory(selectedUser.getUserAddress().getAddress());
-                    System.out.println("on a recup les message de "+selectedUser+" \nmessage "+ messageHistoryOfSelectedUser);
-                    for (Message message : messageHistoryOfSelectedUser.getListMessage()) {
-                        System.out.println("on a un message sauvegarder "+message);
-                        if(message.getRecu()){
-                            displayReceivedMessage(message.getContenu());
-                        }else {
-                            try {
-                                afficherMessageEnvoye(message.getContenu());
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
+                    System.out.println("on a recup les messages de "+selectedUser+" \nmessage "+ messageHistoryOfSelectedUser);
+                    loadHistoryOfMessage(messageHistoryOfSelectedUser);
                     pseudoSelectedContact.setText(user.getPseudo());
                 }
         );
         listWindow.getChildren().add(userNode);
+    }
+
+    private void loadHistoryOfMessage(MessageHistory messageHistoryOfSelectedUser) {
+        for (Message message : messageHistoryOfSelectedUser.getListMessage()) {
+            System.out.println("on a un message sauvegardé "+message);
+            if(message.getRecu()){
+                displayReceivedMessage(message.getContenu());
+            }else {
+                try {
+                    afficherMessageEnvoye(message.getContenu());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public synchronized void deleteAffUser(User user){
@@ -296,18 +307,10 @@ public class MainScreenController{
     }
 
     public void deconnexionButtonClickAction(){
-        /*Label label = (Label)listWindow.getChildren().get(0).lookup("#pseudoUser");
-        System.out.println(label.getText());
-        listWindow.getChildren().remove(0);
-        Label label2 = (Label)listWindow.getChildren().get(1).lookup("#pseudoUser");
-        label2.setText("ChangedPseudo");*/
-        NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
-        networkManagerUDP.sendNotify(State.state.DECONNECTION);
+        notifyDeconection();
+        NetworkManagerTCP.getInstance().reset();
+        ThreadManager.getInstance().reset();
         System.exit(0);
-        //NetworkManagerUDP.getInstance().
-        //ToDo Fermer socket + client
-
-
     }
 
     public void confirmNewPseudoEnteredAction(){
