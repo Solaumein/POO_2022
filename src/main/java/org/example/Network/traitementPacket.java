@@ -10,31 +10,29 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.function.Consumer;
 
-import static java.lang.Thread.sleep;
 
 public class traitementPacket {
-    private Packet packet;
-
+    private final Packet packet;
     private String addrToStr(InetAddress addr){
         String str= addr.toString();
         str = str.substring(1);
 
         return str;}
 
-    traitementPacket(Packet packet, Consumer<String> invalidPseudoCallback){
+    public traitementPacket(Packet packet, Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallBack){
         this.packet = packet;
         boolean thisIsMyAdress = false;
-        try {
+        try {//todo faire fonction qui fait le test de thisIsMyAddress
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface ni = interfaces.nextElement();
                 Enumeration<InetAddress> addresses = ni.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress address = addresses.nextElement();
-                    if (!address.isLinkLocalAddress() && !address.isLoopbackAddress() && address.getHostAddress().indexOf(":") == -1) {
+                    if (!address.isLinkLocalAddress() && !address.isLoopbackAddress() && !address.getHostAddress().contains(":")) {
 
-                        System.out.println(ni.getName() + ": " + address.getHostAddress() + "      " +addrToStr(packet.addr));
-                        if(address.getHostAddress().equals(addrToStr(packet.addr))){thisIsMyAdress=true;}
+                        System.out.println(ni.getName() + ": " + address.getHostAddress() + "      " +addrToStr(packet.getAddr()));
+                        if(address.getHostAddress().equals(addrToStr(packet.getAddr()))){thisIsMyAdress=true;}
                     }
                 }
             }
@@ -42,62 +40,58 @@ public class traitementPacket {
             e.printStackTrace();
         }
         if(!thisIsMyAdress){
-            switch (packet.state){
+            switch (packet.getState()){
                 case CONNECTION -> connexion();
-                case VALIDPSEUDO -> {
-                    try {
-                        validPseudoCallback();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                case VALIDPSEUDO -> validPseudoCallBack.accept(packet);
                 case CHANGEPSEUDO -> changementPseudo();
                 case DECONNECTION -> deconnexion();
-                case INVALIDPSEUDO -> invalidPseudoCallback.accept("toto");
-                default -> System.out.println(packet.state);
+                case INVALIDPSEUDO -> invalidPseudoCallback.accept("");
+                default -> System.out.println(packet.getState());
             }
         }
     }
 
-    private void validPseudoCallback() throws InterruptedException {
+    /*private void validPseudoCallback()  {
         if(!ListContact.isAdressInList(packet.addr)){
             System.out.println("ValidPseudoCallback");
 
             UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
             User user = new User(addr, packet.pseudo);
-            sleep(1000);
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                //le thread se fait kill donc on ignore
+            }
             ListContact.addContact(user);
             UserAddress userAddress=new UserAddress(packet.addr,packet.portcomtcp);
             NetworkManagerTCP.getInstance().connect(userAddress);
             System.out.println("on ajoute le user "+packet.pseudo);
-            //ok, merci le sleep
         }
-    }
+    }*/
 
 
     private void deconnexion() {
-        ListContact.removeContactByAddr(packet.addr);
+        ListContact.removeContactByAddr(packet.getAddr());
     }
 
     private void changementPseudo() {
-        if(ListContact.selfUser.getPseudo().equals(packet.pseudo) || ListContact.isPseudoInList(packet.pseudo)){
-            NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.addr);
+        if(ListContact.selfUser.getPseudo().equals(packet.getPseudo()) || ListContact.isPseudoInList(packet.getPseudo())){
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.getAddr());
         }else{
-            int index = ListContact.searchByAddress(packet.addr);
+            int index = ListContact.searchByAddress(packet.getAddr());
             String oldPseudo = ListContact.listContact.get(index).getPseudo();
-            ListContact.updatePseudoByAddr(packet.addr, packet.pseudo, oldPseudo);
-            NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.addr);
+            ListContact.updatePseudoByAddr(packet.getAddr(), packet.getPseudo(), oldPseudo);
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.getAddr());
         }
     }
-    //todo passer en paquet port TCP
     private void connexion() {
-        if(ListContact.selfUser.getPseudo().equals(packet.pseudo) || ListContact.isPseudoInList(packet.pseudo)){
-            NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.addr);
+        if(ListContact.selfUser.getPseudo().equals(packet.getPseudo()) || ListContact.isPseudoInList(packet.getPseudo())){
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.INVALIDPSEUDO, packet.getAddr());
         }else{
-            UserAddress addr = new UserAddress(packet.addr, packet.portcomtcp);
-            User user = new User(addr, packet.pseudo);
+            UserAddress addr = new UserAddress(packet.getAddr(), packet.getPortcomtcp());
+            User user = new User(addr, packet.getPseudo());
             ListContact.addContact(user);
-            NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.addr);
+            NetworkManagerUDP.getInstance().sendAnswer(State.state.VALIDPSEUDO, packet.getAddr());
         }
     }
 }

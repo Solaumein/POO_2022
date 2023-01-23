@@ -10,13 +10,15 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class NetworkManagerTCP extends Thread{
-    private ArrayList<Socket> listSocket =new ArrayList<>();
-    private ServerSocket serverAccept;
+    private final ArrayList<Socket> listSocket =new ArrayList<>();
 
     private final ThreadManager threadManager =ThreadManager.getInstance();
     private static final NetworkManagerTCP instance = new NetworkManagerTCP();
+
+    private static MessageReceivedHandler messageReceivedHandler=null;
 
     public synchronized static MessageReceivedHandler getMessageReceivedHandler() {
         return messageReceivedHandler;
@@ -25,23 +27,24 @@ public class NetworkManagerTCP extends Thread{
     public synchronized ThreadManager getThreadManager() {
         return threadManager;
     }
-    private static MessageReceivedHandler messageReceivedHandler=null;
-
     public static synchronized void setMessageReceivedHandler(MessageReceivedHandler messageReceivedHandler){
         NetworkManagerTCP.messageReceivedHandler=messageReceivedHandler;
     }
 
     public static NetworkManagerTCP getInstance() {
         if(NetworkManagerTCP.messageReceivedHandler==null){
-            throw new RuntimeException("pas de messageHandlerInitialiser");
-
+            throw new RuntimeException("pas de messageHandler Initialisé");
         }
         return instance;
     }
     private NetworkManagerTCP(){}
     private ListenConnectTCPThread listenConnectTCPThread;
+    private final Consumer<Socket> connectionCallback= socket -> {
+        ThreadManager.getInstance().createThreadCommunication(socket,NetworkManagerTCP.getMessageReceivedHandler());
+        NetworkManagerTCP.getInstance().addSocket(socket);
+    };
     public synchronized void launchListenThread(int port){
-        listenConnectTCPThread=new ListenConnectTCPThread(port,NetworkManagerTCP.messageReceivedHandler);
+        listenConnectTCPThread=new ListenConnectTCPThread(port,connectionCallback);
         listenConnectTCPThread.start();
     }
 
@@ -53,17 +56,19 @@ public class NetworkManagerTCP extends Thread{
     }
     public synchronized void stopAllSocket(){
         System.out.println("on deco de tt le monde");
-        ArrayList<Socket> listSock= (ArrayList<Socket>) getListSocket().clone();
+        ArrayList<Socket> listSock= new ArrayList<>(getListSocket());
         for (Socket socket : listSock) {
-            closeSock(socket.getInetAddress());
+            if(!closeSock(socket.getInetAddress())){//erreur de close
+                //todo peut etre faire action
+                System.out.println("on a pas pu close le sock "+socket);
+            }
         }
-        ThreadManager.getInstance().killAllThread();
     }
 
     public static int getPortLibre(){
         for (int port=1024; port<=65353; port++) {
-            try (ServerSocket serverSocket = new ServerSocket(port)) {
-                return port;//todo peut etre enlever le if
+            try (ServerSocket ignored1 = new ServerSocket(port)) {
+                return port;
             } catch (IOException ignored) {}
         }
         return -1;//aucun port trouvé
@@ -100,13 +105,14 @@ public class NetworkManagerTCP extends Thread{
             listSocket.remove(sock);
             return true;
         } catch (ThreadNotFoundException | IOException | SocketComNotFoundException e) {
+            e.printStackTrace();
             return false;
         }
     }
     public synchronized void reset(){
-            this.stopAllSocket();
-            this.stopListenThread();
-            NetworkManagerTCP.setMessageReceivedHandler(null);
+        this.stopListenThread();
+        this.stopAllSocket();
+        NetworkManagerTCP.setMessageReceivedHandler(null);
 
     }
 

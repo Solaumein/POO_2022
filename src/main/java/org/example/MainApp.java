@@ -3,14 +3,13 @@ package org.example;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.example.Controller.GUIController;
-import org.example.User.User;
 
 public class MainApp extends Application {
     @Override
-    public void start(Stage firstStage) throws Exception {
+    public void start(Stage firstStage)  {
         InitApp();
 
-        GUIController.openNewWindow(firstStage,"src/main/resources/Login.fxml","Connexion");
+         GUIController.openNewWindow(firstStage,"src/main/resources/Login.fxml","Connexion");
 
       /*  ServerSocket serverSocket=new ServerSocket(42069);
         Socket s= serverSocket.accept();
@@ -22,7 +21,6 @@ public class MainApp extends Application {
 
        // ListContact.addNewContactSubscriber((user) -> MainScreenController.afficher);
     }
-    User user=null;
 
     private void InitApp() {}
 

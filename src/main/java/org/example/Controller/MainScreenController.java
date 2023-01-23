@@ -1,7 +1,6 @@
 package org.example.Controller;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -11,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.example.Exception.ThreadNotFoundException;
 import org.example.Message.LocalDbManager;
 import org.example.Message.Message;
@@ -24,7 +22,6 @@ import org.example.User.User;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
 
@@ -38,84 +35,61 @@ public class MainScreenController{
     public TextField textFieldNewPseudo;
     @FXML
     public VBox listWindow;
-    @FXML
-    public Button SendButton;
+    //@FXML
+    //public Button SendButton;
     @FXML
     public TextArea textToSend;
     @FXML
     public VBox messageZone;
-
     @FXML
     public Label myPseudo;
-
     @FXML
     public Button confirmNewpseudo;
-
     @FXML
     public ScrollPane messageScrollPane;
-
     @FXML
     public Label pseudoSelectedContact;
+    @FXML
+    public Button sendButton;
+    @FXML
+    public HBox contactFrame;
 
     private User selectedUser;
-
-
-    public void initialize() {
-        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandlerInit);
-        NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
-        SQLiteHelper.getInstance().createTableMessage();//initalise la bdd
-
-
-    }
-    MessageReceivedHandler messageReceivedHandlerInit= (messageInString, address) -> {
+    public boolean pseudoLibre=true;
+    private final MessageReceivedHandler messageReceivedHandlerInit= (messageInString, address) -> {
         Message message=new Message(messageInString,true,address);
         LocalDbManager.getInstance().addMessage(message);
         System.out.println("message recu "+message+ " par l'address "+address);
     };
+    public void initialize() {
+        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandlerInit);
+        NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
+        SQLiteHelper.getInstance().createTableMessage();
+        LocalDbManager.getInstance().updateSavedMessages();
+    }
 
-    public void deconnectButtonAction(ActionEvent event) {
+    /*public void deconnectButtonAction(ActionEvent event) {
         notifyDeconection();//send a notify of deconnection
 
         Stage mainStage = (Stage) deconnectButton.getScene().getWindow();
         String pathMainScreenFXML="src/main/resources/Login.fxml";
         Stage decoStage= GUIController.openNewWindow(mainStage,pathMainScreenFXML,"Connexion");
         //todo mettre le textfield de la co a son ancien pseudo
-    }
-    boolean pseudoLibre=true;
-    Consumer<String> invalidPseudoCallback= s -> pseudoLibre=false;
+    }*///remplacé par deconnexionButtonClickAction()
+/*
     public void changePseudoButtonAction(ActionEvent event) {
         if(!textFieldNewPseudo.isVisible())textFieldNewPseudo.setVisible(true);
         else{
             String newPseudo=textFieldNewPseudo.getText();
-            notifyChangePseudo();//send a notify of deconnection
+            notifyChangePseudo();//send a "notify" of deconnection
             //demarrage de l'attente de réponse
-            int temps=0;
-            while(temps<10 && pseudoLibre){
-                temps++;
-                try {//toute les 10ms ont test
-                    sleep(10);//todo attendre réponse du premier avec future ou promesse
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if(pseudoLibre){
-                ListContact.selfUser.setPseudo(newPseudo);
-            }else{
-                alertInvalid(ListContact.selfUser.getPseudo());
-            }
+            waitForPseudoLibre(newPseudo);
         }
     }
-
+*/
     private void alertInvalid(String pseudo) {
-        //todo
+        textFieldNewPseudo.clear(); textFieldNewPseudo.setPromptText("Pseudo "+pseudo+" deja pris choisissez en un autre");//todo a tester
     }
-
-    @FXML
-    public Button sendButton;
-
-
-    @FXML
-    public HBox contactFrame;
 
     private void afficherMessageEnvoye(String message) throws IOException {//todo mettre fonction dans GUI controller
         FXMLLoader messageLoader = new FXMLLoader();
@@ -134,7 +108,7 @@ public class MainScreenController{
 
     }
 
-    public void changePseudoButtonClick() throws IOException {
+    public void changePseudoButtonClick() {
         textFieldNewPseudo.setPromptText("New pseudo here");
         pseudoSelectedContact.setPrefWidth(0);
         textFieldNewPseudo.setVisible(true);
@@ -144,7 +118,7 @@ public class MainScreenController{
 
     }
 
-    public void SendButtonAction(ActionEvent event) throws IOException {
+    public void SendButtonAction() throws IOException {
         /*Text messageBubble = new Text(message);
         messageBubble.setFont(Font.font(20));
         messageBubble.setTextAlignment(TextAlignment.RIGHT);
@@ -159,7 +133,10 @@ public class MainScreenController{
 
                 SendMessageTCPThread threadCom = (SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(inetAddress.toString());//todo ligne changée avant test fonctionnel
                 System.out.println("on envoie " + messageInString);
-                threadCom.send(messageInString);
+                if(!threadCom.send(messageInString)){//le message s'est pas send
+                    throw new RuntimeException("message pas envoyé : "+messageInString);
+                }
+
             } catch (ThreadNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -169,23 +146,6 @@ public class MainScreenController{
             Message message=new Message(messageInString,false,inetAddress);
             LocalDbManager.getInstance().addMessage(message);
         }
-
-        /*ArrayList<String> li = new ArrayList<>();
-        li.add("Tanguy");
-        li.add("Onnig");
-        li.add("Stefou");
-        li.add("Gabi");
-        li.add("Mattew");
-        li.add("Romain");
-        li.add("Aude");
-        for (String pseudo : li) {
-            UserAddress addr = null;
-            User test = new User(addr, pseudo);
-            afficherNouveauUser(test);
-
-        }*/
-
-
     }
 
     public void sendButtonEnteredAction(){
@@ -223,25 +183,17 @@ public class MainScreenController{
     public void contactFrameClickAction(){
         messageZone.getChildren().clear();
 
-            NetworkManagerTCP.setMessageReceivedHandler(new MessageReceivedHandler() {
-            @Override
-            public void newMessageArrivedFromAddr(String messageStr,InetAddress address) {
-                System.out.println("on est dans handler");
+            NetworkManagerTCP.setMessageReceivedHandler((messageStr, address) -> {
+                System.out.println("on est dans MessageReceivedHandler");
                 //on save le message
                 Message message=new Message(messageStr,false,address);
                 LocalDbManager.getInstance().addMessage(message);
                 //on le montre dans la boite de dialogue
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("on est dans runlater de reception");
-
-                        if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(messageStr);
-
-                    }
+                Platform.runLater(() -> {
+                    System.out.println("on est dans runlater de reception de msg");
+                    if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
                 });
-            }
-        });
+            });
         System.out.println(selectedUser);
     }
 
@@ -266,8 +218,8 @@ public class MainScreenController{
     private void loadHistoryOfMessage(MessageHistory messageHistoryOfSelectedUser) {
         for (Message message : messageHistoryOfSelectedUser.getListMessage()) {
             System.out.println("on a un message sauvegardé "+message);
-            if(message.getRecu()){
-                displayReceivedMessage(message.getContenu());
+            if(message.isRecu()){
+                displayReceivedMessage(message);
             }else {
                 try {
                     afficherMessageEnvoye(message.getContenu());
@@ -329,25 +281,41 @@ public class MainScreenController{
             textFieldNewPseudo.setDisable(true);
             confirmNewpseudo.setDisable(true);
             pseudoSelectedContact.setPrefWidth(850);
-
-            myPseudo.setText(textFieldNewPseudo.getText());
+            String newPseudo=textFieldNewPseudo.getText();
+            myPseudo.setText(newPseudo);
             ListContact.selfUser.setPseudo(textFieldNewPseudo.getText());
-            NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
-            networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
+            NetworkManagerUDP.getInstance().sendNotify(State.state.CHANGEPSEUDO);
+            waitForPseudoLibre(newPseudo);
             textFieldNewPseudo.clear();
         }
-        else {textFieldNewPseudo.clear(); textFieldNewPseudo.setPromptText("Pas de virgule svp");}
+        else {
+            textFieldNewPseudo.clear();
+            textFieldNewPseudo.setPromptText("Pas de virgule svp");
+        }
+    }
 
-
-
-
+    private void waitForPseudoLibre(String newPseudo) {
+        int temps=0;
+        while(temps<10 && pseudoLibre){
+            temps++;
+            try {//toute les 10ms ont test
+                sleep(10);//todo attendre réponse du premier avec future ou promesse
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if(pseudoLibre){
+            ListContact.selfUser.setPseudo(newPseudo);
+        }else{
+            alertInvalid(ListContact.selfUser.getPseudo());
+        }
     }
 
     private void notifyDeconection() {
         NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
         networkManagerUDP.sendNotify(State.state.DECONNECTION);
     }
-    public void displayReceivedMessage(String message){
+    public void displayReceivedMessage(Message message){
         FXMLLoader messageLoader = new FXMLLoader();
         messageLoader.setLocation(getClass().getResource("/MessageFrame.fxml"));
         try {
@@ -358,9 +326,9 @@ public class MainScreenController{
         Node node;
         node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
         Label messageToDisplay = (Label)node.lookup("#messageContent");
-        messageToDisplay.setText(message);
+        messageToDisplay.setText(message.getContenu());
         Label messageTime = (Label)node.lookup("#messageTime");
-        messageTime.setText("Reçu à " + "HEURE");//todo mettre date
+        messageTime.setText("Reçu à " + message.getDateMessage());//todo mettre date
         HBox hbox =(HBox)node.lookup("#messageFrameContainer");
         hbox.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(hbox, Priority.ALWAYS);
@@ -371,10 +339,5 @@ public class MainScreenController{
         messageScrollPane.layout();
         messageScrollPane.setVvalue(1.0d);
     }
-        private void notifyChangePseudo() {
-        NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
-        networkManagerUDP.sendNotify(State.state.CHANGEPSEUDO);
-        //ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);//sert a rien car Un seul
-        //thread1.start();
-    }
+
 }

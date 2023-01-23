@@ -17,11 +17,11 @@ public class MessageHistory {
 
     @Override
     public String toString() {
-        StringBuilder listMessageInString=new StringBuilder().append("MESSAGEHISTORY :");
+        StringBuilder listMessageInString=new StringBuilder().append("MESSAGEHISTORY : \n");
         for (Message message : listMessage) {
-            if(message.getRecu()) listMessageInString.append("Destinataire :");
+            if(message.getRecu()) listMessageInString.append("Destinataire :").append(message.getOtherHost()).append(" ");
             else listMessageInString.append("Vous :");
-            listMessageInString.append(message).append("\n");
+            listMessageInString.append(message.getDateInString()).append(" contenu ").append(message.getContenu()).append("\n");
         }
         return listMessageInString.toString();
     }

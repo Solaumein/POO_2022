@@ -1,6 +1,5 @@
 package org.example.User;
 
-import org.example.Controller.MainScreenController;
 import org.example.Network.NetworkManagerTCP;
 
 import java.net.Inet4Address;
@@ -9,10 +8,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 
-public class ListContact {
-    private static UserAddress selfAddr;
+public class ListContact {//todo pk tout en static ? sinon au lieu du bloc static c plus propre de faire dans le initialize mainScreenController le getPortLibre
+    private static final UserAddress selfAddr;
 
     public static UserAddress getSelfAddr() {
         return selfAddr;
@@ -22,8 +20,7 @@ public class ListContact {
         try {
             int port = NetworkManagerTCP.getPortLibre();
             if(port==-1) {
-                System.out.println("pas de port libre pour le moment reesayez plus tard");
-                throw new RuntimeException();
+                throw new RuntimeException("pas de port libre pour le moment reesayez plus tard");
             }
             selfAddr = new UserAddress(Inet4Address.getLocalHost(),port);
         } catch (UnknownHostException e) {
@@ -31,15 +28,15 @@ public class ListContact {
         }
     }
 
-    public static String selfPseudo="tengui";
+    public static String selfPseudo="Arthur si tu nous vois";
     public static User selfUser = new User(selfAddr, selfPseudo);
 
     public static ArrayList<User> listContact = new ArrayList<>();
 
-    private static List<ContactEventHandler> handlers = new ArrayList<> ();
-    private static List<ContactEventHandlerDeco> handlersDeco = new ArrayList<>();
+    private static final List<ContactEventHandler> handlers = new ArrayList<> ();
+    private static final List<ContactEventHandlerDeco> handlersDeco = new ArrayList<>();
 
-    private static List<ContactEventHandlerUpdatePseudo> handlersUpdate = new ArrayList<>();
+    private static final List<ContactEventHandlerUpdatePseudo> handlersUpdate = new ArrayList<>();
     public static void addHandler(ContactEventHandler handler) {
         handlers.add(handler);
     }
@@ -118,7 +115,5 @@ public class ListContact {
         return -1;
     }
 
-//    public User getSelfUser() {
-//        return selfUser;
-//    }
+
 }

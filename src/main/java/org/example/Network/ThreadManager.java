@@ -20,7 +20,7 @@ public class ThreadManager {
         return listThread;
     }
 
-    public void setListThread(ArrayList<Thread> listThread) {
+    private void setListThread(ArrayList<Thread> listThread) {
         this.listThread = listThread;
     }
 
@@ -33,10 +33,10 @@ public class ThreadManager {
     }
     public synchronized void killThread(Thread thread) throws ThreadNotFoundException {
         thread.interrupt();
-        if(!this.listThread.remove(thread)) throw new ThreadNotFoundException();
+        if(!this.getListThread().remove(thread)) throw new ThreadNotFoundException();
     }
 
-    private synchronized Thread getThreadFromName(String name) throws ThreadNotFoundException {
+    public synchronized Thread getThreadFromName(String name) throws ThreadNotFoundException {
         for (Thread thread : listThread) {
             if(name.equals(thread.getName())) return thread;
         }
@@ -54,7 +54,6 @@ public class ThreadManager {
         String nameThread=name+endNameListen;
         for (Thread thread : listThread) {
             try {
-                ListenMessageTCPThread thread1 = (ListenMessageTCPThread) thread;
                 if(nameThread.equals(thread.getName())) return thread;
             }catch (ClassCastException ignore){}
         }
@@ -74,12 +73,12 @@ public class ThreadManager {
 
     public synchronized void killAllThread()  {
         //System.out.println("on doit kill "+getListThread().size()+" threads : "+getListThread());
-        ArrayList<Thread> listThread= (ArrayList<Thread>) getListThread().clone();
+        ArrayList<Thread> listThread= new ArrayList<>(getListThread());
         for (Thread thread : listThread) {
           //  System.out.println("on kill lui "+thread+" list "+getListThread());
             try {
                 killThread(thread);
-            } catch (ThreadNotFoundException e) {
+                 } catch (ThreadNotFoundException e) {
                 System.out.println("le thread "+thread+" n'a pas pu etre arreter car il n'existe pas");
             }
             //System.out.println("on l'a kill "+getListThread());

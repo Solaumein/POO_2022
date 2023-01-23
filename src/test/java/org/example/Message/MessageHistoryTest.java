@@ -5,7 +5,6 @@ import junit.framework.TestCase;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MessageHistoryTest extends TestCase {
     public void testMessageHistoryEqual() {
@@ -27,7 +26,7 @@ public class MessageHistoryTest extends TestCase {
             
             assertEquals(messageHistory1,messageHistory2);
             messageHistory1.addMessage(listDeMessage.get(1));
-            assertFalse(messageHistory1.equals(messageHistory2));
+            assert(!messageHistory1.equals(messageHistory2));
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }

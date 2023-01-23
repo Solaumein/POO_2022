@@ -1,17 +1,13 @@
 package org.example.Network;
 
-import org.example.Message.LocalDbManager;
-import org.example.Message.Message;
-import org.example.Message.MessageHistory;
-import org.example.Message.SQLiteHelper;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
 
 public class SendMessageTCPThread extends Thread {
-    private Socket sockCom;
-    private OutputStream outputStream;
+    private final Socket sockCom;
+    private final OutputStream outputStream;
     public SendMessageTCPThread(Socket s){
         super(s.getInetAddress().toString()+ThreadManager.endNameSend);
         this.sockCom=s;
@@ -61,15 +57,6 @@ public class SendMessageTCPThread extends Thread {
 
     }
 
-
-    public boolean close() {
-        try {
-            sockCom.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
     @Override
     public String toString() {
         return this.getName();

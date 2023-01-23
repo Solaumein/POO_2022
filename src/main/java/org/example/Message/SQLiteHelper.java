@@ -28,14 +28,14 @@ public class SQLiteHelper {
 
     private synchronized Connection connect() {//return null if failed
         //creer la bdd ou la load
-        Connection con = null;
+        Connection con;
         try {
             //path to local DB
             String url = "jdbc:sqlite:messages.db";
             con = DriverManager.getConnection(url);
             if (con != null) {
                 DatabaseMetaData metaData = con.getMetaData();
-                //System.out.println("The DB is located at " + metaData.getURL());
+                System.out.println("The DB is located at " + metaData.getURL());
                 //System.out.println("A new database has been created.");
             }
         } catch (SQLException e) {
@@ -125,13 +125,13 @@ public class SQLiteHelper {
     public synchronized MessageHistory getMessageHistoryFromUser(InetAddress otherUser){
         String addrOfOtherHost=otherUser.toString().substring(1);
         System.out.println("on cherche les message du user "+addrOfOtherHost);
-        String sql="SELECT * FROM "+TABLE_NAME+" WHERE "+OTHER_HOST+" = \'"+addrOfOtherHost+"'";
+        String sql="SELECT * FROM "+TABLE_NAME+" WHERE "+OTHER_HOST+" = '"+addrOfOtherHost+"'";
         MessageHistory savedMessageHistory =new MessageHistory();
         try {
             Statement statement= connect().createStatement();
             ResultSet rs=statement.executeQuery(sql);
             while (rs.next()){
-                String addrOtherHostSaved= getOtherHostFromRS(rs).toString().substring(1);;
+                String addrOtherHostSaved= getOtherHostFromRS(rs).toString().substring(1);
                 if(addrOtherHostSaved.equals(addrOfOtherHost)){
                     System.out.println("c le bon user "+addrOtherHostSaved);
                 }

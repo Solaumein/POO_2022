@@ -1,8 +1,5 @@
 package org.example.Network;
 
-import org.example.Message.Message;
-import org.example.Message.MessageHistory;
-import org.example.Message.SQLiteHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +8,9 @@ import java.net.Socket;
 
 public class ListenMessageTCPThread extends Thread {
 
-    private MessageReceivedHandler messageReceivedHandler;
-    private Socket sockCom;
-    private BufferedReader in;
+    private final MessageReceivedHandler messageReceivedHandler;
+    private final Socket sockCom;
+    private final BufferedReader in;
 
     public ListenMessageTCPThread(Socket socket, MessageReceivedHandler messageReceivedHandler) {
         super(socket.getInetAddress().toString()+ThreadManager.endNameListen);
@@ -36,11 +33,11 @@ public class ListenMessageTCPThread extends Thread {
             String messageWithMultipleLine =cleanStringRecu(stringRecu);
             //System.out.println("message apres parse "+messageWithMultipleLine);
             //creation du message
-            Message message = new Message(messageWithMultipleLine, true, sockCom.getInetAddress());
+            //Message message = new Message(messageWithMultipleLine, true, sockCom.getInetAddress());
                /* //sauvegarde du message
                 this.messageHistory.addMessage(message);
                 SQLiteHelper.getInstance().insert(message);*/
-            System.out.println("message recccu " + message);
+            System.out.println("message recccu " + messageWithMultipleLine);
             return messageWithMultipleLine;
 
         } catch (IOException e) {

@@ -26,7 +26,9 @@ public class LocalDbManager {
             this.messageHistoryDB.put(user,new MessageHistory());
         }
         this.messageHistoryDB.get(user).addMessage(message);
-        SQLiteHelper.getInstance().insert(message);
+        if(!SQLiteHelper.getInstance().insert(message)){
+            System.out.println("ERREUR DE SAUVEGARDE DE MESSAGE ");//todo popup pour prevenir que la sauvegarde de message ne marche plus
+        }
         //System.out.println("new message added "+user);
     }
     public synchronized HashMap<InetAddress, MessageHistory> getMessageHistoryDB() {

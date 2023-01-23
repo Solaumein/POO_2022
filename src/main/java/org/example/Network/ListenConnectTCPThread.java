@@ -4,15 +4,21 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.function.Consumer;
 
 public class ListenConnectTCPThread extends Thread{
     private ServerSocket serverAccept;
-    private int serverPort;
+    private final int serverPort;
+    private final Consumer<Socket> connectionCallback;
 
-    private MessageReceivedHandler messageReceivedHandler;
-    public ListenConnectTCPThread(int serverPort,MessageReceivedHandler messageReceivedHandler){
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public ListenConnectTCPThread(int serverPort,Consumer<Socket> connectionCallback){
         this.serverPort=serverPort;
-
+        this.connectionCallback=connectionCallback;
     }
     @Override
     public void run() {
@@ -23,25 +29,20 @@ public class ListenConnectTCPThread extends Thread{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        int i=0;
         while (true){
-            i++;
-            Socket socket= null;
+            Socket socket;
             try {
-                //Thread.sleep(100);
+                Thread.sleep(100);
                 socket = listening();
-                NetworkManagerTCP.getInstance().getThreadManager().createThreadCommunication(socket,messageReceivedHandler);
-                NetworkManagerTCP.getInstance().addSocket(socket);
-            } catch (IOException e) {
-                //e.printStackTrace();
+                connectionCallback.accept(socket);
+            } catch (SocketException e) {//cette erreur survient lorsque le ServerSocket est fermé mais que le thread continue (arrive qd reset de NetworkTCPManager)
+                this.interrupt();
+           } catch (InterruptedException e) {
                 //throw new RuntimeException(e);//sera throw au moment de interrupt
-           }
-            //System.out.println("i="+i);
+            } catch (IOException e) {//erreur d'ecriture il faut arreter l'application
+                throw new RuntimeException(e);
+            }
         }
-    }
-
-    public int getServerPort() {
-        return serverPort;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class ListenConnectTCPThread extends Thread{
     }
 
     private synchronized Socket listening() throws IOException {
-        //System.out.println("on se met en ecoute...");//todo demander au prof pk ca print a l'infini
+        //System.out.println("on se met en ecoute...");
 
         Socket socket =  serverAccept.accept();
         InetAddress addr= socket.getInetAddress();

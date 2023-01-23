@@ -1,8 +1,6 @@
 package org.example.Network;
 
 import junit.framework.TestCase;
-import org.example.Network.ThreadComUDP;
-
 import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
@@ -10,7 +8,7 @@ import static java.lang.Thread.sleep;
 public class ListenNotifyTest extends TestCase {
     public void testListenNotify() throws InterruptedException {
 
-        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback);
+        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback);
         thread1.start();
 
         sleep(5000);
@@ -18,4 +16,5 @@ public class ListenNotifyTest extends TestCase {
         assertTrue(true);
     }
     Consumer<String> invalidPseudoCallback= s -> fail();
+    Consumer<Packet> validPseudoCallback= s->assertTrue(true);
 }

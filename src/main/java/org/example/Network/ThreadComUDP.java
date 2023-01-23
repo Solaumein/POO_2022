@@ -7,43 +7,34 @@ import java.util.function.Consumer;
 
 public class ThreadComUDP extends Thread {
     private static int i =0;
-    Consumer<String> invalidPseudoCallback;
-    public ThreadComUDP(Consumer<String> invalidPseudoCallback){
+    private final Consumer<String> invalidPseudoCallback;
+    private final Consumer<Packet> validPseudoCallback;
+    public ThreadComUDP(Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallback){
         super("thread"+i);
         i++;
         this.invalidPseudoCallback=invalidPseudoCallback;
+        this.validPseudoCallback=validPseudoCallback;
     }
 
 
-    DatagramSocket ds;
-    private void listentIntent(NetworkManagerUDP managerUDP, Consumer<String> invalidPseudoCallback) {
 
+    private void listentIntent() {
+
+        DatagramSocket ds;
         try {
             ds = new DatagramSocket(NetworkManagerUDP.portUDP);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }
         while (true) {
-            Packet info = managerUDP.listenNotify(ds);
+            Packet info = NetworkManagerUDP.getInstance().listenNotify(ds);
             //cas connexion
-            traitementPacket traitementPacket = new traitementPacket(info,invalidPseudoCallback);
+            new traitementPacket(info,invalidPseudoCallback,validPseudoCallback);
             //toDo answer(reponse) où reponse contient mon pseudo, mon port dédié pour tcp, state (ValidPseudo) or InvalidPseudo
         }
         //ds.close();
     }
 
-//    private void notifyIntent() throws SocketException, UnknownHostException {
-//        NetworkManagerUDP managerUDP = new NetworkManagerUDP();
-//        //toDO pouvoir changer le state en arg
-//        boolean notify = managerUDP.sendnotify(org.example.State.state.CONNECTION);
-//
-//    }
-
     @Override
-    public void run() {
-        //super.run();
-            listentIntent(NetworkManagerUDP.getInstance(),invalidPseudoCallback);}
-
-
-
+    public void run() { listentIntent();}
 }

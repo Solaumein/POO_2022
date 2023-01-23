@@ -20,7 +20,7 @@ public class MessageTest extends TestCase {
             listDeMessagePasBon.add(new Message("coucou",dateMsg,true, InetAddress.getByName("google.fr")));
             assert(message1.equals(messagebon));
             for (Message message : listDeMessagePasBon) {
-                assertFalse(message1.equals(message));
+                assert(!message1.equals(message));
             }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);

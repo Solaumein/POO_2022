@@ -1,11 +1,10 @@
 package org.example.Network;
 
-import java.net.Socket;
 
 public class Communication {
 
-    private ListenMessageTCPThread listenMessageTCPThread;
-    private SendMessageTCPThread sendMessageTCPThread;
+    private final ListenMessageTCPThread listenMessageTCPThread;
+    private final SendMessageTCPThread sendMessageTCPThread;
 
     public ListenMessageTCPThread getListenMessageTCPThread() {
         return listenMessageTCPThread;

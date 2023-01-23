@@ -6,9 +6,11 @@ module ClavardageEntrePotes {
     requires javafx.controls;
     requires java.sql;
 
+
     opens org.example;
     //opens org.example.GUI;
     exports org.example;
+    exports org.example.Exception;
     exports org.example.Message;
     opens org.example.Message;
     exports org.example.Network;

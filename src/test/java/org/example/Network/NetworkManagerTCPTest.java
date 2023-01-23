@@ -5,10 +5,6 @@ import org.example.Exception.SocketComNotFoundException;
 import org.example.Exception.ThreadNotFoundException;
 import org.example.User.UserAddress;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -28,6 +24,7 @@ public class NetworkManagerTCPTest
         while(NetworkManagerTCP.getMessageReceivedHandler()==null){
             Thread.sleep(100);
         }
+        System.out.println("c bon c init");
     }
 
 
@@ -56,7 +53,7 @@ public class NetworkManagerTCPTest
             assert true;
         }
     }*/
-    static ArrayList<String> listMessageAtest=new ArrayList<>();;
+    static ArrayList<String> listMessageAtest=new ArrayList<>();
     private void initListMSG(){
         listMessageAtest.add("bonjour");//message normale
         listMessageAtest.add("aie aie aie\n plusieurs ligne");
@@ -65,16 +62,14 @@ public class NetworkManagerTCPTest
         listMessageAtest.add("é#яйца");//ascii compliqué
     }
     ArrayList<String> messageRecu=new ArrayList<>();
-    MessageReceivedHandler messageReceivedHandler2= new MessageReceivedHandler() {
-        @Override
-        public void newMessageArrivedFromAddr(String message,InetAddress address) {
-            System.out.println("MESSSSSSSSSSSSSSSSSSSSsage " + message+" from Address "+address);
-            messageRecu.add(message);
-        }
+    MessageReceivedHandler messageReceivedHandler2= (message, address) -> {
+        System.out.println("MESSSSSSSSSSSSSSSSSSSSsage " + message+" from Address "+address);
+        messageRecu.add(message);
     };
 
     public void testEchangeTCP() throws InterruptedException {//test tous mis les uns après les autres pour eviter les tests jenkins qui se font en thread pour eviter les acces concurrents aux listes
         ConnectionDecoTestTCP();
+        resetAll();
         setUp();
         EmissionReceptionTest();
         resetAll();
@@ -86,14 +81,16 @@ public class NetworkManagerTCPTest
     }
 
 
-    public void EmissionReceptionTest(){
+    private void EmissionReceptionTest(){
 
-     System.out.println("list sock "+NetworkManagerTCP.getInstance().getListSocket());
-     //emission et reception message
-     initListMSG();
-     messageRecu.clear();
-     System.out.println("on a init les MSG");
-     NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
+        System.out.println("list sock "+NetworkManagerTCP.getInstance().getListSocket());
+        //emission et reception message
+        initListMSG();
+        messageRecu.clear();
+        System.out.println("on a init les MSG");
+        System.out.println("la list thread "+NetworkManagerTCP.getInstance().getThreadManager().getListThread());
+
+        NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
      System.out.println("on a lancé l'écoute");
      try {
          Thread.sleep(100);//le temps que l'écoute se lance
@@ -113,7 +110,9 @@ public class NetworkManagerTCPTest
          //ListenMessageTCPThread threadPuit= (ListenMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadListenFromName(InetAddress.getLoopbackAddress().toString());
          SendMessageTCPThread threadSource= (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(InetAddress.getByName("127.0.0.1").toString());
          for (String s1 : listMessageAtest) {
-             threadSource.send(s1);
+             if(!threadSource.send(s1)){
+                 fail();
+             }
          }
      } catch (InterruptedException e) {
          throw new RuntimeException(e);
@@ -129,7 +128,7 @@ public class NetworkManagerTCPTest
      assertEquals(listMessageAtest,messageRecu);
  }
 
-public void ConnectionDecoTestTCP() throws InterruptedException {
+private void ConnectionDecoTestTCP() throws InterruptedException {
     //connection et deconnection
 
     NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());//on lance l'ecoute

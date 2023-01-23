@@ -3,10 +3,7 @@ package org.example.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.example.Controller.MainScreenController;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +15,7 @@ public class GUIController {
     public MainScreenController openAndGetController(Stage currentStage, String title){
 
         MainScreenController controller;
-        Parent root=null;
+        Parent root;
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainScreen.fxml"));
             root = loader.load();
@@ -32,28 +29,28 @@ public class GUIController {
 
         return controller;
     }
-    public static Stage openNewWindow(Stage currentStage, String pathToFXML, String title) {
-        URL urlofFXML= null;
+    public static void openNewWindow(Stage currentStage, String pathToFXML, String title) {
+        URL urlOfFXML;
         try {
-            urlofFXML = new File(pathToFXML).toURI().toURL();
+            urlOfFXML = new File(pathToFXML).toURI().toURL();
 
         } catch (MalformedURLException e) {
             System.out.println("fichier manquant:" + pathToFXML);
             throw new RuntimeException(e);
         }
-        Parent root=null;
+        Parent root;
         try{
-            root = FXMLLoader.load(urlofFXML);
+            root = FXMLLoader.load(urlOfFXML);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         currentStage.setTitle(title);
         currentStage.setScene(new Scene(root));
         currentStage.show();
-        return currentStage;
+        //return currentStage;
     }
-
-    public static Popup getPopupInvalidPseudo(String pseudo){
+/*
+    public static Popup getPopupInvalidPseudo(String pseudo){  //todo faire un VRAI popup
         Popup popup=new Popup();
         Label label=new Label("Invalid pseudo : "+pseudo+" is already taken");
         label.setStyle(" -fx-background-color: white; -fx-color-label-visible: red;");
@@ -62,5 +59,5 @@ public class GUIController {
         label.setMinHeight(50);
         return popup;
     }
-
+*/
 }

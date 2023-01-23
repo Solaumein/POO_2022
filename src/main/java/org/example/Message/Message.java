@@ -7,16 +7,35 @@ import java.util.Objects;
 
 public class Message {
     private String contenu;
-    private Date dateMessage;
-    private boolean recu;
-    private InetAddress otherHost;
+    private final Date dateMessage;
+    private final boolean recu;
+    private final InetAddress otherHost;
+
+    public void setContenu(String contenu) {
+        this.contenu = contenu;
+    }
+
+    public String getContenu() {
+        return contenu;
+    }
+    public Date getDateMessage() {
+        return dateMessage;
+    }
+    public boolean getRecu() {
+        return recu;
+    }
+    public boolean isRecu() {
+        return recu;
+    }
+    public InetAddress getOtherHost() {
+        return otherHost;
+    }
 
     public Message(String contenu, Date dateMessage, boolean recu, InetAddress otherUser){
         this.contenu=contenu;
         this.dateMessage=dateMessage;
         this.otherHost=otherUser;
         this.recu=recu;
-
     }
     public Message(String contenu, boolean recu, InetAddress otherUser){
         this.contenu=contenu;
@@ -30,27 +49,9 @@ public class Message {
         return formatter.format(this.dateMessage);
     }
 
-    public String getContenu() {
-        return contenu;
-    }
-    public Date getDateMessage() {
-        return dateMessage;
-    }
-    public boolean getRecu() {
-        return recu;
-    }
-
-    public boolean isRecu() {
-        return recu;
-    }
-
-    public InetAddress getOtherHost() {
-        return otherHost;
-    }
-
     @Override
     public String toString() {
-        String stateOfMsg=((recu) ? "Recu" : "envoyé");;
+        String stateOfMsg=((recu) ? "Recu" : "envoyé");
         return "msg "+stateOfMsg+ " par toi et l'addresse "+getOtherHost()+" at "+ getDateInString()+" : "+getContenu();
     }
 

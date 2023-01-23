@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 public class ThreadManagerTest extends TestCase {
-    ThreadManager threadManager;
     Socket socket = null;
     Communication communication;
     @Override
@@ -53,8 +51,8 @@ public class ThreadManagerTest extends TestCase {
             fail();
         }
         try {
-            SendMessageTCPThread threadCom1=(SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(InetAddress.getLocalHost().toString());
-            ListenMessageTCPThread threadCom2=(ListenMessageTCPThread) ThreadManager.getInstance().getThreadListenFromName(InetAddress.getLocalHost().toString());
+            ThreadManager.getInstance().getThreadSendFromName(InetAddress.getLocalHost().toString());
+            ThreadManager.getInstance().getThreadListenFromName(InetAddress.getLocalHost().toString());
             assert false;//n'est pas censé les trouver
         } catch (ThreadNotFoundException ignored) {
         } catch (UnknownHostException e) {

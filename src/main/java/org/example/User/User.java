@@ -5,43 +5,35 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Objects;
 
-public class User implements Serializable{
+public class User  {
     private UserAddress userAddress;
     private String pseudo;
-
     private boolean connected;
-
-
-    private FXMLLoader loader;
-
-
     private Node node;
 
     public User(UserAddress userAddress, String pseudo) {
         this.userAddress = userAddress;
         this.pseudo = pseudo;
         this.connected = false;
-        //try {
-            this.loader = new FXMLLoader();
-            this.loader.setLocation(getClass().getResource("/ContactFrame.fxml"));
-            //this.loader = new FXMLLoader((new File("src/main/java/org/example/GUI/ContactFrame.fxml").toURI().toURL()));
-//        } catch (MalformedURLException e) {
-//            System.out.print("erreur load fxml file");
-//            throw new RuntimeException(e);
-//        }
-        System.out.println((String) this.loader.getRoot());
-        try {
-            this.loader.load();
 
-            this.node = (Node)this.loader.getNamespace().get("contactFrame");
-            Label label = (Label)this.node.lookup("#pseudoUser");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/ContactFrame.fxml"));
+
+        System.out.println((String) loader.getRoot());
+        try {
+            loader.load();
+            this.node = (Node) loader.getNamespace().get("contactFrame");
+            Label label = (Label) this.node.lookup("#pseudoUser");
             label.setText(this.pseudo);
         } catch (IOException e) {
             System.out.println("erreur loader");
         }
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
     public UserAddress getUserAddress() {
@@ -66,7 +58,6 @@ public class User implements Serializable{
                 "userAddress=" + userAddress +
                 ", pseudo='" + pseudo + '\'' +
                 ", connected=" + connected +
-                ", loader=" + loader +
                 ", node=" + node +
                 '}';
     }
@@ -84,20 +75,8 @@ public class User implements Serializable{
         return Objects.hash(getUserAddress(), getPseudo());
     }
 
-    public FXMLLoader getLoader() {
-        return loader;
-    }
-
-    public void setLoader(FXMLLoader loader) {
-        this.loader = loader;
-    }
-
     public Node getNode() {
         return node;
-    }
-
-    public void setNode(Node node) {
-        this.node = node;
     }
 }
 
