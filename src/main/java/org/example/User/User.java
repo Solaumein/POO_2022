@@ -35,12 +35,13 @@ public class User implements Serializable{
         System.out.println((String) this.loader.getRoot());
         try {
             this.loader.load();
+
+            this.node = (Node)this.loader.getNamespace().get("contactFrame");
+            Label label = (Label)this.node.lookup("#pseudoUser");
+            label.setText(this.pseudo);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("erreur loader");
         }
-        this.node = (Node)this.loader.getNamespace().get("contactFrame");
-        Label label = (Label)this.node.lookup("#pseudoUser");
-        label.setText(this.pseudo);
     }
 
     public UserAddress getUserAddress() {
