@@ -25,6 +25,7 @@ public class NetworkManagerUDP {
     static final int portUDP=1111;
     public synchronized Packet listenNotify(DatagramSocket ds) {
         //toDo ignorer le packet s'il vient de moi (car broadcast me l'envoie aussi)
+
         try {
             Packet packet = new Packet();
             byte[] buf = new byte[10240];
@@ -43,10 +44,12 @@ public class NetworkManagerUDP {
 
             return packet;
         } catch (IOException e) {
-
             throw new RuntimeException(e);
             //e.printStackTrace();
             //return new Packet();
+        }catch (NumberFormatException | IndexOutOfBoundsException e){
+            System.out.println("on a recu un paquet malformé " );
+            return null;//todo a changer peut etre
         }
     }
 
