@@ -124,7 +124,7 @@ public class NetworkManagerTCPTest
      assertEquals(listMessageAtest,messageRecu);
  }
 
-public void ConnectionDecoTestTCP(){
+public void ConnectionDecoTestTCP() throws InterruptedException {
     //connection et deconnection
 
     NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());//on lance l'ecoute
@@ -145,6 +145,7 @@ public void ConnectionDecoTestTCP(){
         fail();
     }
     NetworkManagerTCP.getInstance().stopListenThread();
+    Thread.sleep(100);
     boolean co= NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getLoopbackAddress(), NetworkManagerTCP.getInstance().getPortListeningConnection()));
     //System.out.println("cooooo "+co);
     if( co){
