@@ -1,4 +1,4 @@
-package org.example.GUI;
+package org.example.Controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -8,7 +8,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
-import org.example.GUI.GUIController;
 import org.example.Network.NetworkManagerUDP;
 import org.example.Network.ThreadComUDP;
 import org.example.User.*;

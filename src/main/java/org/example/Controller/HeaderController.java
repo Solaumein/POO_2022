@@ -5,11 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.GUI.GUIController;
 import org.example.User.ListContact;
 import org.example.Network.NetworkManagerUDP;
 //import org.example.State;
-import org.example.Network.ThreadComUDP;
 import org.example.Network.State;
 
 import java.util.function.Consumer;

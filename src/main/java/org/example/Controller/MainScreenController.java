@@ -8,15 +8,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.example.Exception.ThreadNotFoundException;
-import org.example.GUI.GUIController;
 import org.example.Message.LocalDbManager;
 import org.example.Message.Message;
 import org.example.Message.MessageHistory;
@@ -24,13 +20,10 @@ import org.example.Message.SQLiteHelper;
 import org.example.Network.*;
 import org.example.User.ListContact;
 
-import javafx.scene.text.Text;
 import org.example.User.User;
-import org.example.User.UserAddress;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
