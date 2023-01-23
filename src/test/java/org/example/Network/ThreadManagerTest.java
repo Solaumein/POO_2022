@@ -42,7 +42,7 @@ public class ThreadManagerTest extends TestCase {
 
 
     public void GetThreadFromIPtest(){
-
+        System.out.println("list Thread "+ThreadManager.getInstance().getListThread());
         assertEquals(ThreadManager.getInstance().getListThread().size(),2);//2 car ecoute et envoie
         try {
             ListenMessageTCPThread listenMessageTCPThread= (ListenMessageTCPThread) ThreadManager.getInstance().getThreadListenFromName(socket.getInetAddress().toString());
