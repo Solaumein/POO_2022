@@ -26,13 +26,13 @@ public class ThreadManagerTest extends TestCase {
 
 
     public void testThread(){//test tous mis les uns après les autres pour eviter les tests jenkins qui se font en thread pour eviter les acces concurrents aux listes
-        GetThreadFromIPtest();
+        GetThreadFromIPTest();
         setUp();
         CreateAndKilltest();
     }
-    public void GetThreadFromIPtest(){
-
-        assertEquals(ThreadManager.getInstance().getListThread().size(),2);//2 car ecoute et envoie
+    private void GetThreadFromIPTest(){
+        System.out.println("list Thread : "+ThreadManager.getInstance().getListThread());
+        assertEquals(2,ThreadManager.getInstance().getListThread().size());//2 car ecoute et envoie
         try {
             ListenMessageTCPThread listenMessageTCPThread= (ListenMessageTCPThread) ThreadManager.getInstance().getThreadListenFromName(socket.getInetAddress().toString());
             SendMessageTCPThread sendMessageTCPThread=(SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(socket.getInetAddress().toString());
