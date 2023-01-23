@@ -55,7 +55,7 @@ public class NetworkManagerTCP extends Thread{
         System.out.println("on deco de tt le monde");
         ArrayList<Socket> listSock= (ArrayList<Socket>) getListSocket().clone();
         for (Socket socket : listSock) {
-            deconnect(socket.getInetAddress());
+            closeSock(socket.getInetAddress());
         }
         ThreadManager.getInstance().killAllThread();
     }
@@ -91,7 +91,7 @@ public class NetworkManagerTCP extends Thread{
         threadManager.killThread(communication.getSendMessageTCPThread());
     }
 
-    public synchronized boolean deconnect(InetAddress address){
+    public synchronized boolean closeSock(InetAddress address){
         System.out.println("on se deco de addr "+address);
         try{
             SendMessageTCPThread threadCom= (SendMessageTCPThread) threadManager.getThreadSendFromName(address.toString());
@@ -103,7 +103,14 @@ public class NetworkManagerTCP extends Thread{
             return false;
         }
     }
-    public synchronized boolean deconnect(User u){
+    public synchronized void reset(){
+            this.stopAllSocket();
+            this.stopListenThread();
+            NetworkManagerTCP.setMessageReceivedHandler(null);
+
+    }
+
+    public synchronized boolean closeSock(User u){
         System.out.println("on se deco au user "+u);
         InetAddress address=u.getUserAddress().getAddress();
         try {

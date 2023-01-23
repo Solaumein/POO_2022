@@ -77,11 +77,16 @@ public class NetworkManagerTCPTest
         ConnectionDecoTestTCP();
         setUp();
         EmissionReceptionTest();
+        resetAll();
+    }
+
+    private void resetAll() {
+        NetworkManagerTCP.getInstance().reset();
+        ThreadManager.getInstance().reset();
     }
 
 
-
- public void EmissionReceptionTest(){
+    public void EmissionReceptionTest(){
 
      System.out.println("list sock "+NetworkManagerTCP.getInstance().getListSocket());
      //emission et reception message
@@ -124,7 +129,7 @@ public class NetworkManagerTCPTest
      assertEquals(listMessageAtest,messageRecu);
  }
 
-public void ConnectionDecoTestTCP() throws InterruptedException {
+public void ConnectionDecoTestTCP(){
     //connection et deconnection
 
     NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());//on lance l'ecoute
@@ -145,7 +150,6 @@ public void ConnectionDecoTestTCP() throws InterruptedException {
         fail();
     }
     NetworkManagerTCP.getInstance().stopListenThread();
-    Thread.sleep(100);
     boolean co= NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getLoopbackAddress(), NetworkManagerTCP.getInstance().getPortListeningConnection()));
     //System.out.println("cooooo "+co);
     if( co){

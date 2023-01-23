@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class ThreadManagerTest extends TestCase {
     ThreadManager threadManager;
@@ -26,13 +27,23 @@ public class ThreadManagerTest extends TestCase {
 
 
     public void testThread(){//test tous mis les uns après les autres pour eviter les tests jenkins qui se font en thread pour eviter les acces concurrents aux listes
-        GetThreadFromIPTest();
+        GetThreadFromIPtest();
         setUp();
         CreateAndKilltest();
+        resetAll();
     }
-    private void GetThreadFromIPTest(){
-        System.out.println("list Thread : "+ThreadManager.getInstance().getListThread());
-        assertEquals(2,ThreadManager.getInstance().getListThread().size());//2 car ecoute et envoie
+
+    private void resetAll() {
+        ThreadManager.getInstance().reset();
+        NetworkManagerTCP.getInstance().reset();
+    }
+
+
+
+
+    public void GetThreadFromIPtest(){
+
+        assertEquals(ThreadManager.getInstance().getListThread().size(),2);//2 car ecoute et envoie
         try {
             ListenMessageTCPThread listenMessageTCPThread= (ListenMessageTCPThread) ThreadManager.getInstance().getThreadListenFromName(socket.getInetAddress().toString());
             SendMessageTCPThread sendMessageTCPThread=(SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(socket.getInetAddress().toString());

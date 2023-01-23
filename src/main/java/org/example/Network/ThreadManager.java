@@ -20,6 +20,14 @@ public class ThreadManager {
         return listThread;
     }
 
+    public void setListThread(ArrayList<Thread> listThread) {
+        this.listThread = listThread;
+    }
+
+    public synchronized void reset(){
+        ThreadManager.getInstance().killAllThread();
+        ThreadManager.getInstance().setListThread(new ArrayList<>());
+    }
     public synchronized void addThread(Thread thread){
         this.listThread.add(thread);
     }
