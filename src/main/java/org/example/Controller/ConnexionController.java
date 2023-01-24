@@ -49,68 +49,72 @@ public class ConnexionController {
     public void connectButtonAction() {
         pseudoLibre=true;
         String pseudo=textFieldPseudo.getText();
-        System.out.println("on lance un notify de notre pseudo : "+pseudo);
-        ListContact.selfUser.setPseudo(pseudo);
+        if(!textFieldPseudo.getText().contains(",")) {
+            System.out.println("on lance un notify de notre pseudo : " + pseudo);
+            ListContact.selfUser.setPseudo(pseudo);
 
-        notifyConnectionUsers();//send the "notify" in broadcast
-        int temps=0;
-        while(temps<10 && pseudoLibre){
-            temps++;
-            try {//toute les 10ms ont test
-                sleep(10);//todo attendre réponse du premier avec future ou promesse
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            notifyConnectionUsers();//send the "notify" in broadcast
+            int temps = 0;
+            while (temps < 10 && pseudoLibre) {
+                temps++;
+                try {//toute les 10ms ont test
+                    sleep(10);//todo attendre réponse du premier avec future ou promesse
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        }
-        if(pseudoLibre){
-            Stage mainScreenStage=(Stage) connectButton.getScene().getWindow();
-            mainScreenStage.setOnCloseRequest(evt -> {
-                NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
-                networkManagerUDP.sendNotify(State.state.DECONNECTION);
-                System.exit(0);
-            });
-            String mainScreenTitle="Clavardage Entre Pote";
-            GUIController guiController = new GUIController();
+            if (pseudoLibre) {
+                Stage mainScreenStage = (Stage) connectButton.getScene().getWindow();
+                mainScreenStage.setOnCloseRequest(evt -> {
+                    NetworkManagerUDP networkManagerUDP = NetworkManagerUDP.getInstance();
+                    networkManagerUDP.sendNotify(State.state.DECONNECTION);
+                    System.exit(0);
+                });
+                String mainScreenTitle = "Clavardage Entre Pote";
+                GUIController guiController = new GUIController();
 
-            MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
-            mainScreenController.myPseudo.setText(ListContact.selfUser.getPseudo());
-            System.out.println("on init le handler");
+                MainScreenController mainScreenController = guiController.openAndGetController(mainScreenStage, mainScreenTitle);
+                mainScreenController.myPseudo.setText(ListContact.selfUser.getPseudo());
+                System.out.println("on init le handler");
 
-            ContactEventHandler contactEventHandler= user -> Platform.runLater(() -> {
-                System.out.println("On entre dans le runLater");
-                mainScreenController.afficherNouveauUser(user);
+                ContactEventHandler contactEventHandler = user -> Platform.runLater(() -> {
+                    System.out.println("On entre dans le runLater");
+                    mainScreenController.afficherNouveauUser(user);
                 /*if(ListContact.listContact!=null){
                     for (User user : ListContact.listContact) {
                         //User usersave = user;
                         ListContact.listContact.remove(user);
                         ListContact.listContact.add(user);
                     }}*/
-                System.out.println("Initiated");
-            });
+                    System.out.println("Initiated");
+                });
 
-            ContactEventHandlerDeco contactEventHandlerDeco= user -> Platform.runLater(() -> {
-                System.out.println("On entre dans le runLater");
-                mainScreenController.deleteAffUser(user);
+                ContactEventHandlerDeco contactEventHandlerDeco = user -> Platform.runLater(() -> {
+                    System.out.println("On entre dans le runLater");
+                    mainScreenController.deleteAffUser(user);
 
-                System.out.println("Initiated");
-            });
+                    System.out.println("Initiated");
+                });
 
-            ContactEventHandlerUpdatePseudo contactEventHandlerUpdate= (oldPseudo, newPseudo) -> Platform.runLater(() -> {
-                System.out.println("On entre dans le runLater");
-                mainScreenController.updatePseudo(oldPseudo, newPseudo);
+                ContactEventHandlerUpdatePseudo contactEventHandlerUpdate = (oldPseudo, newPseudo) -> Platform.runLater(() -> {
+                    System.out.println("On entre dans le runLater");
+                    mainScreenController.updatePseudo(oldPseudo, newPseudo);
 
-                System.out.println("Initiated");
-            });
+                    System.out.println("Initiated");
+                });
 
-            ListContact.addHandler(contactEventHandler);
-            ListContact.addHandlerDeco(contactEventHandlerDeco);
-            ListContact.addHandlerUpdatePseudo(contactEventHandlerUpdate);
-            //ListContact.addContact(new User(null,"test"));
+                ListContact.addHandler(contactEventHandler);
+                ListContact.addHandlerDeco(contactEventHandlerDeco);
+                ListContact.addHandlerUpdatePseudo(contactEventHandlerUpdate);
+                //ListContact.addContact(new User(null,"test"));
 
 
-
-        }else{
-            alertInvalid();
+            } else {
+                alertInvalid();
+            }
+        }
+        else {
+            textInvalidMsg.setText("Pas de virgule svp!");
         }
 
 
