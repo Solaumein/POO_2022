@@ -68,7 +68,7 @@ public class MainScreenController {
             System.out.println("on est dans runlater de reception");
             Platform.runLater(() -> {
                 if(selectedUser!=null && selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
-                System.out.println("message rekkkkku "+message+ " par l'address "+address);
+                System.out.println("message rekkkkku "+message+ " par l'address "+address+" selected user = "+selectedUser);
 
             });
         }
@@ -232,6 +232,8 @@ public class MainScreenController {
 
             if(!textFieldNewPseudo.getText().contains(",")){
                 String newPseudo= textFieldNewPseudo.getText();
+                String oldPseudo=ListContact.selfUser.getPseudo();
+                ListContact.selfUser.setPseudo(newPseudo);
                 NetworkManagerUDP.getInstance().sendNotify(State.state.CHANGEPSEUDO);
                 int temps=0;
                 while(temps<10 && pseudoLibre){
@@ -248,10 +250,11 @@ public class MainScreenController {
                     textFieldNewPseudo.setDisable(true);
                     confirmNewpseudo.setDisable(true);
                     pseudoSelectedContact.setPrefWidth(850);
-                    ListContact.selfUser.setPseudo(newPseudo);
+
                     myPseudo.setText(newPseudo);
                     ListContact.selfUser.setPseudo(newPseudo);
                 }else{
+                    ListContact.selfUser.setPseudo(oldPseudo);
                     alertInvalid(newPseudo);
                 }
                 textFieldNewPseudo.clear();

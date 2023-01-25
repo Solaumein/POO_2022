@@ -86,7 +86,7 @@ public class ConnexionController {
                         ListContact.listContact.remove(user);
                         ListContact.listContact.add(user);
                     }}*/
-                    System.out.println("Initiated");
+                    System.out.println("Initiated contact of "+user);
                 });
 
                 ContactEventHandlerDeco contactEventHandlerDeco = user -> Platform.runLater(() -> {

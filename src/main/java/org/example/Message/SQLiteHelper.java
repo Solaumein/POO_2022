@@ -104,7 +104,7 @@ public class SQLiteHelper {
         try {
             String contenuMessage = rs.getString(MESSAGE_CONTENT);
             InetAddress IPSender= getOtherHostFromRS(rs);
-            System.out.println(rs.getString(MESSAGE_DATE));
+            //System.out.println(rs.getString(MESSAGE_DATE));
             java.util.Date dateMSG=dateFormat.parse(rs.getString(MESSAGE_DATE));
             boolean recu=rs.getBoolean(RECU);
             return new Message(contenuMessage,dateMSG,recu,IPSender);
@@ -133,7 +133,7 @@ public class SQLiteHelper {
             while (rs.next()){
                 String addrOtherHostSaved= getOtherHostFromRS(rs).toString().substring(1);
                 if(addrOtherHostSaved.equals(addrOfOtherHost)){
-                    System.out.println("c le bon user "+addrOtherHostSaved);
+                    //System.out.println("c le bon user "+addrOtherHostSaved);
                 }
                 //String idMSG=rs.getString(ID);
                 Message message=parseMessageFromResultSet(rs);
