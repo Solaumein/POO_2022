@@ -9,8 +9,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ThreadManagerTest extends TestCase {
-    Socket socket = null;
-    Communication communication;
+    private Socket socket = null;
+    private Communication communication;
     @Override
     protected void setUp()  {//est executé avant chaque test (evite redondance de code)
         try{
@@ -68,7 +68,7 @@ public class ThreadManagerTest extends TestCase {
         assertEquals(2,ThreadManager.getInstance().getListThread().size());
 
         try {
-            NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandler);
+            NetworkManagerTCP.getInstance().setMessageReceivedHandler(messageReceivedHandler);
             NetworkManagerTCP.getInstance().killCommunication(communication);
             assertEquals(0,ThreadManager.getInstance().getListThread().size());
         } catch (ThreadNotFoundException e) {

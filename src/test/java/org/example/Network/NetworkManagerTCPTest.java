@@ -20,8 +20,8 @@ public class NetworkManagerTCPTest
 
     @Override
     public void setUp() throws InterruptedException {
-        NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandler2);
-        while(NetworkManagerTCP.getMessageReceivedHandler()==null){
+        NetworkManagerTCP.getInstance().setMessageReceivedHandler(messageReceivedHandler2);
+        while(NetworkManagerTCP.getInstance().getMessageReceivedHandler()==null){
             Thread.sleep(100);
         }
         System.out.println("c bon c init");

@@ -15,26 +15,24 @@ public class NetworkManagerTCP extends Thread{
     private final ArrayList<Socket> listSocket =new ArrayList<>();
     private static final NetworkManagerTCP instance = new NetworkManagerTCP();
 
-    private static MessageReceivedHandler messageReceivedHandler=null;
+    private MessageReceivedHandler messageReceivedHandler=null;
 
-    public synchronized static MessageReceivedHandler getMessageReceivedHandler() {
+    public synchronized MessageReceivedHandler getMessageReceivedHandler() {
         return messageReceivedHandler;
     }
 
-    public static synchronized void setMessageReceivedHandler(MessageReceivedHandler messageReceivedHandler){
-        NetworkManagerTCP.messageReceivedHandler=messageReceivedHandler;
+    public synchronized void setMessageReceivedHandler(MessageReceivedHandler messageReceivedHandler){
+        System.out.println("on change le handler");
+        this.messageReceivedHandler=messageReceivedHandler;
     }
 
     public static NetworkManagerTCP getInstance() {
-        if(NetworkManagerTCP.messageReceivedHandler==null){
-            throw new RuntimeException("pas de messageHandler Initialisé");
-        }
         return instance;
     }
     private NetworkManagerTCP(){}
     private ListenConnectTCPThread listenConnectTCPThread;
     private final Consumer<Socket> connectionCallback= socket -> {
-        ThreadManager.getInstance().createThreadCommunication(socket,NetworkManagerTCP.getMessageReceivedHandler());
+        ThreadManager.getInstance().createThreadCommunication(socket,NetworkManagerTCP.getInstance().getMessageReceivedHandler());
         NetworkManagerTCP.getInstance().addSocket(socket);
     };
     public synchronized void launchListenThread(int port){
@@ -77,7 +75,7 @@ public class NetworkManagerTCP extends Thread{
             Socket socket =  new Socket(userAddress.getAddress(), userAddress.getPort());
             System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
-            ThreadManager.getInstance().createThreadCommunication(socket,NetworkManagerTCP.messageReceivedHandler);
+            ThreadManager.getInstance().createThreadCommunication(socket,NetworkManagerTCP.getInstance().messageReceivedHandler);
             return true;
         } catch (IOException e) {
             //e.printStackTrace();
@@ -120,7 +118,7 @@ public class NetworkManagerTCP extends Thread{
     public synchronized void reset(){
         this.stopListenThread();
         this.stopAllSocket();
-        NetworkManagerTCP.setMessageReceivedHandler(null);
+        NetworkManagerTCP.getInstance().setMessageReceivedHandler(null);
 
     }
 
