@@ -58,7 +58,6 @@ public class ListenMessageTCPThread extends Thread {
                     sleep(100);
                 } catch (InterruptedException ignored) {} //ignored car lors du kill ca fait erreur
             }else {
-                System.out.println("on appelle le handler");
                 messageReceivedHandler.newMessageArrivedFromAddr(msgReceived,sockCom.getInetAddress());
             }
         }
