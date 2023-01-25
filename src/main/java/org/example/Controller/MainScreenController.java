@@ -91,16 +91,20 @@ public class MainScreenController{
         textFieldNewPseudo.clear(); textFieldNewPseudo.setPromptText("Pseudo "+pseudo+" deja pris choisissez en un autre");//todo a tester
     }
 
-    private void afficherMessageEnvoye(String message) throws IOException {//todo mettre fonction dans GUI controller
+    private void afficherMessageEnvoye(Message message) {//todo mettre fonction dans GUI controller
         FXMLLoader messageLoader = new FXMLLoader();
         messageLoader.setLocation(getClass().getResource("/MessageFrameSent.fxml"));
-        messageLoader.load();
+        try {
+            messageLoader.load();
+        } catch (IOException e) {
+            //popup de message pas pu être loader
+        }
         Node node;
         node = (Node)messageLoader.getNamespace().get("messageFrameContainer");
         Label messageToDisplay = (Label)node.lookup("#messageContent");
-        messageToDisplay.setText(message);
+        messageToDisplay.setText(message.getContenu());
         Label messageTime = (Label)node.lookup("#messageTime");
-        messageTime.setText("Envoyé à " + "HEURE");
+        messageTime.setText("Envoyé à " + message.getDateMessage());
         messageZone.getChildren().add(node);
         messageScrollPane.applyCss();
         messageScrollPane.layout();
@@ -140,11 +144,15 @@ public class MainScreenController{
             } catch (ThreadNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            //une fois que message a ete envoyer on peut sauvegarder le message envoyé
-            afficherMessageEnvoye(messageInString);
+            //pour remetre la zone de texte d'envoie à zero
             textToSend.clear();
+
+            //une fois que message a ete envoyer on peut sauvegarder le message envoyé
             Message message=new Message(messageInString,false,inetAddress);
             LocalDbManager.getInstance().addMessage(message);
+
+            //affiche le message envoyé
+            afficherMessageEnvoye(message);
         }
     }
 
@@ -221,11 +229,8 @@ public class MainScreenController{
             if(message.isRecu()){
                 displayReceivedMessage(message);
             }else {
-                try {
-                    afficherMessageEnvoye(message.getContenu());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                    afficherMessageEnvoye(message);
+
             }
         }
     }
