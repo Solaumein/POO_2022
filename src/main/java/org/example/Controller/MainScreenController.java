@@ -60,6 +60,7 @@ public class MainScreenController {
     public HBox contactFrame;
 
     boolean pseudoLibre=true;
+    private final Consumer<String> invalidPseudoCallback= s -> pseudoLibre=false;
     private final MessageReceivedHandler messageReceivedHandlerInit=  new MessageReceivedHandler() {
         @Override
         public void newMessageArrivedFromAddr(String messageInString, InetAddress address) {
@@ -74,6 +75,13 @@ public class MainScreenController {
         }
     };
         public void initialize() {
+            try {
+                ThreadComUDP threadComUDP= (ThreadComUDP) ThreadManager.getInstance().getThreadFromName("threadUDP");
+                threadComUDP.setInvalidPseudoCallback(invalidPseudoCallback);
+            } catch (ThreadNotFoundException e) {
+                System.out.println("pas de threadUDP trouvé");
+                throw new RuntimeException(e);
+            }
             NetworkManagerTCP.getInstance().setMessageReceivedHandler(messageReceivedHandlerInit);
             NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
             SQLiteHelper.getInstance().createTableMessage();//initalise la bdd
@@ -245,6 +253,7 @@ public class MainScreenController {
                     }
                 }
                 if(pseudoLibre){
+                    System.out.println("le psuedpo est libre");
                     textFieldNewPseudo.setVisible(false);
                     confirmNewpseudo.setVisible(false);
                     textFieldNewPseudo.setDisable(true);
@@ -254,6 +263,8 @@ public class MainScreenController {
                     myPseudo.setText(newPseudo);
                     ListContact.selfUser.setPseudo(newPseudo);
                 }else{
+                    System.out.println("le psuedpo est pas libre");
+
                     ListContact.selfUser.setPseudo(oldPseudo);
                     alertInvalid(newPseudo);
                 }

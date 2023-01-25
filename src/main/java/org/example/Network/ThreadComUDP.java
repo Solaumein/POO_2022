@@ -6,17 +6,17 @@ import java.net.SocketException;
 import java.util.function.Consumer;
 
 public class ThreadComUDP extends Thread {
-    private static int i =0;
-    private final Consumer<String> invalidPseudoCallback;
+    private Consumer<String> invalidPseudoCallback;
     private final Consumer<Packet> validPseudoCallback;
     public ThreadComUDP(Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallback){
-        super("thread"+i);
-        i++;
+        super("threadUDP");
         this.invalidPseudoCallback=invalidPseudoCallback;
         this.validPseudoCallback=validPseudoCallback;
     }
 
-
+    public void setInvalidPseudoCallback(Consumer<String> invalidPseudoCallback) {
+        this.invalidPseudoCallback = invalidPseudoCallback;
+    }
 
     private void listentIntent() {
 
@@ -33,6 +33,11 @@ public class ThreadComUDP extends Thread {
             //toDo answer(reponse) où reponse contient mon pseudo, mon port dédié pour tcp, state (ValidPseudo) or InvalidPseudo
         }
         //ds.close();
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 
     @Override

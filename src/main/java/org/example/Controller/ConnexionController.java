@@ -134,6 +134,8 @@ public class ConnexionController {
         System.out.print("threaddemarre : "+ this.threadStarted + "   gjoifghgesfrihoier");
         if(!this.threadStarted){
             ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback);
+            System.out.println("on ajoute le thread "+thread1);
+            ThreadManager.getInstance().addThread(thread1);
             thread1.start();
             this.threadStarted =true;
         }
