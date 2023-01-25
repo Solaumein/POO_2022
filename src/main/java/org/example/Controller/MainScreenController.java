@@ -184,12 +184,12 @@ public class MainScreenController{
         messageZone.getChildren().clear();
 
             NetworkManagerTCP.setMessageReceivedHandler((messageStr, address) -> {
-                System.out.println("on est dans MessageReceivedHandler");
-                //on save le message
-                Message message=new Message(messageStr,false,address);
-                LocalDbManager.getInstance().addMessage(message);
                 //on le montre dans la boite de dialogue
                 Platform.runLater(() -> {
+                    System.out.println("on est dans MessageReceivedHandler");
+                    //on save le message
+                    Message message=new Message(messageStr,false,address);
+                    LocalDbManager.getInstance().addMessage(message);
                     System.out.println("on est dans runlater de reception de msg");
                     if(selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
                 });
@@ -202,8 +202,8 @@ public class MainScreenController{
         Node userNode = user.getNode();
         userNode.setOnMouseClicked(
                 event -> {
-                    contactFrameClickAction();
                     selectedUser = user;//todo on pourrait pas tout mettre dans le contactFrameClickAction ?
+                    contactFrameClickAction();
                     //System.out.println("la bdd ");
                     //SQLiteHelper.getInstance().printAll();
                     MessageHistory messageHistoryOfSelectedUser= LocalDbManager.getInstance().getMessageHistory(selectedUser.getUserAddress().getAddress());
