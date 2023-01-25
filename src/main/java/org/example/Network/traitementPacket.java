@@ -4,6 +4,7 @@ import org.example.User.ListContact;
 import org.example.User.User;
 import org.example.User.UserAddress;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -17,7 +18,8 @@ public class traitementPacket {
         String str= addr.toString();
         str = str.substring(1);
 
-        return str;}
+        return str;
+    }
 
     public traitementPacket(Packet packet, Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallBack){
         this.packet = packet;
@@ -72,6 +74,13 @@ public class traitementPacket {
 
     private void deconnexion() {
         ListContact.removeContactByAddr(packet.getAddr());
+        if(!ThreadManager.getInstance().killCommunicationWithAddr(packet.getAddr())){//si le thread n'as pas été trouvé on ferme au moins les socket
+            try {
+                NetworkManagerTCP.getInstance().closeAllSockWithAddr(packet.getAddr());
+            } catch (IOException e) {
+                //faire popup mettant que le message n'as pas pu être envoyer car le destinataire est parti
+            }
+        }
     }
 
     private void changementPseudo() {

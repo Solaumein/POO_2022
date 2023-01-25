@@ -2,6 +2,7 @@ package org.example.Network;
 
 import org.example.Exception.ThreadNotFoundException;
 
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -31,9 +32,34 @@ public class ThreadManager {
     public synchronized void addThread(Thread thread){
         this.listThread.add(thread);
     }
-    public synchronized void killThread(Thread thread) throws ThreadNotFoundException {
+    public synchronized boolean killThread(Thread thread) throws ThreadNotFoundException {
         thread.interrupt();
-        if(!this.getListThread().remove(thread)) throw new ThreadNotFoundException();
+        return this.getListThread().remove(thread);
+    }
+
+    public boolean killThreadSendFromName(String name){
+        try {
+            SendMessageTCPThread threadSend= (SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(name);
+            return killThread(threadSend);
+        } catch (ThreadNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+    public boolean killThreadListenFromName(String name){
+        try {
+            ListenMessageTCPThread threadSend= (ListenMessageTCPThread) ThreadManager.getInstance().getThreadListenFromName(name);
+            return killThread(threadSend);
+        } catch (ThreadNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean killCommunicationWithAddr(InetAddress address){
+        return killThreadListenFromName(address.toString()) && killThreadSendFromName(address.toString());
     }
 
     public synchronized Thread getThreadFromName(String name) throws ThreadNotFoundException {

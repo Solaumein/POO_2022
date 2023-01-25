@@ -88,7 +88,7 @@ public class NetworkManagerTCPTest
         initListMSG();
         messageRecu.clear();
         System.out.println("on a init les MSG");
-        System.out.println("la list thread "+NetworkManagerTCP.getInstance().getThreadManager().getListThread());
+        System.out.println("la list thread "+ThreadManager.getInstance().getListThread());
 
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
      System.out.println("on a lancé l'écoute");
@@ -104,11 +104,11 @@ public class NetworkManagerTCPTest
          //System.out.println("list sock "+networkManagerTCP.getListSocket());
          assertEquals(2,NetworkManagerTCP.getInstance().getListSocket().size());
 
-         System.out.println("la list thread "+NetworkManagerTCP.getInstance().getThreadManager().getListThread());
+         System.out.println("la list thread "+ThreadManager.getInstance().getListThread());
          System.out.println("la list sock "+NetworkManagerTCP.getInstance().getListSocket());
 
          //ListenMessageTCPThread threadPuit= (ListenMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadListenFromName(InetAddress.getLoopbackAddress().toString());
-         SendMessageTCPThread threadSource= (SendMessageTCPThread) NetworkManagerTCP.getInstance().getThreadManager().getThreadSendFromName(InetAddress.getByName("127.0.0.1").toString());
+         SendMessageTCPThread threadSource= (SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(InetAddress.getByName("127.0.0.1").toString());
          for (String s1 : listMessageAtest) {
              if(!threadSource.send(s1)){
                  fail();
@@ -138,7 +138,7 @@ private void ConnectionDecoTestTCP() throws InterruptedException {
         NetworkManagerTCP.getInstance().connect(new UserAddress(InetAddress.getLoopbackAddress(), portServTCP));//Socket socket=new Socket(InetAddress.getLoopbackAddress(), portServTCP);
         System.out.println("on s'est co "+NetworkManagerTCP.getInstance().getListSocket());
         Socket socket=NetworkManagerTCP.getInstance().getSocketFromIP(InetAddress.getLoopbackAddress());
-        Thread.sleep(100);//le temps que s'ajoute dans la liste le socket
+        Thread.sleep(1000);//le temps que s'ajoute dans la liste le socket
         System.out.println(NetworkManagerTCP.getInstance().getListSocket());
         assertEquals(2,NetworkManagerTCP.getInstance().getListSocket().size());
         Socket remoteSocketSaved=NetworkManagerTCP.getInstance().getSocketFromIP(InetAddress.getLoopbackAddress());

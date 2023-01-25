@@ -2,7 +2,6 @@ package org.example.Network;
 
 import org.example.Exception.SocketComNotFoundException;
 import org.example.Exception.ThreadNotFoundException;
-import org.example.User.User;
 import org.example.User.UserAddress;
 
 import java.io.IOException;
@@ -14,8 +13,6 @@ import java.util.function.Consumer;
 
 public class NetworkManagerTCP extends Thread{
     private final ArrayList<Socket> listSocket =new ArrayList<>();
-
-    private final ThreadManager threadManager =ThreadManager.getInstance();
     private static final NetworkManagerTCP instance = new NetworkManagerTCP();
 
     private static MessageReceivedHandler messageReceivedHandler=null;
@@ -24,9 +21,6 @@ public class NetworkManagerTCP extends Thread{
         return messageReceivedHandler;
     }
 
-    public synchronized ThreadManager getThreadManager() {
-        return threadManager;
-    }
     public static synchronized void setMessageReceivedHandler(MessageReceivedHandler messageReceivedHandler){
         NetworkManagerTCP.messageReceivedHandler=messageReceivedHandler;
     }
@@ -58,9 +52,10 @@ public class NetworkManagerTCP extends Thread{
         System.out.println("on deco de tt le monde");
         ArrayList<Socket> listSock= new ArrayList<>(getListSocket());
         for (Socket socket : listSock) {
-            if(!closeSock(socket.getInetAddress())){//erreur de close
-                //todo peut etre faire action
-                System.out.println("on a pas pu close le sock "+socket);
+            try {
+                closeSock(socket);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -82,7 +77,7 @@ public class NetworkManagerTCP extends Thread{
             Socket socket =  new Socket(userAddress.getAddress(), userAddress.getPort());
             System.out.println("il a accept on ecoute sur le port "+socket.getPort());
             addSocket(socket);
-            threadManager.createThreadCommunication(socket,NetworkManagerTCP.messageReceivedHandler);
+            ThreadManager.getInstance().createThreadCommunication(socket,NetworkManagerTCP.messageReceivedHandler);
             return true;
         } catch (IOException e) {
             //e.printStackTrace();
@@ -92,43 +87,41 @@ public class NetworkManagerTCP extends Thread{
     }
     public void killCommunication(Communication communication) throws ThreadNotFoundException {
 
-        threadManager.killThread(communication.getListenMessageTCPThread());
-        threadManager.killThread(communication.getSendMessageTCPThread());
+        ThreadManager.getInstance().killThread(communication.getListenMessageTCPThread());
+        ThreadManager.getInstance().killThread(communication.getSendMessageTCPThread());
     }
 
-    public synchronized boolean closeSock(InetAddress address){
+    public synchronized boolean closeSock(InetAddress address) throws IOException {
         System.out.println("on se deco de addr "+address);
         try{
-            SendMessageTCPThread threadCom= (SendMessageTCPThread) threadManager.getThreadSendFromName(address.toString());
             Socket sock=getSocketFromIP(address);
-            threadCom.getSockCom().close();
+            sock.close();
             listSocket.remove(sock);
             return true;
-        } catch (ThreadNotFoundException | IOException | SocketComNotFoundException e) {
+        } catch (SocketComNotFoundException e) {
             e.printStackTrace();
             return false;
         }
+    }
+    public synchronized void closeSock(Socket socket) throws IOException {
+        System.out.println("on se deco de addr "+socket.getInetAddress());
+        socket.close();
+        listSocket.remove(socket);
+    }
+    public synchronized void closeAllSockWithAddr(InetAddress address) throws IOException {
+        System.out.println("on deco tt les cok de addr "+address);
+            ArrayList<Socket> listSockClone=new ArrayList<>(listSocket);
+            for (Socket socket : listSockClone) {
+                socket.close();
+                listSocket.remove(socket);
+            }
+
     }
     public synchronized void reset(){
         this.stopListenThread();
         this.stopAllSocket();
         NetworkManagerTCP.setMessageReceivedHandler(null);
 
-    }
-
-    public synchronized boolean closeSock(User u){
-        System.out.println("on se deco au user "+u);
-        InetAddress address=u.getUserAddress().getAddress();
-        try {
-            SendMessageTCPThread threadCom= (SendMessageTCPThread) threadManager.getThreadSendFromName(address.toString());
-            Socket sock=getSocketFromIP(address);
-            threadManager.killThread(threadCom);
-            threadCom.getSockCom().close();
-            listSocket.remove(sock);
-            return true;
-        } catch (ThreadNotFoundException | IOException | SocketComNotFoundException e) {
-            return false;
-        }
     }
 
     public synchronized ArrayList<Socket> getListSocket() {
