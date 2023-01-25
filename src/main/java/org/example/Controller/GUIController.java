@@ -3,6 +3,7 @@ package org.example.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -49,6 +50,15 @@ public class GUIController {
         currentStage.show();
         //return currentStage;
     }
+
+    public static Alert getPopup(Alert.AlertType type,String title,String message,String header){
+        Alert alert=new Alert(type);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.setHeaderText(header);
+        return alert;
+    }
+
 /*
     public static Popup getPopupInvalidPseudo(String pseudo){  //todo faire un VRAI popup
         Popup popup=new Popup();

@@ -59,8 +59,24 @@ public class MainScreenController{
     private final MessageReceivedHandler messageReceivedHandlerInit= (messageInString, address) -> {
         Message message=new Message(messageInString,true,address);
         LocalDbManager.getInstance().addMessage(message);
+        //Platform.runLater(() -> enableNotif(address,message));
         System.out.println("message recu "+message+ " par l'address "+address);
     };
+
+    private void enableNotif(InetAddress address, Message message) {
+        String pseudo= ListContact.listContact.get(ListContact.searchByAddress(address)).getPseudo();
+        String title = "New message from "+pseudo;
+        String notifPasOuf="Nouveau message !";
+        GUIController.getPopup(Alert.AlertType.INFORMATION,title,message.getContenu(),notifPasOuf).show();
+        /*Notification notification = Notifications.SUCCESS;
+
+        TrayNotification tray = new TrayNotification();
+        tray.setTitle(title);
+        tray.setMessage(message);
+        tray.setNotification(notification);
+        tray.showAndWait();*/
+    }
+
     public void initialize() {
         NetworkManagerTCP.setMessageReceivedHandler(messageReceivedHandlerInit);
         NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
