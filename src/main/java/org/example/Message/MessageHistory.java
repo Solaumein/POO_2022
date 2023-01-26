@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class MessageHistory {
     private final ArrayList<Message> listMessage;
-    //InetAddress destinataire; //redondant
 
     public MessageHistory(){
         this.listMessage=new ArrayList<>();
@@ -15,8 +14,12 @@ public class MessageHistory {
         this.listMessage.add(message);
     }
 
+    public ArrayList<Message> getListMessage() {
+        return listMessage;
+    }
+
     @Override
-    public String toString() {
+    public String toString() {//pour meilleure lisibilité nous avons changé le toString
         StringBuilder listMessageInString=new StringBuilder().append("MESSAGEHISTORY : \n");
         for (Message message : listMessage) {
             if(message.getRecu()) listMessageInString.append("Destinataire :").append(message.getOtherHost()).append(" ");
@@ -24,10 +27,6 @@ public class MessageHistory {
             listMessageInString.append(message.getDateInString()).append(" contenu ").append(message.getContenu()).append("\n");
         }
         return listMessageInString.toString();
-    }
-
-    public ArrayList<Message> getListMessage() {
-        return listMessage;
     }
 
     @Override

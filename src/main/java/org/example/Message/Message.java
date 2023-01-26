@@ -39,7 +39,7 @@ public class Message {
     }
     public Message(String contenu, boolean recu, InetAddress otherUser){
         this.contenu=contenu;
-        this.dateMessage=new Date(System.currentTimeMillis());
+        this.dateMessage=new Date(System.currentTimeMillis());//si pas de date alors nous prenons la date de la creation de l'objet
         this.otherHost=otherUser;
         this.recu=recu;
     }
