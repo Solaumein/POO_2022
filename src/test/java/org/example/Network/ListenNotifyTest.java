@@ -6,12 +6,16 @@ import java.util.function.Consumer;
 import static java.lang.Thread.sleep;
 
 public class ListenNotifyTest extends TestCase {
-    public void testListenNotify() throws InterruptedException {
+    public void testListenNotify() {
 
         ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback);
         thread1.start();
 
-        sleep(5000);
+        try {
+            sleep(5000);
+        } catch (InterruptedException e) {
+            fail();
+        }
         thread1.interrupt();
         assertTrue(true);
     }
