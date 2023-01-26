@@ -12,6 +12,7 @@ import org.example.Message.Message;
 import org.example.Network.*;
 import org.example.User.*;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.function.Consumer;
 
@@ -46,9 +47,22 @@ public class ConnexionController {
             System.out.println("on ajoute le user "+packet.getPseudo());
         }
     };
+    private final Consumer<Packet> decoCallback=new Consumer<Packet>() {
+        @Override
+        public void accept(Packet packet) {
+            ListContact.removeContactByAddr(packet.getAddr());
+            if(!ThreadManager.getInstance().killCommunicationWithAddr(packet.getAddr())){//si le thread n'as pas été trouvé on ferme au moins les socket
+                try {
+                    NetworkManagerTCP.getInstance().closeAllSockWithAddr(packet.getAddr());
+                } catch (IOException e) {
+                    //faire popup mettant que le message n'as pas pu être envoyer car le destinataire est parti
+                }
+            }
+            System.out.println("on met le selected a null avant ");
+        }
+    };
 
     private boolean threadStarted =false;
-
 
     public void connectButtonAction() {
         pseudoLibre=true;
@@ -98,6 +112,12 @@ public class ConnexionController {
                 ContactEventHandlerDeco contactEventHandlerDeco = user -> Platform.runLater(() -> {
                     System.out.println("On entre dans le runLater");
                     mainScreenController.deleteAffUser(user);
+                    if(ListContact.getSelectedContact().equals(user)){
+                        System.out.println("le selected user s'est deco");
+                        mainScreenController.messageZone.getChildren().clear();
+                        ListContact.setSelectedContact(null);
+                        mainScreenController.pseudoSelectedContact.setText("No contact selected, please choose one");
+                    }
 
                     System.out.println("Initiated");
                 });
@@ -157,7 +177,7 @@ public class ConnexionController {
     private void notifyConnectionUsers() {
         System.out.print("threaddemarre : "+ this.threadStarted + "   gjoifghgesfrihoier");
         if(!this.threadStarted){
-            ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback);
+            ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback,decoCallback);
             System.out.println("on ajoute le thread "+thread1);
             ThreadManager.getInstance().addThread(thread1);
             thread1.start();

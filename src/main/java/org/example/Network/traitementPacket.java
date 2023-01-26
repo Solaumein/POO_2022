@@ -21,7 +21,7 @@ public class traitementPacket {
         return str;
     }
 
-    public traitementPacket(Packet packet, Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallBack){
+    public traitementPacket(Packet packet, Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallBack,Consumer<Packet> decoCallback){
         this.packet = packet;
         boolean thisIsMyAdress = false;
         try {//todo faire fonction qui fait le test de thisIsMyAddress
@@ -46,7 +46,7 @@ public class traitementPacket {
                 case CONNECTION : connexion(); break;
                 case VALIDPSEUDO : validPseudoCallBack.accept(packet); break;
                 case CHANGEPSEUDO : changementPseudo(); break;
-                case DECONNECTION : deconnexion(); break;
+                case DECONNECTION : decoCallback.accept(packet); break;
                 case INVALIDPSEUDO : invalidPseudoCallback.accept(""); break;
                 default : System.out.println(packet.getState()); break;
             }
@@ -72,16 +72,6 @@ public class traitementPacket {
     }*/
 
 
-    private void deconnexion() {
-        ListContact.removeContactByAddr(packet.getAddr());
-        if(!ThreadManager.getInstance().killCommunicationWithAddr(packet.getAddr())){//si le thread n'as pas été trouvé on ferme au moins les socket
-            try {
-                NetworkManagerTCP.getInstance().closeAllSockWithAddr(packet.getAddr());
-            } catch (IOException e) {
-                //faire popup mettant que le message n'as pas pu être envoyer car le destinataire est parti
-            }
-        }
-    }
 
     private void changementPseudo() {
         if(ListContact.selfUser.getPseudo().equals(packet.getPseudo()) || ListContact.isPseudoInList(packet.getPseudo())){
