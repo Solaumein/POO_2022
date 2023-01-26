@@ -8,11 +8,11 @@ import static java.lang.Thread.sleep;
 public class ListenNotifyTest extends TestCase {
     public void testListenNotify() {
 
-        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback);
+        ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback, null);
         thread1.start();
 
         try {
-            sleep(5000);
+            sleep(1000);
         } catch (InterruptedException e) {
             fail();
         }
