@@ -43,12 +43,12 @@ public class traitementPacket {
         }
         if(!thisIsMyAdress){
             switch (packet.getState()){
-                case CONNECTION -> connexion();
-                case VALIDPSEUDO -> validPseudoCallBack.accept(packet);
-                case CHANGEPSEUDO -> changementPseudo();
-                case DECONNECTION -> deconnexion();
-                case INVALIDPSEUDO -> invalidPseudoCallback.accept("");
-                default -> System.out.println(packet.getState());
+                case CONNECTION : connexion(); break;
+                case VALIDPSEUDO : validPseudoCallBack.accept(packet); break;
+                case CHANGEPSEUDO : changementPseudo(); break;
+                case DECONNECTION : deconnexion(); break;
+                case INVALIDPSEUDO : invalidPseudoCallback.accept(""); break;
+                default : System.out.println(packet.getState()); break;
             }
         }
     }

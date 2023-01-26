@@ -72,7 +72,7 @@
                            </font>
                         </Label>
                         <TextField fx:id="textFieldNewPseudo" disable="true" maxWidth="-Infinity" prefHeight="46.0" prefWidth="278.0" promptText="New pseudo Here" style="-fx-text-fill: #c0c0c0; -fx-background-color: #36393e; -fx-background-radius: 25px;" visible="false" />
-                        <Button fx:id="confirmNewpseudo" disable="true" mnemonicParsing="false" onMouseClicked="#confirmNewPseudoClickAction" onMouseEntered="#confirmNewPseudoEnteredAction" onMouseExited="#confirmNewPseudoExitAction" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" visible="false">
+                        <Button fx:id="confirmNewPseudo" disable="true" mnemonicParsing="false" onMouseClicked="#confirmNewPseudoClickAction" onMouseEntered="#confirmNewPseudoEnteredAction" onMouseExited="#confirmNewPseudoExitAction" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #1e2124;" visible="false">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

@@ -11,6 +11,15 @@ import java.util.List;
 
 public class ListContact {//todo pk tout en static ? sinon au lieu du bloc static c plus propre de faire dans le initialize mainScreenController le getPortLibre
     private static final UserAddress selfAddr;
+    private static User selectedContact;
+
+    public synchronized static void setSelectedContact(User selectedContact) {
+        ListContact.selectedContact = selectedContact;
+    }
+
+    public synchronized static User getSelectedContact() {
+        return selectedContact;
+    }
 
     public static UserAddress getSelfAddr() {
         return selfAddr;

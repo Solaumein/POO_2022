@@ -6,16 +6,19 @@ import java.net.SocketException;
 import java.util.function.Consumer;
 
 public class ThreadComUDP extends Thread {
-    private static int i =0;
-    private final Consumer<String> invalidPseudoCallback;
+
+
+    private Consumer<String> invalidPseudoCallback;
     private final Consumer<Packet> validPseudoCallback;
     public ThreadComUDP(Consumer<String> invalidPseudoCallback,Consumer<Packet> validPseudoCallback){
-        super("thread"+i);
-        i++;
+        super("threadUDP");
         this.invalidPseudoCallback=invalidPseudoCallback;
         this.validPseudoCallback=validPseudoCallback;
     }
 
+    public void setInvalidPseudoCallback(Consumer<String> invalidPseudoCallback) {
+        this.invalidPseudoCallback = invalidPseudoCallback;
+    }
 
 
     private void listentIntent() {

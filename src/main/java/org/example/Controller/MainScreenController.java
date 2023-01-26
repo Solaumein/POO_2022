@@ -1,19 +1,14 @@
 package org.example.Controller;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import org.example.Exception.ThreadNotFoundException;
 import org.example.Message.LocalDbManager;
 import org.example.Message.Message;
@@ -21,12 +16,10 @@ import org.example.Message.MessageHistory;
 import org.example.Message.SQLiteHelper;
 import org.example.Network.*;
 import org.example.User.ListContact;
-import javafx.scene.text.Text;
 import org.example.User.User;
-import org.example.User.UserAddress;
+
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
@@ -47,34 +40,36 @@ public class MainScreenController {
         @FXML
         public Label myPseudo;
         @FXML
-        public Button confirmNewpseudo;
+        public Button confirmNewPseudo;
         @FXML
         public ScrollPane messageScrollPane;
         @FXML
         public Label pseudoSelectedContact;
-        private User selectedUser;
+
 
     @FXML
     public Button sendButton;
     @FXML
     public HBox contactFrame;
 
-    boolean pseudoLibre=true;
-    private final MessageReceivedHandler messageReceivedHandlerInit=  new MessageReceivedHandler() {
+    static boolean pseudoLibre=true;
+    private final Consumer<String> invalidPseudoCallback= new Consumer<String>() {
         @Override
-        public void newMessageArrivedFromAddr(String messageInString, InetAddress address) {
-            Message message=new Message(messageInString,true,address);
-            LocalDbManager.getInstance().addMessage(message);
-            System.out.println("on est dans runlater de reception");
-            Platform.runLater(() -> {
-                if(selectedUser!=null && selectedUser.getUserAddress().getAddress().equals(address))displayReceivedMessage(message);
-                System.out.println("message rekkkkku "+message+ " par l'address "+address+" selected user = "+selectedUser);
-
-            });
+        public void accept(String s) {
+            MainScreenController.pseudoLibre=false;
+            System.out.println("le pseudo est pas libre");
         }
     };
+
         public void initialize() {
-            NetworkManagerTCP.getInstance().setMessageReceivedHandler(messageReceivedHandlerInit);
+            try {
+                ThreadComUDP threadComUDP= (ThreadComUDP) ThreadManager.getInstance().getThreadFromName("threadUDP");
+                threadComUDP.setInvalidPseudoCallback(invalidPseudoCallback);
+            } catch (ThreadNotFoundException e) {
+                System.out.println("pas de threadUDP trouvé");
+                throw new RuntimeException(e);
+            }
+            //NetworkManagerTCP.getInstance().setMessageReceivedHandler(messageReceivedHandlerInit);
             NetworkManagerTCP.getInstance().launchListenThread(NetworkManagerTCP.getPortLibre());
             SQLiteHelper.getInstance().createTableMessage();//initalise la bdd
             LocalDbManager.getInstance().updateSavedMessages();//prends les msg de la bdd
@@ -95,16 +90,16 @@ public class MainScreenController {
             textFieldNewPseudo.setPromptText("New pseudo here");
             pseudoSelectedContact.setPrefWidth(0);
             textFieldNewPseudo.setVisible(true);
-            confirmNewpseudo.setVisible(true);
+            confirmNewPseudo.setVisible(true);
             textFieldNewPseudo.setDisable(false);
-            confirmNewpseudo.setDisable(false);
+            confirmNewPseudo.setDisable(false);
         }
         public void SendButtonAction() {
-            if(selectedUser!=null) {
+            if(ListContact.getSelectedContact()!=null) {
                 String messageInString = textToSend.getText();
                 textToSend.clear();
                 System.out.println(ListContact.listContact);
-                InetAddress inetAddress = selectedUser.getUserAddress().getAddress();
+                InetAddress inetAddress = ListContact.getSelectedContact().getUserAddress().getAddress();
                 try {
                     SendMessageTCPThread threadCom = (SendMessageTCPThread) ThreadManager.getInstance().getThreadSendFromName(inetAddress.toString());
                     System.out.println("on envoie " + messageInString);
@@ -172,12 +167,14 @@ public class MainScreenController {
             Node userNode = user.getNode();
             userNode.setOnMouseClicked(
                     event -> {
-                        selectedUser = user;
+                        System.out.println("le user "+user+" le selected "+ListContact.getSelectedContact());
+                        ListContact.setSelectedContact(user);
+                        System.out.println("2 :       le user "+user+" le selected "+ListContact.getSelectedContact());
                         contactFrameClickAction();
                         //System.out.println("la bdd ");
                         //SQLiteHelper.getInstance().printAll();
-                        MessageHistory messageHistoryOfSelectedUser= LocalDbManager.getInstance().getMessageHistory(selectedUser.getUserAddress().getAddress());
-                        System.out.println("on a recup les message de "+selectedUser+" \nmessage "+ messageHistoryOfSelectedUser);
+                        MessageHistory messageHistoryOfSelectedUser= LocalDbManager.getInstance().getMessageHistory(ListContact.getSelectedContact().getUserAddress().getAddress());
+                        System.out.println("on a recup les message de "+ListContact.getSelectedContact()+" \nmessage "+ messageHistoryOfSelectedUser);
                         for (Message message : messageHistoryOfSelectedUser.getListMessage()) {
                             //System.out.println("on a un message sauvegarder "+message);
                             if(message.isRecu()){
@@ -223,10 +220,10 @@ public class MainScreenController {
 
         }
         public void confirmNewPseudoEnteredAction(){
-            confirmNewpseudo.setStyle("-fx-background-color: #424549");
+            confirmNewPseudo.setStyle("-fx-background-color: #424549");
         }
         public void confirmNewPseudoExitAction(){
-            confirmNewpseudo.setStyle("-fx-background-color: #1e2124");
+            confirmNewPseudo.setStyle("-fx-background-color: #1e2124");
         }
         public void confirmNewPseudoClickAction(){
 
@@ -236,7 +233,7 @@ public class MainScreenController {
                 ListContact.selfUser.setPseudo(newPseudo);
                 NetworkManagerUDP.getInstance().sendNotify(State.state.CHANGEPSEUDO);
                 int temps=0;
-                while(temps<10 && pseudoLibre){
+                while(temps<10 && MainScreenController.pseudoLibre){
                     temps++;
                     try {//toute les 10ms ont test
                         sleep(10);//todo attendre réponse du premier avec future ou promesse
@@ -244,16 +241,18 @@ public class MainScreenController {
                         throw new RuntimeException(e);
                     }
                 }
-                if(pseudoLibre){
+                if(MainScreenController.pseudoLibre){
+                    System.out.println("le psuedpo est libre");
                     textFieldNewPseudo.setVisible(false);
-                    confirmNewpseudo.setVisible(false);
+                    confirmNewPseudo.setVisible(false);
                     textFieldNewPseudo.setDisable(true);
-                    confirmNewpseudo.setDisable(true);
+                    confirmNewPseudo.setDisable(true);
                     pseudoSelectedContact.setPrefWidth(850);
 
                     myPseudo.setText(newPseudo);
                     ListContact.selfUser.setPseudo(newPseudo);
                 }else{
+                    System.out.println("le psuedpo est pas libre");
                     ListContact.selfUser.setPseudo(oldPseudo);
                     alertInvalid(newPseudo);
                 }
@@ -282,6 +281,7 @@ public class MainScreenController {
         HBox.setHgrow(hbox, Priority.ALWAYS);
         HBox hbox2 = (HBox)node.lookup("#messageFrame");
         HBox.setMargin(hbox2, new Insets(0,300,0,10));
+        System.out.println("node "+node+" messagezone "+messageZone);
         messageZone.getChildren().add(node);
         messageScrollPane.applyCss();
         messageScrollPane.layout();

@@ -7,9 +7,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import org.example.Message.LocalDbManager;
+import org.example.Message.Message;
 import org.example.Network.*;
 import org.example.User.*;
 
+import java.net.InetAddress;
 import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
@@ -45,6 +48,7 @@ public class ConnexionController {
     };
 
     private boolean threadStarted =false;
+
 
     public void connectButtonAction() {
         pseudoLibre=true;
@@ -86,6 +90,8 @@ public class ConnexionController {
                         ListContact.listContact.remove(user);
                         ListContact.listContact.add(user);
                     }}*/
+
+
                     System.out.println("Initiated contact of "+user);
                 });
 
@@ -103,6 +109,27 @@ public class ConnexionController {
                     System.out.println("Initiated");
                 });
 
+                NetworkManagerTCP.getInstance().setMessageReceivedHandler(new MessageReceivedHandler() {
+                    @Override
+                    public void newMessageArrivedFromAddr(String messageInString, InetAddress address) {
+                        System.out.println("on va rentrer dans le runlater de plateforme");
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Message message=new Message(messageInString,true,address);
+                                LocalDbManager.getInstance().addMessage(message);
+                                System.out.println("on est dans runlater de reception handler");
+                                if(ListContact.getSelectedContact()!=null && ListContact.getSelectedContact().getUserAddress().getAddress().equals(address)){
+                                    System.out.println("le message s'affiche car "+ListContact.getSelectedContact()+" est le meme que "+address+" message "+messageInString);
+                                    mainScreenController.displayReceivedMessage(message);
+                                }
+                            }
+                        });
+                    }
+                });
+
+
+
                 ListContact.addHandler(contactEventHandler);
                 ListContact.addHandlerDeco(contactEventHandlerDeco);
                 ListContact.addHandlerUpdatePseudo(contactEventHandlerUpdate);
@@ -116,9 +143,6 @@ public class ConnexionController {
         else {
             textInvalidMsg.setText("Pas de virgule svp!");
         }
-
-
-
     }
 
     private void alertInvalid() {
@@ -135,6 +159,7 @@ public class ConnexionController {
         if(!this.threadStarted){
             ThreadComUDP thread1 = new ThreadComUDP(invalidPseudoCallback,validPseudoCallback);
             thread1.start();
+            ThreadManager.getInstance().addThread(thread1);
             this.threadStarted =true;
         }
         NetworkManagerUDP networkManagerUDP=NetworkManagerUDP.getInstance();
