@@ -255,6 +255,7 @@ public class MainScreenController {
                     System.out.println("le psuedpo est pas libre");
                     ListContact.selfUser.setPseudo(oldPseudo);
                     alertInvalid(newPseudo);
+                    MainScreenController.pseudoLibre=true;
                 }
                 textFieldNewPseudo.clear();
             }
