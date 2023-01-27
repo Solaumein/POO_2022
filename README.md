@@ -23,8 +23,14 @@ Recupération du projet :
 ```git clone http://github.com/Solaumein/POO_2022```
 
  Le projet peut être compilé et exécuté à l'aide de la commande maven suivante (commande à éxécuter à la racine du projet, là où se trouve le pom.xml) :
+ 
+ Commande Linux :
 
  ``` mvn clean && mvn compile && mvn exec:java -Dexec.mainclass="org.example.MainApp.java ```
+ 
+ Commande cliquable depuis le readme sur intellij :
+ 
+ ``` mvn clean compile exec:java -Dexec.mainclass="org.example.MainApp.java ```
 
 
 
