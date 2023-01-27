@@ -41,8 +41,6 @@ Recupération du projet :
 ### UF "Conception et Programmation avancées" de 4ème année INSA 
 
   - [UML et patrons de conception](https://moodle.insa-toulouse.fr/course/view.php?id=1283)
-	- [nos TDs de "prise en main" de l'UML](./TD/TDs_UML) 
   - [Programmation avancée en Java](https://moodle.insa-toulouse.fr/course/view.php?id=1228) 
-	- [nos TDs de "prise en main" de programmation avancée en Java](./TD/TDs_Java)
   - [Conduite de projet](https://moodle.insa-toulouse.fr/course/view.php?id=1759) 
   - [PDLA](https://moodle.insa-toulouse.fr/course/view.php?id=1758)
