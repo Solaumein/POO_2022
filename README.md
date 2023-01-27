@@ -42,6 +42,8 @@ Recupération du projet :
 ## Liens utiles
 [Code](./src/main/java/org/example)
 
+[Package Message](./src/main/java/org/example/Message)
+
 [Rapport](./Rapport_UML_COO1.pdf) 
 
 ### UF "Conception et Programmation avancées" de 4ème année INSA 
